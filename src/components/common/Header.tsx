@@ -1,33 +1,37 @@
-import React from "react";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
+import { Search, Store } from "lucide-react";
 import Link from "next/link";
+import NavLink from "./Navlink";
 
-const Header = () => {
+const Navbar = () => {
   return (
-    <nav className="flex justify-between items-center mx-5 sm:mx-10 lg:mx-20 my-3">
-      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-        HOMEBITES
-      </h1>
-      <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-5 md:gap-10 lg:gap-20">
-        <div className="flex gap-5">
-          <Link href="/" className="text-lg md:text-xl lg:text-2xl">
-            Home
-          </Link>
-          <Link href="/menu" className="text-lg md:text-xl lg:text-2xl">
-            Menu
-          </Link>
-        </div>
-        <div className="flex gap-5">
-          <Button variant="outline" className="cursor-pointer sm:text-xl">
-            <Link href="/login">Login</Link>
-          </Button>
-          <Button className="bg-teal-500 hover:bg-teal-600 text-black cursor-pointer sm:text-xl">
-            <Link href="/register">Signup</Link>
-          </Button>
-        </div>
+    <div className="text-white flex flex-wrap justify-between items-center px-10 py-5 bg-gray-800 shadow-md min-w-screen mx-auto">
+      <Link href="/" className="text-xl md:text-3xl font-bold">
+        HOMEBITES{" "}
+      </Link>
+
+      <div className="hidden md:flex md:justify-center gap-5 text-gray-700 text-lg">
+        <NavLink href="/">Home</NavLink>
+        <NavLink href="/menu">Menu</NavLink>
+        <NavLink href="#footer">About Us</NavLink>
+        <NavLink href="#footer">Contact Us</NavLink>
       </div>
-    </nav>
+
+      <div className="flex items-center gap-1">
+        <Search size={28} className="mx-4" />
+
+        <Link href="/cart">
+          <Store size={28} className="mx-4" />
+        </Link>
+        {/* {getTotalCartAmount() > 0 && (
+            <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></div>
+          )} */}
+        <Button variant="outline" className="ml-1">
+          <Link href="/login">Sign-in</Link>
+        </Button>
+      </div>
+    </div>
   );
 };
 
-export default Header;
+export default Navbar;

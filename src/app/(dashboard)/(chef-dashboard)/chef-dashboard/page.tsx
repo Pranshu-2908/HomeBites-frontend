@@ -44,63 +44,79 @@ function Page() {
   const router = useRouter();
   return (
     <DashboardPage title="DASHBOARD" hideBackButton={true}>
-      <div className="flex flex-col gap-8">
-        <div className="bg-white shadow-md p-4 rounded-xl border-2 border-gray-200">
-          <h2 className="text-lg font-bold mb-2">Orders Trend</h2>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart data={orderTrends}>
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="orders"
-                stroke="#3b82f6"
-                strokeWidth={2}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+      <div className="flex flex-col gap-6">
+        {/* Chart Section */}
+        <div className="bg-white shadow-md p-3 sm:p-4 rounded-xl border-2 border-gray-200">
+          <h2 className="text-base sm:text-lg font-bold mb-2">Orders Trend</h2>
+          <div className="h-64 sm:h-80 md:h-96 lg:h-72">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={orderTrends}>
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize: "0.75rem" }}
+                  axisLine={{ strokeWidth: 1 }}
+                />
+                <YAxis
+                  tick={{ fontSize: "0.75rem" }}
+                  axisLine={{ strokeWidth: 1 }}
+                />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="orders"
+                  stroke="#3b82f6"
+                  strokeWidth={2}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {/* Rating */}
-          <Card className="bg-yellow-100 border-yellow-300 shadow-2xl hover:scale-110 transition-all duration-500">
-            <CardHeader className="flex items-center gap-2">
-              <FaStar className="text-yellow-500 text-2xl" />
-              <CardTitle>Rating</CardTitle>
+          <Card className="bg-yellow-100 border-yellow-300 shadow-lg hover:shadow-xl transition-all duration-300">
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaStar className="text-yellow-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">Rating</CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{chefStats.rating} ⭐</p>
-              <p className="text-sm text-gray-600">
-                ({chefStats.totalRatings} customers rated)
+            <CardContent className="pt-0 pb-4 px-4">
+              <p className="text-lg font-bold">{chefStats.rating} ⭐</p>
+              <p className="text-xs sm:text-sm text-gray-600">
+                ({chefStats.totalRatings} rated)
               </p>
             </CardContent>
           </Card>
 
           {/* Total Meals */}
           <Card
-            className="bg-blue-100 border-blue-300 shadow-2xl hover:scale-110 transition-all duration-500"
+            className="bg-blue-100 border-blue-300 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
             onClick={() => router.push("chef-dashboard/meals")}
           >
-            <CardHeader className="flex items-center gap-2">
-              <FaUtensils className="text-blue-500 text-2xl" />
-              <CardTitle>Total Meals</CardTitle>
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaUtensils className="text-blue-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">
+                Total Meals
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{chefStats.totalMeals}</p>
+            <CardContent className="pt-0 pb-4 px-4">
+              <p className="text-lg font-bold">{chefStats.totalMeals}</p>
             </CardContent>
           </Card>
 
           {/* Total Orders Delivered */}
           <Card
-            className="bg-green-100 border-green-300 shadow-2xl hover:scale-110 transition-all duration-500"
+            className="bg-green-100 border-green-300 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
             onClick={() => router.push("chef-dashboard/order-history")}
           >
-            <CardHeader className="flex items-center gap-2">
-              <FaCheckCircle className="text-green-500 text-2xl" />
-              <CardTitle>Orders Delivered</CardTitle>
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaCheckCircle className="text-green-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">
+                Orders Delivered
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">
+            <CardContent className="pt-0 pb-4 px-4">
+              <p className="text-lg font-bold">
                 {chefStats.totalOrdersDelivered}
               </p>
             </CardContent>
@@ -108,64 +124,79 @@ function Page() {
 
           {/* Live Orders */}
           <Card
-            className="bg-red-100 border-red-300 shadow-2xl hover:scale-110 transition-all duration-500"
+            className="bg-red-100 border-red-300 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
             onClick={() => router.push("chef-dashboard/orders")}
           >
-            <CardHeader className="flex items-center gap-2">
-              <FaFire className="text-red-500 text-2xl" />
-              <CardTitle>Live Orders</CardTitle>
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaFire className="text-red-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">
+                Live Orders
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{chefStats.liveOrders}</p>
+            <CardContent className="pt-0 pb-4 px-4">
+              <p className="text-lg font-bold">{chefStats.liveOrders}</p>
             </CardContent>
           </Card>
 
           {/* Revenue Earned */}
-          <Card className="bg-purple-100 border-purple-300 shadow-2xl hover:scale-110 transition-all duration-500">
-            <CardHeader className="flex items-center gap-2">
-              <FaMoneyBillWave className="text-purple-500 text-2xl" />
-              <CardTitle>Total Revenue</CardTitle>
+          <Card className="bg-purple-100 border-purple-300 shadow-lg hover:shadow-xl transition-all duration-300">
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaMoneyBillWave className="text-purple-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">
+                Total Revenue
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">
+            <CardContent className="pt-0 pb-4 px-4">
+              <p className="text-lg font-bold">
                 ₹{chefStats.revenue.toLocaleString()}
               </p>
             </CardContent>
           </Card>
 
           {/* Most Popular Dish */}
-          <Card className="bg-pink-100 border-pink-300 shadow-2xl hover:scale-110 transition-all duration-500">
-            <CardHeader className="flex items-center gap-2">
-              <FaUtensils className="text-pink-500 text-2xl" />
-              <CardTitle>Most Popular Dish</CardTitle>
+          <Card className="bg-pink-100 border-pink-300 shadow-lg hover:shadow-xl transition-all duration-300">
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaUtensils className="text-pink-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">
+                Popular Dish
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{chefStats.mostPopularDish}</p>
+            <CardContent className="pt-0 pb-4 px-4">
+              <p
+                className="text-base font-bold truncate"
+                title={chefStats.mostPopularDish}
+              >
+                {chefStats.mostPopularDish}
+              </p>
             </CardContent>
           </Card>
 
           {/* Pending Orders */}
           <Card
-            className="bg-orange-100 border-orange-300 shadow-2xl hover:scale-110 transition-all duration-500"
+            className="bg-orange-100 border-orange-300 shadow-lg hover:shadow-xl transition-all duration-300 cursor-pointer"
             onClick={() => router.push("chef-dashboard/orders")}
           >
-            <CardHeader className="flex items-center gap-2">
-              <FaSpinner className="text-orange-500 text-2xl" />
-              <CardTitle>Pending Orders</CardTitle>
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaSpinner className="text-orange-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">
+                Pending Orders
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{chefStats.pendingOrders}</p>
+            <CardContent className="pt-0 pb-4 px-4">
+              <p className="text-lg font-bold">{chefStats.pendingOrders}</p>
             </CardContent>
           </Card>
 
           {/* Average Preparation Time */}
-          <Card className="bg-teal-100 border-teal-300 shadow-2xl hover:scale-110 transition-all duration-500">
-            <CardHeader className="flex items-center gap-2">
-              <FaClock className="text-teal-500 text-2xl" />
-              <CardTitle>Avg. Prep Time</CardTitle>
+          <Card className="bg-teal-100 border-teal-300 shadow-lg hover:shadow-xl transition-all duration-300">
+            <CardHeader className="flex flex-row items-center gap-2 p-4">
+              <FaClock className="text-teal-500 text-xl" />
+              <CardTitle className="text-sm sm:text-base">
+                Avg. Prep Time
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-xl font-bold">{chefStats.avgPrepTime} min</p>
+            <CardContent className="pt-0 pb-4 px-4">
+              <p className="text-lg font-bold">{chefStats.avgPrepTime} min</p>
             </CardContent>
           </Card>
         </div>

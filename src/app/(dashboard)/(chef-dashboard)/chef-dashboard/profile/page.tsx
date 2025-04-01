@@ -4,7 +4,7 @@ import CreateProfile from "./Profile";
 
 function Page() {
   return (
-    <DashboardPage title="Chef's Dashboard">
+    <DashboardPage title="back to dashboard">
       <CreateProfile />
     </DashboardPage>
   );

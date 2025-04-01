@@ -4,7 +4,7 @@ import ViewOrders from "./ViewOrders";
 
 function Page() {
   return (
-    <DashboardPage title="Chef's Dashboard">
+    <DashboardPage title="back to dashboard">
       <ViewOrders />
     </DashboardPage>
   );

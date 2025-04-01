@@ -4,7 +4,7 @@ import ViewMeals from "./ViewMeals";
 
 function Page() {
   return (
-    <DashboardPage title="Chef's Dashboard">
+    <DashboardPage title="back to dashboard">
       <ViewMeals />
     </DashboardPage>
   );

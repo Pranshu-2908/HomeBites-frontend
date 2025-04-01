@@ -4,7 +4,7 @@ import AddMeal from "./AddMeal";
 
 function Page() {
   return (
-    <DashboardPage title="Chef's Dashboard">
+    <DashboardPage title="back to dashboard">
       <AddMeal />
     </DashboardPage>
   );

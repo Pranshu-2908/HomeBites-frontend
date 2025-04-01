@@ -4,7 +4,7 @@ import OrderHistory from "./OrderHistory";
 
 function Page() {
   return (
-    <DashboardPage title="Chef's Dashboard">
+    <DashboardPage title="back to dashboard">
       <OrderHistory />
     </DashboardPage>
   );

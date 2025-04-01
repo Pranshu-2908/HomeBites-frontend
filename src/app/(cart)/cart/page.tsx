@@ -9,13 +9,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Minus, Plus, Trash } from "lucide-react";
 
 const Cart: React.FC = () => {
   return (
     <div className="mt-10 px-4">
       <div className="bg-white shadow-md rounded-lg p-6">
         <Table>
-          <TableCaption>Your Cart</TableCaption>
+          <TableCaption className="text-xl">Your Cart</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">Items</TableHead>
@@ -23,7 +25,7 @@ const Cart: React.FC = () => {
               <TableHead className="text-center">Price</TableHead>
               <TableHead className="text-center">Quantity</TableHead>
               <TableHead className="text-center">Total</TableHead>
-              <TableHead className="text-right">Remove</TableHead>
+              <TableHead className="text-center">Edit</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -33,7 +35,21 @@ const Cart: React.FC = () => {
               <TableCell className="text-center">150</TableCell>
               <TableCell className="text-center">3</TableCell>
               <TableCell className="text-center">450</TableCell>
-              <TableCell className="text-right">x</TableCell>
+              <TableCell className="flex items-center justify-evenly">
+                <Button variant={"outline"} size={"icon"}>
+                  <Plus />
+                </Button>
+                <Button variant={"outline"} size={"icon"}>
+                  <Minus />
+                </Button>
+                <Button
+                  variant={"destructive"}
+                  size={"icon"}
+                  className="text-black"
+                >
+                  <Trash />
+                </Button>
+              </TableCell>
             </TableRow>
           </TableBody>
           <TableFooter>
@@ -44,7 +60,7 @@ const Cart: React.FC = () => {
           </TableFooter>
         </Table>
       </div>
-      <div className="flex flex-col md:flex-row justify-between mt-8 gap-6">
+      <div className="flex flex-col md:flex-row justify-between my-8 gap-6">
         <div className="bg-white shadow-md rounded-lg p-6 w-full md:w-1/2">
           <h2 className="text-lg font-semibold">Cart Totals</h2>
           <div className="flex justify-between text-gray-600 mt-2">

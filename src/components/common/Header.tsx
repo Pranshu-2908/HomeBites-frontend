@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Search, Store } from "lucide-react";
+import { ShoppingCartIcon } from "lucide-react";
 import Link from "next/link";
 import NavLink from "./Navlink";
 
@@ -18,10 +18,8 @@ const Navbar = () => {
       </div>
 
       <div className="flex items-center gap-1">
-        <Search size={28} className="mx-4" />
-
         <Link href="/cart">
-          <Store size={28} className="mx-4" />
+          <ShoppingCartIcon size={28} className="mx-4" />
         </Link>
         {/* {getTotalCartAmount() > 0 && (
             <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></div>

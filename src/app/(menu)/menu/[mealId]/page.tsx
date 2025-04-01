@@ -3,6 +3,14 @@
 import { useParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+
 const meals = [
   {
     id: 1,
@@ -65,6 +73,15 @@ const meals = [
     rating: 4,
   },
 ];
+
+const reviews = [
+  { id: 1, name: "Alice", text: "Absolutely delicious!", rating: 5 },
+  { id: 2, name: "Bob", text: "Loved the flavors!", rating: 4 },
+  { id: 3, name: "Charlie", text: "Would order again!", rating: 5 },
+  { id: 4, name: "Dave", text: "Tasty and fresh.", rating: 4 },
+  { id: 5, name: "Eve", text: "Great portion size!", rating: 5 },
+];
+
 export default function MealDetailsPage() {
   const { mealId } = useParams();
   const meal = meals.find((m) => m.id.toString() === mealId);
@@ -76,7 +93,7 @@ export default function MealDetailsPage() {
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <Card className="overflow-hidden">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
           <img
             src={meal.image}
             alt={meal.name}
@@ -121,6 +138,30 @@ export default function MealDetailsPage() {
           </CardContent>
         </div>
       </Card>
+
+      <h2 className="text-xl font-semibold mt-8">Customer Reviews</h2>
+      <Carousel className="mt-4 w-full">
+        <CarouselContent className="flex">
+          {reviews.map((review) => (
+            <CarouselItem
+              key={review.id}
+              className="basis-full sm:basis-1/2 lg:basis-1/3 p-2"
+            >
+              <Card className="p-4 border rounded-lg ml-2">
+                <h3 className="font-bold">{review.name}</h3>
+                <p className="text-gray-600 mt-1">{review.text}</p>
+                <div className="flex mt-2">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 text-yellow-500" />
+                  ))}
+                </div>
+              </Card>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="hidden lg:inline" />
+        <CarouselNext className="hidden lg:inline" />
+      </Carousel>
     </div>
   );
 }

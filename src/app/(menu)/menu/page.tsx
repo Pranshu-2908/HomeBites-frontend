@@ -9,8 +9,9 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
+import { Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 const meals = [
   {
@@ -80,16 +81,26 @@ export default function MenuPage() {
 
   const [search, setSearch] = useState("");
   const [cuisine, setCuisine] = useState("");
+  const [type, setType] = useState("");
+  const [time, setTime] = useState("");
 
   const filteredMeals = meals.filter(
     (meal) =>
       meal.name.toLowerCase().includes(search.toLowerCase()) &&
       (cuisine === "" ||
-        meal.cuisine.toLowerCase().includes(cuisine.toLowerCase()))
+        meal.cuisine.toLowerCase().includes(cuisine.toLowerCase())) &&
+      (type === "" || meal.type.toLowerCase().startsWith(type.toLowerCase())) &&
+      (time === "" || parseInt(meal.prepTime) <= parseInt(time))
   );
+  const resetTypeFilter = () => {
+    setType("");
+  };
+  const resetTimeFilter = () => {
+    setTime("");
+  };
   return (
     <div className="container mx-auto p-4">
-      <div className="flex flex-col md:flex-row gap-4 mb-6">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6">
         <Input
           placeholder="Search meals..."
           value={search}
@@ -102,17 +113,43 @@ export default function MenuPage() {
           onChange={(e) => setCuisine(e.target.value)}
           className="w-full md:w-1/4"
         />
-        <div className="w-full md:w-1/4">
-          <Select>
+        <div className="flex gap-1 items-center">
+          <Select onValueChange={(value) => setType(value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="type" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="vegetarian">Veg</SelectItem>
+              <SelectItem value="non-vegetarian">Non-Veg</SelectItem>
+              <SelectItem value="vegan">Vegan</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            size={"icon"}
+            onClick={resetTypeFilter}
+            className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            <X className="text-black" />
+          </Button>
+        </div>
+        <div className="flex gap-1 items-center">
+          <Select onValueChange={(value) => setTime(value)}>
             <SelectTrigger>
               <SelectValue placeholder="Delivery Time" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="15 min">15 min</SelectItem>
-              <SelectItem value="30 min">30 min</SelectItem>
-              <SelectItem value="45 min">45 min</SelectItem>
+              <SelectItem value="15">15 min</SelectItem>
+              <SelectItem value="30">30 min</SelectItem>
+              <SelectItem value="45">45 min</SelectItem>
             </SelectContent>
           </Select>
+          <Button
+            size={"icon"}
+            onClick={resetTimeFilter}
+            className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
+          >
+            <X className="text-black" />
+          </Button>
         </div>
       </div>
 
@@ -140,7 +177,7 @@ export default function MenuPage() {
                       : "text-red-600"
                   }
                 >
-                  {meal.type === "vegetarian" ? "🌱 Veg" : "🍗 Non-Veg"}
+                  {meal.type}
                 </span>
               </div>
               <p className="text-xs text-gray-500">

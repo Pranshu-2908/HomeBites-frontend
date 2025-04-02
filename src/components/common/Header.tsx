@@ -5,7 +5,7 @@ import NavLink from "./Navlink";
 
 const Navbar = () => {
   return (
-    <div className="text-white flex flex-wrap justify-between items-center px-10 py-5 bg-gray-800 shadow-md min-w-screen mx-auto">
+    <div className="text-white flex flex-wrap justify-between items-center px-10 py-5 bg-gray-800 shadow-md w-full mx-auto">
       <Link href="/" className="text-xl md:text-3xl font-bold">
         HOMEBITES{" "}
       </Link>
@@ -13,8 +13,8 @@ const Navbar = () => {
       <div className="hidden md:flex md:justify-center gap-5 text-gray-700 text-lg">
         <NavLink href="/">Home</NavLink>
         <NavLink href="/menu">Menu</NavLink>
-        <NavLink href="#footer">About Us</NavLink>
-        <NavLink href="#footer">Contact Us</NavLink>
+        <NavLink href="/about">About Us</NavLink>
+        <NavLink href="/contact">Contact Us</NavLink>
       </div>
 
       <div className="flex items-center gap-1">

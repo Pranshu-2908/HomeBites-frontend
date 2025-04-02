@@ -78,12 +78,16 @@ const Navbar = () => {
                   </div>
                 </div>
                 <div className="flex flex-col text-slate-600">
-                  <div className="flex w-fit items-center cursor-pointer">
-                    <User2 />
-                    <Button variant="link">
-                      <Link href="/profile">View Profile</Link>
-                    </Button>
-                  </div>
+                  {user?.role === "customer" ? (
+                    <div className="flex w-fit items-center cursor-pointer">
+                      <User2 />
+                      <Button variant="link">
+                        <Link href="/profile">View Profile</Link>
+                      </Button>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
                   <div className="flex w-fit items-center cursor-pointer">
                     <LogOut />
                     <Button variant="link" onClick={handleLogout}>

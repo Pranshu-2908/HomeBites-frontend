@@ -9,7 +9,7 @@ function Layout({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(checkAuth()); // Automatically check authentication on app start
+    dispatch(checkAuth());
   }, [dispatch]);
   return (
     <div className="flex flex-col min-h-screen">

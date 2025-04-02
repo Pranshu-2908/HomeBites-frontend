@@ -44,10 +44,12 @@ const authSlice = createSlice({
     login: (state, action: PayloadAction<User>) => {
       state.user = action.payload;
       state.isAuthenticated = true;
+      state.status = "succeeded";
     },
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
+      state.status = "idle";
     },
   },
   extraReducers: (builder) => {

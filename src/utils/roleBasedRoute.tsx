@@ -1,26 +1,42 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { useRouter } from "next/navigation";
-import { ReactNode, useEffect } from "react";
+import { toast } from "sonner";
 
 interface RoleBasedRouteProps {
-  children: ReactNode;
   allowedRoles: string[];
+  children: React.ReactNode;
 }
 
-const RoleBasedRoute = ({ children, allowedRoles }: RoleBasedRouteProps) => {
+const RoleBasedRoute = ({ allowedRoles, children }: RoleBasedRouteProps) => {
+  const { user, isAuthenticated, status } = useSelector(
+    (state: RootState) => state.auth
+  );
   const router = useRouter();
-  const { user } = useSelector((store: RootState) => store.auth);
+
+  const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    console.log({ user });
-    if (!user || !allowedRoles.includes(user.role)) {
-      router.replace("/");
-    }
-  }, [user, router, allowedRoles]);
+    if (status === "loading") return;
 
-  if (!user || !allowedRoles.includes(user.role)) {
-    return null;
+    if (!isAuthenticated || !user || !allowedRoles.includes(user.role)) {
+      console.log({ user });
+      router.replace("/");
+      toast("Access Denied");
+    } else {
+      setIsCheckingAuth(false);
+    }
+  }, [status, isAuthenticated, user, allowedRoles, router]);
+
+  if (status === "loading" || isCheckingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">Checking authentication...</p>
+      </div>
+    );
   }
 
   return <>{children}</>;

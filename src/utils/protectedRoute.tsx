@@ -1,22 +1,34 @@
 "use client";
-import { useSelector } from "react-redux";
+
 import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import { useAppSelector } from "@/redux/hooks";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const isAuthenticated = useSelector(
-    (state: RootState) => state.auth.isAuthenticated
+  const { isAuthenticated, status } = useAppSelector(
+    (state: RootState) => state.auth
   );
-
   useEffect(() => {
-    if (!isAuthenticated) {
+    if ((status === "succeeded" || status === "failed") && !isAuthenticated) {
       router.push("/login");
     }
-  }, [isAuthenticated, router]);
+  }, [status, isAuthenticated, router]);
 
-  return isAuthenticated ? <>{children}</> : null;
+  if (status !== "succeeded") {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <p className="text-lg font-semibold">Checking authentication...</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

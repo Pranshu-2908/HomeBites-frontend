@@ -37,8 +37,8 @@ const Signup = () => {
         password,
         role,
       });
-      dispatch(login(response.data));
-      toast("Signed-in successfully!");
+      dispatch(login(response.data.user));
+      toast(response.data.message);
 
       // Redirect based on user role
       if (response.data.user.role === "chef") {

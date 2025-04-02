@@ -1,20 +1,79 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { login } from "@/redux/authSlice";
+import axiosInstance from "@/utils/axiosInstance";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
-const page = () => {
+const Login = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const dispatch = useDispatch();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+
+    try {
+      const response = await axiosInstance.post("/login", {
+        email,
+        password,
+      });
+      if (response.data) {
+        dispatch(login(response.data.user));
+        toast(response.data.message);
+      }
+      // Redirect based on user role
+      if (response.data.user.role === "chef") {
+        console.log("chef role");
+        router.push("/chef-dashboard");
+      } else {
+        console.log("customer role");
+        router.push("/");
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (err: any) {
+      toast(err.response?.data?.message);
+      console.log(err.response?.data?.message);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center mx-auto bg-linear-to-b from-purple-50 to-white">
-      <form className="border border-gray-300 rounded-2xl p-4 my-10">
+      <form
+        onSubmit={handleSubmit}
+        className="border border-gray-300 rounded-2xl p-4 my-10"
+      >
         <h1 className="text-2xl md:text-3xl font-bold mb-5">Login</h1>
 
+        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+
         <div className="my-5">
-          <Input type="email" name="email" placeholder="E-mail" />
+          <Input
+            type="email"
+            name="email"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
         </div>
 
         <div className="my-5">
-          <Input type="password" placeholder="Password" name="password" />
+          <Input
+            type="password"
+            placeholder="Password"
+            name="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
         </div>
 
         <Button
@@ -35,4 +94,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Login;

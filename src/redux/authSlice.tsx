@@ -1,6 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axiosInstance from "@/utils/axiosInstance";
-
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 interface User {
   id: string;
   name: string;
@@ -14,21 +12,6 @@ interface AuthState {
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
 }
-
-export const checkAuth = createAsyncThunk<User, void, { rejectValue: string }>(
-  "auth/checkAuth",
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axiosInstance.get("/me");
-      return response.data;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
-      return rejectWithValue(
-        error.response?.data?.message || "Authentication failed"
-      );
-    }
-  }
-);
 
 const initialState: AuthState = {
   user: null,
@@ -51,26 +34,6 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.status = "idle";
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      .addCase(checkAuth.pending, (state) => {
-        state.status = "loading";
-      })
-      .addCase(checkAuth.fulfilled, (state, action: PayloadAction<User>) => {
-        state.status = "succeeded";
-        state.user = action.payload;
-        state.isAuthenticated = true;
-      })
-      .addCase(
-        checkAuth.rejected,
-        (state, action: PayloadAction<string | undefined>) => {
-          state.status = "failed";
-          state.error = action.payload || "Unknown error";
-          state.user = null;
-          state.isAuthenticated = false;
-        }
-      );
   },
 });
 

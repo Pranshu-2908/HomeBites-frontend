@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import RoleBasedRoute from "@/utils/roleBasedRoute";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { checkAuth, logout } from "@/redux/authSlice";
+import { logout } from "@/redux/authSlice";
 import {
   Popover,
   PopoverContent,
@@ -34,9 +34,6 @@ export default function ChefDashboardLayout({
 }) {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  useEffect(() => {
-    dispatch(checkAuth());
-  }, [dispatch]);
   const pathName = usePathname();
   const profileName = "Chef John Doe";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

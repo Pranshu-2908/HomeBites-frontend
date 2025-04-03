@@ -11,7 +11,7 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
     (state: RootState) => state.auth
   );
   useEffect(() => {
-    if ((status === "succeeded" || status === "failed") && !isAuthenticated) {
+    if (status === "succeeded" && !isAuthenticated) {
       router.push("/login");
     }
   }, [status, isAuthenticated, router]);

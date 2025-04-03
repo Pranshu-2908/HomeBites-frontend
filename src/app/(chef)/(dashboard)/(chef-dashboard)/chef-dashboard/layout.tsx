@@ -14,7 +14,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import axiosInstance from "@/utils/axiosInstance";
+import { axiosInstance } from "@/utils/axiosInstance";
 import { toast } from "sonner";
 import ProtectedRoute from "@/utils/protectedRoute";
 
@@ -42,7 +42,9 @@ export default function ChefDashboardLayout({
     setIsSidebarOpen(!isSidebarOpen);
   };
   const handleLogout = async () => {
-    const resp = await axiosInstance.get("/logout", { withCredentials: true });
+    const resp = await axiosInstance.get("/user/logout", {
+      withCredentials: true,
+    });
     dispatch(logout());
     router.push("/");
     toast(resp.data.message);

@@ -62,7 +62,7 @@ const Cart: React.FC = () => {
             </TableFooter>
           </Table>
         </div>
-        <div className="flex flex-col md:flex-row justify-between my-8 gap-6">
+        <div className="flex flex-col-reverse md:flex-row justify-between my-8 gap-6">
           <div className="bg-white shadow-md rounded-lg p-6 w-full md:w-1/2">
             <h2 className="text-lg font-semibold">Cart Totals</h2>
             <div className="flex justify-between text-gray-600 mt-2">

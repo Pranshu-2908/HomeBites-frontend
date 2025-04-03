@@ -20,8 +20,6 @@ const RoleBasedRoute = ({ allowedRoles, children }: RoleBasedRouteProps) => {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    if (status === "loading") return;
-
     if (!isAuthenticated || !user || !allowedRoles.includes(user.role)) {
       console.log({ user });
       router.replace("/");
@@ -31,7 +29,7 @@ const RoleBasedRoute = ({ allowedRoles, children }: RoleBasedRouteProps) => {
     }
   }, [status, isAuthenticated, user, allowedRoles, router]);
 
-  if (status === "loading" || isCheckingAuth) {
+  if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-lg font-semibold">Checking authentication...</p>

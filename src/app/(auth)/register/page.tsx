@@ -7,7 +7,7 @@ import Link from "next/link";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "@/redux/authSlice";
-import axiosInstance from "@/utils/axiosInstance";
+import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -31,7 +31,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await axiosInstance.post("/register", {
+      const response = await axiosInstance.post("/user/register", {
         name,
         email,
         password,

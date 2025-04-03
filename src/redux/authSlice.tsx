@@ -9,7 +9,7 @@ interface User {
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
-  status: "idle" | "loading" | "succeeded" | "failed";
+  status: "idle" | "succeeded";
   error: string | null;
 }
 

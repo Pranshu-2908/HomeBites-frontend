@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { logout } from "@/redux/authSlice";
 import { useRouter } from "next/navigation";
-import axiosInstance from "@/utils/axiosInstance";
+import { axiosInstance } from "@/utils/axiosInstance";
 import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { Avatar, AvatarImage } from "../ui/avatar";
@@ -22,7 +22,9 @@ const Navbar = () => {
   const user = useAppSelector((store) => store.auth.user);
 
   const handleLogout = async () => {
-    const resp = await axiosInstance.get("/logout", { withCredentials: true });
+    const resp = await axiosInstance.get("/user/logout", {
+      withCredentials: true,
+    });
     dispatch(logout());
     router.push("/");
     toast(resp.data.message);

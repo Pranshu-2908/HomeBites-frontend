@@ -9,42 +9,19 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { useState } from "react";
-
-const meals = [
-  {
-    id: "1",
-    name: "Paneer Butter Masala",
-    description: "Creamy tomato-based paneer dish",
-    price: 250,
-    category: "Vegetarian",
-    cuisine: "Indian",
-    quantity: 10,
-    prepTime: 30,
-  },
-  {
-    id: "2",
-    name: "Chicken Biryani",
-    description: "Spicy rice dish with tender chicken",
-    price: 350,
-    category: "Non-Vegetarian",
-    cuisine: "Indian",
-    quantity: 5,
-    prepTime: 45,
-  },
-  {
-    id: "3",
-    name: "Vegan Buddha Bowl",
-    description: "Healthy mixed grains with fresh veggies",
-    price: 200,
-    category: "Vegan",
-    cuisine: "Continental",
-    quantity: 8,
-    prepTime: 25,
-  },
-];
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+import { fetchChefMeals } from "@/redux/mealSlice";
 
 export default function ViewMeals() {
+  const { chefMeals } = useAppSelector((store: RootState) => store.meal);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchChefMeals());
+  }, [dispatch]);
+
   const [expandedMeal, setExpandedMeal] = useState<string | null>(null);
 
   const toggleMealDetails = (id: string) => {
@@ -75,8 +52,8 @@ export default function ViewMeals() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {meals.map((meal) => (
-                  <TableRow key={meal.id}>
+                {chefMeals.map((meal) => (
+                  <TableRow key={meal._id}>
                     <TableCell>{meal.name}</TableCell>
                     <TableCell className="text-center">
                       {meal.category}
@@ -89,7 +66,7 @@ export default function ViewMeals() {
                       {meal.quantity}
                     </TableCell>
                     <TableCell className="text-center">
-                      {meal.prepTime} min
+                      {meal.preparationTime} min
                     </TableCell>
                     <TableCell className="text-center">
                       <Button variant="outline" size="sm" className="mr-2">
@@ -107,17 +84,17 @@ export default function ViewMeals() {
 
           {/* Mobile view and tablet view */}
           <div className="xl:hidden space-y-4">
-            {meals.map((meal) => (
-              <Card key={meal.id} className="overflow-hidden">
+            {chefMeals.map((meal) => (
+              <Card key={meal._id} className="overflow-hidden">
                 <div
                   className="p-4 bg-gray-50 flex justify-between items-center cursor-pointer"
-                  onClick={() => toggleMealDetails(meal.id)}
+                  onClick={() => toggleMealDetails(meal._id)}
                 >
                   <h3 className="font-medium">{meal.name}</h3>
                   <span>₹{meal.price}</span>
                 </div>
 
-                {expandedMeal === meal.id && (
+                {expandedMeal === meal._id && (
                   <div className="p-4 space-y-2 text-sm">
                     <div className="grid grid-cols-2 gap-2">
                       <div>
@@ -134,7 +111,7 @@ export default function ViewMeals() {
                       </div>
                       <div>
                         <p className="font-semibold">Prep Time:</p>
-                        <p>{meal.prepTime} min</p>
+                        <p>{meal.preparationTime} min</p>
                       </div>
                     </div>
 

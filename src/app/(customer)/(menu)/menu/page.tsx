@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { fetchMeals } from "@/redux/mealSlice";
+import Image from "next/image";
 
 export default function MenuPage() {
   const { meals, loading, error } = useAppSelector(
@@ -114,9 +115,11 @@ export default function MenuPage() {
             className="overflow-hidden p-0"
             onClick={() => router.push(`/menu/${meal._id}`)}
           >
-            <img
-              src={meal.images[0] || "biryani.jpg"}
+            <Image
+              src={meal.images[0] || "/biryani.jpg"}
               alt={meal.name}
+              width={400}
+              height={160}
               className="w-full h-40 object-cover"
             />
             <CardContent className="p-4">

@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { useEffect } from "react";
 import { fetchMealById } from "@/redux/mealSlice";
+import Image from "next/image";
 
 const reviews = [
   { id: 1, name: "Alice", text: "Absolutely delicious!", rating: 5 },
@@ -43,9 +44,11 @@ export default function MealDetailsPage() {
     <div className="container mx-auto p-4 max-w-4xl">
       <Card className="overflow-hidden">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
-          <img
-            src={selectedMeal.images?.[0] || "biryani.jpg"}
+          <Image
+            src={selectedMeal.images?.[0] || "/biryani.jpg"}
             alt={selectedMeal.name}
+            width={500}
+            height={256}
             className="w-full h-64 object-cover rounded-lg"
           />
           <CardContent className="flex flex-col justify-between">

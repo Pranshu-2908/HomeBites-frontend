@@ -1,5 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { axiosInstance } from "@/utils/axiosInstance"; // Use the centralized axios instance
+import {
+  axiosInstance,
+  axiosInstanceWithFormData,
+} from "@/utils/axiosInstance"; // Use the centralized axios instance
 import { toast } from "sonner";
 import { ParamValue } from "next/dist/server/request/params";
 
@@ -71,6 +74,29 @@ export const fetchMealById = createAsyncThunk(
   }
 );
 
+export const createMeal = createAsyncThunk(
+  "meal/createMeal",
+  async (formData: FormData, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstanceWithFormData.post(
+        "/meal/",
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
+      toast.success(response.data.message);
+      return response.data.meal;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Something went wrong");
+      return rejectWithValue(
+        error.response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+);
+
 const mealSlice = createSlice({
   name: "meals",
   initialState,
@@ -98,6 +124,18 @@ const mealSlice = createSlice({
       .addCase(fetchMealById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch the meal";
+      })
+      .addCase(createMeal.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createMeal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.meals.push(action.payload);
+      })
+      .addCase(createMeal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

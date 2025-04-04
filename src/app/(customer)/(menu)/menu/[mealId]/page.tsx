@@ -46,7 +46,7 @@ export default function MealDetailsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
           <Image
             src={selectedMeal.images?.[0] || "/biryani.jpg"}
-            alt={selectedMeal?.name}
+            alt={selectedMeal?.name || "Meal Image"}
             width={500}
             height={256}
             className="w-full h-64 object-cover rounded-lg"

@@ -14,9 +14,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+import { Loader2 } from "lucide-react";
+import { createMeal } from "@/redux/mealSlice";
 
 export default function AddMeal() {
-  const [formData, setFormData] = useState({
+  const dispatch = useAppDispatch();
+  const { loading } = useAppSelector((store: RootState) => store.meal);
+  const [images, setImages] = useState<File | null>(null);
+  const [input, setInput] = useState({
     name: "",
     description: "",
     price: "",
@@ -24,29 +31,39 @@ export default function AddMeal() {
     cuisine: "",
     quantity: "",
     preparationTime: "",
-    image: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData((prevState) => ({
+    setInput((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
     }));
   };
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // Handle form submission here
-    console.log("Meal added:", formData);
-  };
-
   const handleSelectChange = (value: string) => {
-    setFormData((prevState) => ({
+    setInput((prevState) => ({
       ...prevState,
       category: value,
     }));
   };
-
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Handle form submission here
+    const formData = new FormData();
+    formData.append("name", input.name || "");
+    formData.append("description", input.description);
+    formData.append("price", input.price);
+    formData.append("category", input.category);
+    formData.append("cuisine", input.cuisine);
+    formData.append("quantity", input.quantity);
+    formData.append("preparationTime", input.preparationTime);
+    if (images) {
+      formData.append("images", images);
+    }
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+    dispatch(createMeal(formData));
+  };
   return (
     <div className="w-full max-w-4xl mx-auto p-2 md:p-6">
       <Card className="shadow-sm">
@@ -61,7 +78,7 @@ export default function AddMeal() {
                   id="name"
                   type="text"
                   name="name"
-                  value={formData.name}
+                  value={input.name}
                   onChange={handleChange}
                   className="w-full"
                   required
@@ -74,7 +91,7 @@ export default function AddMeal() {
                   id="description"
                   type="text"
                   name="description"
-                  value={formData.description}
+                  value={input.description}
                   onChange={handleChange}
                   className="w-full"
                   required
@@ -87,7 +104,7 @@ export default function AddMeal() {
                   id="price"
                   type="number"
                   name="price"
-                  value={formData.price}
+                  value={input.price}
                   onChange={handleChange}
                   className="w-full"
                   required
@@ -98,7 +115,7 @@ export default function AddMeal() {
                 <Label htmlFor="category">Category</Label>
                 <Select
                   onValueChange={handleSelectChange}
-                  value={formData.category}
+                  value={input.category}
                 >
                   <SelectTrigger className="w-full">
                     <SelectValue placeholder="Select a category" />
@@ -120,7 +137,7 @@ export default function AddMeal() {
                   id="cuisine"
                   type="text"
                   name="cuisine"
-                  value={formData.cuisine}
+                  value={input.cuisine}
                   onChange={handleChange}
                   className="w-full"
                   required
@@ -133,7 +150,7 @@ export default function AddMeal() {
                   id="quantity"
                   type="number"
                   name="quantity"
-                  value={formData.quantity}
+                  value={input.quantity}
                   onChange={handleChange}
                   className="w-full"
                   required
@@ -148,7 +165,7 @@ export default function AddMeal() {
                   id="preparationTime"
                   type="number"
                   name="preparationTime"
-                  value={formData.preparationTime}
+                  value={input.preparationTime}
                   onChange={handleChange}
                   className="w-full"
                   required
@@ -158,10 +175,10 @@ export default function AddMeal() {
               <div className="space-y-2">
                 <Label htmlFor="image">Image Upload</Label>
                 <Input
-                  id="image"
+                  id="images"
                   type="file"
-                  name="image"
-                  onChange={handleChange}
+                  name="images"
+                  onChange={(e) => setImages(e.target.files?.[0] || null)}
                   className="w-full"
                   required
                 />
@@ -169,12 +186,19 @@ export default function AddMeal() {
             </div>
 
             <div className="pt-4">
-              <Button
-                type="submit"
-                className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white"
-              >
-                Add Meal
-              </Button>
+              {loading ? (
+                <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
+                  <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                  Adding Meal...
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  className="w-full sm:w-auto bg-blue-500 hover:bg-blue-600 text-white"
+                >
+                  Add Meal
+                </Button>
+              )}
             </div>
           </form>
         </CardContent>

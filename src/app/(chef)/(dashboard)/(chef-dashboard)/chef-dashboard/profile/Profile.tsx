@@ -45,9 +45,6 @@ export default function CreateProfile() {
     if (profilePicture) {
       formData.append("profilePicture", profilePicture);
     }
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
 
     dispatch(updateProfile(formData));
   };

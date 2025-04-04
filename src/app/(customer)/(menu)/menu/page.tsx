@@ -47,7 +47,11 @@ export default function MenuPage() {
   const resetTimeFilter = () => {
     setTime("");
   };
-
+  if (loading) return <p>Loading meal details...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!meals) {
+    return <p className="text-center text-red-500">Meal not found.</p>;
+  }
   return (
     <div className="container mx-auto p-4">
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6">
@@ -104,8 +108,6 @@ export default function MenuPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {loading && <p>Loading meals...</p>}
-        {error && <p className="text-red-500">{error}</p>}
         {filteredMeals.map((meal) => (
           <Card
             key={meal._id}
@@ -113,7 +115,7 @@ export default function MenuPage() {
             onClick={() => router.push(`/menu/${meal._id}`)}
           >
             <img
-              src="biryani.jpg"
+              src={meal.images[0] || "biryani.jpg"}
               alt={meal.name}
               className="w-full h-40 object-cover"
             />

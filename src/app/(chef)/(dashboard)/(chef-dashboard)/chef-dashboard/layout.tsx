@@ -35,7 +35,6 @@ export default function ChefDashboardLayout({
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathName = usePathname();
-  const profileName = "Chef John Doe";
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const user = useAppSelector((store) => store.auth.user);
   const toggleSidebar = () => {
@@ -54,7 +53,7 @@ export default function ChefDashboardLayout({
       <RoleBasedRoute allowedRoles={["chef"]}>
         <div className="flex flex-col md:flex-row min-h-screen">
           {/* Mobile Menu Button */}
-          <div className="md:hidden p-4 bg-gray-800 text-white flex justify-between items-center">
+          <div className="md:hidden p-4 bg-gray-800 text-white flex justify-between items-center  sticky top-0 z-50">
             <div className="flex justify-start items-center gap-2">
               {" "}
               <div>
@@ -62,7 +61,10 @@ export default function ChefDashboardLayout({
                   <PopoverTrigger asChild>
                     <Avatar className="cursor-pointer size-12 bg-white">
                       <AvatarImage
-                        src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                        src={
+                          user?.profilePicture ||
+                          "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                        }
                         alt="@shadcn"
                       />
                     </Avatar>
@@ -72,7 +74,10 @@ export default function ChefDashboardLayout({
                       <div className="flex gap-4">
                         <Avatar className="border-1 border-gray-300">
                           <AvatarImage
-                            src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                            src={
+                              user?.profilePicture ||
+                              "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                            }
                             alt="@shadcn"
                           />
                         </Avatar>
@@ -98,7 +103,7 @@ export default function ChefDashboardLayout({
                   </PopoverContent>
                 </Popover>
               </div>
-              <div className="text-xl font-semibold">{profileName}</div>
+              <div className="text-xl font-semibold">{user?.name}</div>
             </div>
             <Button
               variant="ghost"
@@ -119,20 +124,24 @@ export default function ChefDashboardLayout({
               "bg-gray-800 text-white transition-all duration-300 ease-in-out",
               isSidebarOpen
                 ? "block w-full md:w-64 min-h-0 md:min-h-screen"
-                : "hidden md:block md:w-64 md:min-h-screen"
+                : "hidden md:block md:w-64 md:min-h-screen",
+              "sticky top-0 h-screen"
             )}
           >
             {/* Desktop profile*/}
-            <div className="flex items-center p-4 gap-3">
+            <div className="flex items-center p-4 gap-3 ">
               <div className="hidden md:block text-xl font-semibold">
-                {profileName}
+                {user?.name}
               </div>
               <div className="hidden md:block">
                 <Popover>
                   <PopoverTrigger asChild>
                     <Avatar className="cursor-pointer size-12 bg-white">
                       <AvatarImage
-                        src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                        src={
+                          user?.profilePicture ||
+                          "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                        }
                         alt="@shadcn"
                       />
                     </Avatar>
@@ -142,7 +151,10 @@ export default function ChefDashboardLayout({
                       <div className="flex gap-4">
                         <Avatar className="border-1 border-gray-300">
                           <AvatarImage
-                            src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                            src={
+                              user?.profilePicture ||
+                              "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                            }
                             alt="@shadcn"
                           />
                         </Avatar>
@@ -190,7 +202,7 @@ export default function ChefDashboardLayout({
           </div>
 
           {/* Main Content */}
-          <div className="flex-1 overflow-hidden">{children}</div>
+          <div className="flex-1 overflow-auto">{children}</div>
         </div>
       </RoleBasedRoute>
     </ProtectedRoute>

@@ -20,10 +20,10 @@ function DashboardPage({
   const router = useRouter();
 
   return (
-    <section className="flex-1 h-full w-full flex flex-col">
-      <div className="p-4 sm:p-6 lg:p-8 w-full flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200">
-        <div className="flex w-full flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex items-center gap-4">
+    <section className="flex-1 h-screen w-full flex flex-col overflow-hidden">
+      <div className="p-4 sm:p-6 lg:p-8 w-full flex flex-col sm:flex-row justify-between items-start sm:items-center border-b border-gray-200 sticky top-0 bg-gray-100 z-30 shadow-md">
+        <div className="flex w-full flex-col sm:flex-row sm:items-center gap-4 ">
+          <div className="flex items-center gap-4 ">
             {hideBackButton ? null : (
               <Button
                 onClick={() => router.push("/chef-dashboard")}
@@ -41,7 +41,7 @@ function DashboardPage({
           ) : null}
         </div>
       </div>
-      <div className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col overflow-y-auto">
+      <div className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col overflow-auto">
         {children}
       </div>
     </section>

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -12,164 +12,47 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-
-const meals = [
-  {
-    id: 1,
-    name: "Paneer Butter Masala",
-    description: "Rich and creamy paneer dish with Indian spices.",
-    price: 250,
-    image: "/paneer.jpg",
-    type: "vegetarian",
-    quantity: 10,
-    prepTime: "30 min",
-    cuisine: "Indian",
-    rating: 4,
-  },
-  {
-    id: 2,
-    name: "Chicken Biryani",
-    description: "Aromatic basmati rice cooked with chicken and spices.",
-    price: 350,
-    image: "/biryani.jpg",
-    type: "non-vegetarian",
-    quantity: 8,
-    prepTime: "45 min",
-    cuisine: "Indian",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Margherita Pizza",
-    description: "Classic pizza with fresh tomatoes, basil, and mozzarella.",
-    price: 300,
-    image: "/pizza.jpg",
-    type: "vegetarian",
-    quantity: 12,
-    prepTime: "25 min",
-    cuisine: "Italian",
-    rating: 4,
-  },
-  {
-    id: 4,
-    name: "Sushi Platter",
-    description: "Assorted sushi rolls with soy sauce and wasabi.",
-    price: 500,
-    image: "/sushi.jpeg",
-    type: "non-vegetarian",
-    quantity: 6,
-    prepTime: "40 min",
-    cuisine: "Japanese",
-    rating: 5,
-  },
-  {
-    id: 5,
-    name: "Vegan Salad Bowl",
-    description: "Healthy bowl with fresh veggies, nuts, and dressing.",
-    price: 200,
-    image: "/salad.jpg",
-    type: "vegan",
-    quantity: 15,
-    prepTime: "15 min",
-    cuisine: "Continental",
-    rating: 4,
-  },
-  {
-    id: 6,
-    name: "Paneer Butter Masala",
-    description: "Rich and creamy paneer dish with Indian spices.",
-    price: 250,
-    image: "/paneer.jpg",
-    type: "vegetarian",
-    quantity: 10,
-    prepTime: "30 min",
-    cuisine: "Indian",
-    rating: 4,
-  },
-  {
-    id: 7,
-    name: "Paneer Butter Masala",
-    description: "Rich and creamy paneer dish with Indian spices.",
-    price: 250,
-    image: "/paneer.jpg",
-    type: "vegetarian",
-    quantity: 10,
-    prepTime: "30 min",
-    cuisine: "Indian",
-    rating: 4,
-  },
-  {
-    id: 8,
-    name: "Paneer Butter Masala",
-    description: "Rich and creamy paneer dish with Indian spices.",
-    price: 250,
-    image: "/paneer.jpg",
-    type: "vegetarian",
-    quantity: 10,
-    prepTime: "30 min",
-    cuisine: "Indian",
-    rating: 4,
-  },
-  {
-    id: 9,
-    name: "Paneer Butter Masala",
-    description: "Rich and creamy paneer dish with Indian spices.",
-    price: 250,
-    image: "/paneer.jpg",
-    type: "vegetarian",
-    quantity: 10,
-    prepTime: "30 min",
-    cuisine: "Indian",
-    rating: 4,
-  },
-  {
-    id: 10,
-    name: "Paneer Butter Masala",
-    description: "Rich and creamy paneer dish with Indian spices.",
-    price: 250,
-    image: "/paneer.jpg",
-    type: "vegetarian",
-    quantity: 10,
-    prepTime: "30 min",
-    cuisine: "Indian",
-    rating: 4,
-  },
-  {
-    id: 11,
-    name: "Paneer Butter Masala",
-    description: "Rich and creamy paneer dish with Indian spices.",
-    price: 250,
-    image: "/paneer.jpg",
-    type: "vegetarian",
-    quantity: 10,
-    prepTime: "30 min",
-    cuisine: "Indian",
-    rating: 4,
-  },
-];
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+import { fetchMeals } from "@/redux/mealSlice";
+import Image from "next/image";
 
 export default function MenuPage() {
+  const { meals, loading, error } = useAppSelector(
+    (store: RootState) => store.meal
+  );
   const router = useRouter();
-
+  const dispatch = useAppDispatch();
   const [search, setSearch] = useState("");
   const [cuisine, setCuisine] = useState("");
-  const [type, setType] = useState("");
+  const [category, setCategory] = useState("");
   const [time, setTime] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchMeals());
+    console.log("refetched");
+  }, [dispatch]);
 
   const filteredMeals = meals.filter(
     (meal) =>
       meal.name.toLowerCase().includes(search.toLowerCase()) &&
       (cuisine === "" ||
         meal.cuisine.toLowerCase().includes(cuisine.toLowerCase())) &&
-      (type === "" || meal.type.toLowerCase().startsWith(type.toLowerCase())) &&
-      (time === "" || parseInt(meal.prepTime) <= parseInt(time))
+      (category === "" ||
+        meal.category.toLowerCase().startsWith(category.toLowerCase())) &&
+      (time === "" || meal.preparationTime <= parseInt(time))
   );
   const resetTypeFilter = () => {
-    setType("");
+    setCategory("");
   };
   const resetTimeFilter = () => {
     setTime("");
   };
+  if (loading) return <p>Loading meal details...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!meals) {
+    return <p className="text-center text-red-500">Meal not found.</p>;
+  }
   return (
     <div className="container mx-auto p-4">
       <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6">
@@ -186,13 +69,13 @@ export default function MenuPage() {
           className="w-full md:w-1/4"
         />
         <div className="flex gap-1 items-center">
-          <Select onValueChange={(value) => setType(value)}>
+          <Select onValueChange={(value) => setCategory(value)}>
             <SelectTrigger>
               <SelectValue placeholder="type" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="vegetarian">Veg</SelectItem>
-              <SelectItem value="non-vegetarian">Non-Veg</SelectItem>
+              <SelectItem value="non-veg">Non-Veg</SelectItem>
               <SelectItem value="vegan">Vegan</SelectItem>
             </SelectContent>
           </Select>
@@ -228,13 +111,15 @@ export default function MenuPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredMeals.map((meal) => (
           <Card
-            key={meal.id}
+            key={meal._id}
             className="overflow-hidden p-0"
-            onClick={() => router.push(`/menu/${meal.id}`)}
+            onClick={() => router.push(`/menu/${meal._id}`)}
           >
-            <img
-              src={meal.image}
+            <Image
+              src={meal.images[0] || "/biryani.jpg"}
               alt={meal.name}
+              width={400}
+              height={160}
               className="w-full h-40 object-cover"
             />
             <CardContent className="p-4">
@@ -244,16 +129,16 @@ export default function MenuPage() {
                 <span className="font-semibold">₹{meal.price}</span>
                 <span
                   className={
-                    meal.type === "vegetarian"
+                    meal.category === "vegetarian"
                       ? "text-green-600"
                       : "text-red-600"
                   }
                 >
-                  {meal.type}
+                  {meal.category}
                 </span>
               </div>
               <p className="text-xs text-gray-500">
-                {meal.quantity} available • {meal.prepTime} prep time
+                {meal.quantity} available • {meal.preparationTime} prep time
               </p>
               <div className="flex mt-2">
                 {[...Array(meal.rating)].map((_, i) => (

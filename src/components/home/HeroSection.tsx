@@ -16,10 +16,10 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="font-bold text-4xl text-center max-w-sm sm:text-3xl sm:max-w-md lg:max-w-lg xl:max-w-xl lg:text-5xl mx-auto">
+        <div className="font-bold text-4xl text-center max-w-sm sm:text-3xl sm:max-w-md lg:max-w-lg xl:max-w-xl lg:text-4xl xl:text-5xl mx-auto">
           Authenticate Homemade Food Delivery Platform
         </div>
-        <div className="text-sm sm:text-md lg:text-lg text-center px-4 lg:px-8sm:max-w-md lg:max-w-lg xl:max-w-xl  text-slate-800">
+        <div className="text-sm sm:text-md lg:text-lg text-center px-4 lg:px-8 sm:max-w-md lg:max-w-lg xl:max-w-xl  text-slate-800">
           <p>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse
             consectetur quibusdam illo doloribus. Tempore culpa voluptas iste

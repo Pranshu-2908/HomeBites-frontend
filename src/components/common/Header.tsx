@@ -22,9 +22,7 @@ const Navbar = () => {
   const user = useAppSelector((store) => store.auth.user);
 
   const handleLogout = async () => {
-    const resp = await axiosInstance.get("/user/logout", {
-      withCredentials: true,
-    });
+    const resp = await axiosInstance.get("/user/logout");
     dispatch(logout());
     router.push("/");
     toast(resp.data.message);

@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
-import { updateProfile } from "@/redux/authSlice";
+import { updateProfile } from "@/redux/slices/authSlice";
 import { Loader2 } from "lucide-react";
 
 export default function CreateProfile() {

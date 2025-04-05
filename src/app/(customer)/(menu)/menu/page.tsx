@@ -14,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
-import { fetchMeals } from "@/redux/mealSlice";
+import { fetchMeals } from "@/redux/slices/mealSlice";
 import Image from "next/image";
 
 export default function MenuPage() {

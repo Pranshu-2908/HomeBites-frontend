@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "./store";
+import { RootState } from "../store";
 import { axiosInstanceWithFormData } from "@/utils/axiosInstance";
 import { toast } from "sonner";
 interface User {

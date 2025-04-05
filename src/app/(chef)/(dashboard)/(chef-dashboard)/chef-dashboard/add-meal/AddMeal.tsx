@@ -17,7 +17,7 @@ import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { Loader2 } from "lucide-react";
-import { createMeal } from "@/redux/mealSlice";
+import { createMeal } from "@/redux/slices/mealSlice";
 
 export default function AddMeal() {
   const dispatch = useAppDispatch();

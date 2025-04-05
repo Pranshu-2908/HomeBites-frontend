@@ -12,7 +12,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
-import { fetchChefMeals } from "@/redux/mealSlice";
+import { fetchChefMeals } from "@/redux/slices/mealSlice";
 
 export default function ViewMeals() {
   const { chefMeals } = useAppSelector((store: RootState) => store.meal);

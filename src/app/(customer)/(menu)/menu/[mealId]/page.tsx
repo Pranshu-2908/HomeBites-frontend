@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { useEffect } from "react";
-import { fetchMealById } from "@/redux/mealSlice";
+import { fetchMealById } from "@/redux/slices/mealSlice";
 import Image from "next/image";
 
 const reviews = [

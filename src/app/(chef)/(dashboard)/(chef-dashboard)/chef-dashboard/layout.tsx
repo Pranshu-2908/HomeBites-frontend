@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import RoleBasedRoute from "@/utils/roleBasedRoute";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { logout } from "@/redux/authSlice";
+import { logout } from "@/redux/slices/authSlice";
 import {
   Popover,
   PopoverContent,

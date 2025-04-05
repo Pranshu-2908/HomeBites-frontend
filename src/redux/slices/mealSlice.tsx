@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   axiosInstance,
   axiosInstanceWithFormData,
-} from "@/utils/axiosInstance"; // Use the centralized axios instance
+} from "@/utils/axiosInstance";
 import { toast } from "sonner";
 import { ParamValue } from "next/dist/server/request/params";
 
@@ -56,7 +57,6 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async () => {
   try {
     const response = await axiosInstance.get("/meal/");
     return response.data.meals;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     toast(error.response?.data?.message || "failed to fetch meals");
     throw error;
@@ -68,7 +68,6 @@ export const fetchMealById = createAsyncThunk(
     try {
       const response = await axiosInstance.get(`/meal/${mealId}`);
       return response.data.meal;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast(error.response?.data?.message || "Failed to fetch meal");
       throw error;
@@ -81,14 +80,28 @@ export const fetchChefMeals = createAsyncThunk(
     try {
       const response = await axiosInstance.get("/meal/chef");
       return response.data.meals;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast(error.response?.data?.message || "Failed to fetch meals");
       throw error;
     }
   }
 );
-
+export const updateMeal = createAsyncThunk<
+  Meal,
+  { id: string; formData: FormData },
+  { rejectValue: string }
+>("meal/updateMeal", async ({ id, formData }, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstanceWithFormData.put(
+      `/meal/${id}`,
+      formData
+    );
+    toast.success(response.data.message);
+    return response.data.meal;
+  } catch (err: any) {
+    return rejectWithValue(err.response?.data?.message || "Update failed");
+  }
+});
 export const createMeal = createAsyncThunk(
   "meal/createMeal",
   async (formData: FormData, { rejectWithValue }) => {
@@ -102,7 +115,6 @@ export const createMeal = createAsyncThunk(
       );
       toast.success(response.data.message);
       return response.data.meal;
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Something went wrong");
       return rejectWithValue(
@@ -162,6 +174,19 @@ const mealSlice = createSlice({
       .addCase(fetchChefMeals.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch meals";
+      })
+      .addCase(updateMeal.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(updateMeal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.chefMeals = state.chefMeals.map((meal) =>
+          meal._id === action.payload._id ? action.payload : meal
+        );
+      })
+      .addCase(updateMeal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Update failed";
       });
   },
 });

@@ -9,6 +9,7 @@ interface DashBoradPageProps {
   children?: ReactNode;
   hideBackButton?: boolean;
   cta?: ReactNode;
+  backHref?: string;
 }
 
 function DashboardPage({
@@ -16,6 +17,7 @@ function DashboardPage({
   children,
   cta,
   hideBackButton,
+  backHref,
 }: DashBoradPageProps) {
   const router = useRouter();
 
@@ -26,7 +28,7 @@ function DashboardPage({
           <div className="flex items-center gap-4 ">
             {hideBackButton ? null : (
               <Button
-                onClick={() => router.push("/chef-dashboard")}
+                onClick={() => router.push(backHref || "/chef-dashboard")}
                 variant="outline"
                 className="w-fit bg-white"
                 size="sm"

@@ -18,8 +18,10 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { Loader2 } from "lucide-react";
 import { createMeal } from "@/redux/slices/mealSlice";
+import { useRouter } from "next/navigation";
 
 export default function AddMeal() {
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const { loading } = useAppSelector((store: RootState) => store.meal);
   const [images, setImages] = useState<File | null>(null);
@@ -45,7 +47,7 @@ export default function AddMeal() {
       category: value,
     }));
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission here
     const formData = new FormData();
@@ -59,10 +61,8 @@ export default function AddMeal() {
     if (images) {
       formData.append("images", images);
     }
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}: ${pair[1]}`);
-    }
-    dispatch(createMeal(formData));
+    await dispatch(createMeal(formData));
+    router.push("/chef-dashboard/meals");
   };
   return (
     <div className="w-full max-w-4xl mx-auto p-2 md:p-6">

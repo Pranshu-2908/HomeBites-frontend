@@ -13,8 +13,11 @@ import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { fetchChefMeals } from "@/redux/slices/mealSlice";
+import { Edit2, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function ViewMeals() {
+  const router = useRouter();
   const { chefMeals } = useAppSelector((store: RootState) => store.meal);
   const dispatch = useAppDispatch();
 
@@ -69,10 +72,20 @@ export default function ViewMeals() {
                       {meal.preparationTime} min
                     </TableCell>
                     <TableCell className="text-center">
-                      <Button variant="outline" size="sm" className="mr-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="mr-2"
+                        onClick={() => {
+                          console.log(`/chef-dashboard/meals/${meal._id}`);
+                          router.push(`/chef-dashboard/meals/${meal._id}`);
+                        }}
+                      >
+                        <Edit2 className="text-black w-6 h-6 animate-pulse" />
                         Edit
                       </Button>
                       <Button variant="destructive" size="sm">
+                        <Trash2 className="text-black w-6 h-6 animate-pulse" />
                         Delete
                       </Button>
                     </TableCell>
@@ -116,7 +129,15 @@ export default function ViewMeals() {
                     </div>
 
                     <div className="pt-2 flex space-x-2">
-                      <Button variant="outline" size="sm" className="flex-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                        onClick={() =>
+                          router.push(`/chef-dashboard/meals/${meal._id}`)
+                        }
+                      >
+                        <Edit2 className="text-black w-6 h-6 animate-pulse" />
                         Edit
                       </Button>
                       <Button
@@ -124,6 +145,7 @@ export default function ViewMeals() {
                         size="sm"
                         className="flex-1"
                       >
+                        <Trash2 className="text-black w-6 h-6 animate-pulse" />
                         Delete
                       </Button>
                     </div>

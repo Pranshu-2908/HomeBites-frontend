@@ -5,7 +5,7 @@ import Link from "next/link";
 import NavLink from "./Navlink";
 import { useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
-import { logout } from "@/redux/authSlice";
+import { logout } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { toast } from "sonner";

@@ -12,7 +12,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { useEffect } from "react";
-import { fetchMealById } from "@/redux/mealSlice";
+import { fetchMealById } from "@/redux/slices/mealSlice";
 import Image from "next/image";
 
 const reviews = [
@@ -46,7 +46,7 @@ export default function MealDetailsPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
           <Image
             src={selectedMeal.images?.[0] || "/biryani.jpg"}
-            alt={selectedMeal.name}
+            alt={selectedMeal?.name || "Meal Image"}
             width={500}
             height={256}
             className="w-full h-64 object-cover rounded-lg"

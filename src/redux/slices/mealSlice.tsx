@@ -86,6 +86,7 @@ export const fetchChefMeals = createAsyncThunk(
     }
   }
 );
+
 export const updateMeal = createAsyncThunk<
   Meal,
   { id: string; formData: FormData },
@@ -120,6 +121,20 @@ export const createMeal = createAsyncThunk(
       return rejectWithValue(
         error.response?.data?.message || "Something went wrong"
       );
+    }
+  }
+);
+
+export const deleteMeal = createAsyncThunk(
+  "meal/delete",
+  async (mealId: string) => {
+    try {
+      await axiosInstance.delete(`/meal/${mealId}`);
+      toast.success("Meal Deleted Succesfully");
+      return mealId;
+    } catch (error) {
+      toast.error("Failed to delete meal");
+      throw error;
     }
   }
 );
@@ -187,6 +202,20 @@ const mealSlice = createSlice({
       .addCase(updateMeal.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Update failed";
+      })
+      .addCase(deleteMeal.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deleteMeal.fulfilled, (state, action) => {
+        state.loading = false;
+        state.chefMeals = state.chefMeals.filter(
+          (meal) => meal._id !== action.payload
+        );
+      })
+      .addCase(deleteMeal.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

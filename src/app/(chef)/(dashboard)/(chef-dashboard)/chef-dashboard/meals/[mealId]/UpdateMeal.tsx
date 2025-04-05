@@ -10,6 +10,16 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function EditMealPage() {
   const { mealId } = useParams();
@@ -51,7 +61,12 @@ export default function EditMealPage() {
   ) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
-
+  const handleSelectChange = (value: string) => {
+    setInput((prevState) => ({
+      ...prevState,
+      category: value,
+    }));
+  };
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData();
@@ -92,14 +107,21 @@ export default function EditMealPage() {
               />
             </div>
 
-            <div>
-              <label className="block mb-1 font-medium text-sm">Category</label>
-              <Input
-                name="category"
-                value={input.category}
-                onChange={handleChange}
-                placeholder="Category"
-              />
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select onValueChange={handleSelectChange} value={input.category}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Category</SelectLabel>
+                    <SelectItem value="vegetarian">Vegetarian</SelectItem>
+                    <SelectItem value="non-veg">Non-veg</SelectItem>
+                    <SelectItem value="vegan">Vegan</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="md:col-span-2">

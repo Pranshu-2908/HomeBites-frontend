@@ -9,26 +9,45 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
-import { fetchChefMeals } from "@/redux/slices/mealSlice";
-import { Edit2, Trash2 } from "lucide-react";
+import { deleteMeal, fetchChefMeals } from "@/redux/slices/mealSlice";
+import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function ViewMeals() {
   const router = useRouter();
-  const { chefMeals } = useAppSelector((store: RootState) => store.meal);
   const dispatch = useAppDispatch();
+  const { chefMeals, loading } = useAppSelector(
+    (store: RootState) => store.meal
+  );
+
+  const [expandedMeal, setExpandedMeal] = useState<string | null>(null);
+  const [, setDeleteTargetMealId] = useState<string | null>(null);
 
   useEffect(() => {
     dispatch(fetchChefMeals());
   }, [dispatch]);
 
-  const [expandedMeal, setExpandedMeal] = useState<string | null>(null);
-
   const toggleMealDetails = (id: string) => {
     setExpandedMeal(expandedMeal === id ? null : id);
+  };
+
+  const handleDeleteMeal = (mealId: string) => {
+    if (!mealId) return;
+    console.log("Deleting meal:", mealId);
+    dispatch(deleteMeal(mealId));
+    setDeleteTargetMealId(null);
   };
 
   return (
@@ -71,23 +90,54 @@ export default function ViewMeals() {
                     <TableCell className="text-center">
                       {meal.preparationTime} min
                     </TableCell>
-                    <TableCell className="text-center">
+                    <TableCell className="text-center flex justify-center gap-2">
                       <Button
                         variant="outline"
                         size="sm"
-                        className="mr-2"
-                        onClick={() => {
-                          console.log(`/chef-dashboard/meals/${meal._id}`);
-                          router.push(`/chef-dashboard/meals/${meal._id}`);
-                        }}
+                        onClick={() =>
+                          router.push(`/chef-dashboard/meals/${meal._id}`)
+                        }
                       >
-                        <Edit2 className="text-black w-6 h-6 animate-pulse" />
+                        <Edit2 className="text-black w-6 h-6 animate-pulse mr-1" />
                         Edit
                       </Button>
-                      <Button variant="destructive" size="sm">
-                        <Trash2 className="text-black w-6 h-6 animate-pulse" />
-                        Delete
-                      </Button>
+
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            onClick={() => setDeleteTargetMealId(meal._id)}
+                          >
+                            <Trash2 className="text-black w-6 h-6 animate-pulse mr-1" />
+                            Delete
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Confirm Deletion</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to delete this meal? This
+                              action cannot be undone.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            {loading ? (
+                              <Button variant="destructive">
+                                <Loader2 className="text-black w-6 h-6 animate-spin mr-1" />
+                                Deleting...
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="destructive"
+                                onClick={() => handleDeleteMeal(meal._id)}
+                              >
+                                Confirm Delete
+                              </Button>
+                            )}
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -95,7 +145,7 @@ export default function ViewMeals() {
             </Table>
           </div>
 
-          {/* Mobile view and tablet view */}
+          {/* Mobile & Tablet View */}
           <div className="xl:hidden space-y-4">
             {chefMeals.map((meal) => (
               <Card key={meal._id} className="overflow-hidden">
@@ -137,17 +187,47 @@ export default function ViewMeals() {
                           router.push(`/chef-dashboard/meals/${meal._id}`)
                         }
                       >
-                        <Edit2 className="text-black w-6 h-6 animate-pulse" />
+                        <Edit2 className="text-black w-6 h-6 animate-pulse mr-1" />
                         Edit
                       </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        className="flex-1"
-                      >
-                        <Trash2 className="text-black w-6 h-6 animate-pulse" />
-                        Delete
-                      </Button>
+
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button
+                            variant="destructive"
+                            size="sm"
+                            className="flex-1"
+                            onClick={() => setDeleteTargetMealId(meal._id)}
+                          >
+                            <Trash2 className="text-black w-6 h-6 animate-pulse mr-1" />
+                            Delete
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Confirm Deletion</DialogTitle>
+                            <DialogDescription>
+                              Are you sure you want to delete this meal? This
+                              action cannot be undone.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter>
+                            {loading ? (
+                              <Button variant="destructive">
+                                <Loader2 className="text-black w-6 h-6 animate-spin mr-1" />
+                                Deleting...
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="destructive"
+                                onClick={() => handleDeleteMeal(meal._id)}
+                              >
+                                Confirm Delete
+                              </Button>
+                            )}
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
                     </div>
                   </div>
                 )}

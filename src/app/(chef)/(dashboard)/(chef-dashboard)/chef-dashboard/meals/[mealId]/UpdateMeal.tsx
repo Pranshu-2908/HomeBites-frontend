@@ -18,20 +18,6 @@ export default function EditMealPage() {
   const { selectedMeal, loading } = useAppSelector((state) => state.meal);
   const [images, setImages] = useState<File | null>(null);
 
-  // const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const files = e.target.files;
-  //   if (!files) return;
-
-  //   const fileArray = Array.from(files);
-
-  //   if (fileArray.length > 10) {
-  //     toast.error("You can only upload a maximum of 10 images.");
-  //     return;
-  //   }
-
-  //   setImages(fileArray);
-  // };
-
   const [input, setInput] = useState({
     name: "",
     description: "",
@@ -68,7 +54,6 @@ export default function EditMealPage() {
 
   const handleUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission here
     const formData = new FormData();
     formData.append("name", input.name || "");
     formData.append("description", input.description);

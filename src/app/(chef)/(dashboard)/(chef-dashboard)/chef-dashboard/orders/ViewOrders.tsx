@@ -13,13 +13,16 @@ import { Badge } from "@/components/ui/badge";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { useEffect } from "react";
-import { fetchChefOrdersByStatus } from "@/redux/slices/orderSlice";
+import {
+  fetchChefOrdersByStatus,
+  updateOrderStatus,
+} from "@/redux/slices/orderSlice";
 
 export default function ViewOrders() {
-  const { pendingOrders, acceptedOrders, preparedOrders } = useAppSelector(
+  const { pendingOrders, acceptedOrders, preparingOrders } = useAppSelector(
     (store: RootState) => store.order
   );
-  const orders = [...pendingOrders, ...acceptedOrders, ...preparedOrders];
+  const orders = [...pendingOrders, ...acceptedOrders, ...preparingOrders];
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchChefOrdersByStatus());
@@ -29,6 +32,23 @@ export default function ViewOrders() {
     if (status === "pending") return "bg-yellow-400 text-black";
     if (status === "accepted") return "bg-blue-500 text-white";
     return "bg-orange-500 text-white";
+  };
+
+  const handleAccept = async (orderId: string) => {
+    await dispatch(updateOrderStatus({ orderId, status: "accepted" }));
+    await dispatch(fetchChefOrdersByStatus());
+  };
+  const handlePreparing = async (orderId: string) => {
+    await dispatch(updateOrderStatus({ orderId, status: "preparing" }));
+    await dispatch(fetchChefOrdersByStatus());
+  };
+  const handleCompleted = async (orderId: string) => {
+    await dispatch(updateOrderStatus({ orderId, status: "completed" }));
+    await dispatch(fetchChefOrdersByStatus());
+  };
+  const handleReject = async (orderId: string) => {
+    await dispatch(updateOrderStatus({ orderId, status: "rejected" }));
+    await dispatch(fetchChefOrdersByStatus());
   };
 
   return (
@@ -76,12 +96,40 @@ export default function ViewOrders() {
                     </TableCell>
                     <TableCell className="text-center">
                       {order.status === "pending" && (
-                        <Button variant="outline" size="sm" className="mr-2">
-                          Accept
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => handleAccept(order._id)}
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="mr-2"
+                            onClick={() => handleReject(order._id)}
+                          >
+                            Reject
+                          </Button>
+                        </div>
+                      )}
+                      {order.status === "accepted" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handlePreparing(order._id)}
+                        >
+                          Mark in Progress
                         </Button>
                       )}
-                      {order.status !== "confirmed" && (
-                        <Button variant="outline" size="sm">
+                      {order.status === "preparing" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleCompleted(order._id)}
+                        >
                           Mark as Completed
                         </Button>
                       )}
@@ -103,7 +151,7 @@ export default function ViewOrders() {
                   </Badge>
                 </div>
 
-                <div className="space-y-3 text-sm mb-4">
+                <div className="flex flex-col gap-3 text-sm mb-4">
                   <div className="flex justify-between">
                     <span className="text-gray-500">Customer:</span>
                     <span className="font-medium">
@@ -111,12 +159,7 @@ export default function ViewOrders() {
                     </span>
                   </div>
 
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Total:</span>
-                    <span className="font-bold">₹{order.totalAmount}</span>
-                  </div>
-
-                  <div className="pt-2 border-t">
+                  <div className="pt-2 border-y">
                     <div className="text-gray-500 mb-1">Items:</div>
                     {order.meals.map((meal, index) => (
                       <div key={index} className="flex justify-between py-1">
@@ -127,16 +170,46 @@ export default function ViewOrders() {
                       </div>
                     ))}
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Total:</span>
+                    <span className="font-bold">₹{order.totalAmount}</span>
+                  </div>
                 </div>
 
                 <div className="flex flex-wrap gap-2 pt-2 border-t">
                   {order.status === "pending" && (
-                    <Button variant="outline" size="sm">
-                      Accept
+                    <div className="flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleAccept(order._id)}
+                      >
+                        Accept
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleReject(order._id)}
+                      >
+                        Reject
+                      </Button>
+                    </div>
+                  )}
+                  {order.status === "accepted" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePreparing(order._id)}
+                    >
+                      Mark in Progress
                     </Button>
                   )}
-                  {order.status !== "confirmed" && (
-                    <Button variant="outline" size="sm">
+                  {order.status === "preparing" && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCompleted(order._id)}
+                    >
                       Mark as completed
                     </Button>
                   )}

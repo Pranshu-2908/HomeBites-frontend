@@ -15,10 +15,9 @@ import { fetchChefOrdersByStatus } from "@/redux/slices/orderSlice";
 import { RootState } from "@/redux/store";
 
 export default function OrderHistory() {
-  const { completedOrders, cancelledOrders, loading, error } = useAppSelector(
-    (store: RootState) => store.order
-  );
-  const orders = [...completedOrders, ...cancelledOrders];
+  const { completedOrders, cancelledOrders, rejectedOrders, loading, error } =
+    useAppSelector((store: RootState) => store.order);
+  const orders = [...completedOrders, ...cancelledOrders, ...rejectedOrders];
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchChefOrdersByStatus());
@@ -30,7 +29,8 @@ export default function OrderHistory() {
   }
   const getStatusBadgeClass = (status: string) => {
     if (status === "completed") return "bg-green-400 text-black";
-    if (status === "cancelled") return "bg-red-500 text-white";
+    if (status === "cancelled") return "bg-orange-500 text-white";
+    if (status === "rejected") return "bg-red-500 text-black";
     return "bg-orange-500 text-white";
   };
   return (
@@ -63,7 +63,7 @@ export default function OrderHistory() {
                     <TableCell className="text-center">
                       {order.meals.map((meal, index) => (
                         <div key={index}>
-                          🍽 {meal.mealId?.name} - {meal.quantity}x (₹
+                          {meal.mealId?.name} - {meal.quantity}x (₹
                           {meal.mealId?.price})
                         </div>
                       ))}
@@ -110,7 +110,7 @@ export default function OrderHistory() {
                     <div className="text-gray-500 mb-1">Items:</div>
                     {order.meals.map((meal, index) => (
                       <div key={index} className="flex justify-between py-1">
-                        <span>🍽 {meal.mealId?.name}</span>
+                        <span>{meal.mealId?.name}</span>
                         <span>
                           {meal.quantity}x (₹{meal.mealId?.price})
                         </span>

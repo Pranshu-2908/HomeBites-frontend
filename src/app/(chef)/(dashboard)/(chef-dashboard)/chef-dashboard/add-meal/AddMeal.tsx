@@ -49,7 +49,6 @@ export default function AddMeal() {
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission here
     const formData = new FormData();
     formData.append("name", input.name || "");
     formData.append("description", input.description);

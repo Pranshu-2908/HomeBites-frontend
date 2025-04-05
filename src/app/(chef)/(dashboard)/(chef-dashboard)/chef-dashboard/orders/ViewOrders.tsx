@@ -17,11 +17,11 @@ import {
   fetchChefOrdersByStatus,
   updateOrderStatus,
 } from "@/redux/slices/orderSlice";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function ViewOrders() {
-  const { pendingOrders, acceptedOrders, preparingOrders } = useAppSelector(
-    (store: RootState) => store.order
-  );
+  const { pendingOrders, acceptedOrders, preparingOrders, loading } =
+    useAppSelector((store: RootState) => store.order);
   const orders = [...pendingOrders, ...acceptedOrders, ...preparingOrders];
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -50,7 +50,7 @@ export default function ViewOrders() {
     await dispatch(updateOrderStatus({ orderId, status: "rejected" }));
     await dispatch(fetchChefOrdersByStatus());
   };
-
+  if (loading) return <LoadingSpinner message="Loading live orders...." />;
   return (
     <div className="p-2 md:p-6">
       <Card className="mb-4">
@@ -96,11 +96,10 @@ export default function ViewOrders() {
                     </TableCell>
                     <TableCell className="text-center">
                       {order.status === "pending" && (
-                        <div className="flex gap-2">
+                        <div className="flex items-center justify-center gap-2">
                           <Button
                             variant="outline"
                             size="sm"
-                            className="mr-2"
                             onClick={() => handleAccept(order._id)}
                           >
                             Accept
@@ -108,7 +107,6 @@ export default function ViewOrders() {
                           <Button
                             variant="outline"
                             size="sm"
-                            className="mr-2"
                             onClick={() => handleReject(order._id)}
                           >
                             Reject

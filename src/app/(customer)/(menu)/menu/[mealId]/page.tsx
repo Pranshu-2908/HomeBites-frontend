@@ -14,6 +14,7 @@ import { RootState } from "@/redux/store";
 import { useEffect } from "react";
 import { fetchMealById } from "@/redux/slices/mealSlice";
 import Image from "next/image";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const reviews = [
   { id: 1, name: "Alice", text: "Absolutely delicious!", rating: 5 },
@@ -35,7 +36,7 @@ export default function MealDetailsPage() {
     dispatch(fetchMealById(mealId));
     console.log("dispatched");
   }, [dispatch, mealId]);
-  if (loading) return <p>Loading meal details...</p>;
+  if (loading) return <LoadingSpinner message="Loading meal..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!selectedMeal) {
     return <p className="text-center text-red-500">Meal not found.</p>;

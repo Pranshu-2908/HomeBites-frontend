@@ -24,6 +24,7 @@ import { RootState } from "@/redux/store";
 import { deleteMeal, fetchChefMeals } from "@/redux/slices/mealSlice";
 import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function ViewMeals() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function ViewMeals() {
     dispatch(deleteMeal(mealId));
     setDeleteTargetMealId(null);
   };
-
+  if (loading) return <LoadingSpinner message="Loading your meals..." />;
   return (
     <div className="w-full">
       <Card className="shadow-md">

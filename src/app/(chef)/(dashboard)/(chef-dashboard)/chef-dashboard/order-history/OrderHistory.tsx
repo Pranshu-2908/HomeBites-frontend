@@ -13,6 +13,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { useEffect } from "react";
 import { fetchChefOrdersByStatus } from "@/redux/slices/orderSlice";
 import { RootState } from "@/redux/store";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function OrderHistory() {
   const { completedOrders, cancelledOrders, rejectedOrders, loading, error } =
@@ -22,7 +23,7 @@ export default function OrderHistory() {
   useEffect(() => {
     dispatch(fetchChefOrdersByStatus());
   }, [dispatch]);
-  if (loading) return <p>Loading meal details...</p>;
+  if (loading) return <LoadingSpinner message="Loading order history..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!completedOrders) {
     return <p className="text-center text-red-500">Meal not found.</p>;

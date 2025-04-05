@@ -8,6 +8,7 @@ import { login } from "@/redux/slices/authSlice";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,12 +16,14 @@ const Login = () => {
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
     try {
+      setLoading(true);
       const response = await axiosInstance.post("/user/login", {
         email,
         password,
@@ -41,6 +44,8 @@ const Login = () => {
     } catch (err: any) {
       toast(err.response?.data?.message);
       console.log(err.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,12 +81,22 @@ const Login = () => {
           />
         </div>
 
-        <Button
-          type="submit"
-          className="cursor-pointer bg-slate-900 hover:bg-slate-600 w-full"
-        >
-          Submit
-        </Button>
+        {loading ? (
+          <Button
+            type="button"
+            className="cursor-pointer bg-slate-900 hover:bg-slate-600 w-full"
+          >
+            <Loader2 className="text-white animate-spin w-6 h-6" />
+            Submiting...
+          </Button>
+        ) : (
+          <Button
+            type="submit"
+            className="cursor-pointer bg-slate-900 hover:bg-slate-600 w-full"
+          >
+            Submit
+          </Button>
+        )}
 
         <div className="mt-5 flex gap-2 justify-center">
           New to DreamHomes?

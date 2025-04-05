@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { fetchMeals } from "@/redux/slices/mealSlice";
 import Image from "next/image";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function MenuPage() {
   const { meals, loading, error } = useAppSelector(
@@ -48,7 +49,7 @@ export default function MenuPage() {
   const resetTimeFilter = () => {
     setTime("");
   };
-  if (loading) return <p>Loading meal details...</p>;
+  if (loading) return <LoadingSpinner message="Loading Meals..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!meals) {
     return <p className="text-center text-red-500">Meal not found.</p>;

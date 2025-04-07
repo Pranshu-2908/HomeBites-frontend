@@ -52,7 +52,7 @@ const Signup = () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast("Sign up failed!");
-      console.log(err.response?.data?.message);
+      throw err;
     } finally {
       setLoading(false);
     }

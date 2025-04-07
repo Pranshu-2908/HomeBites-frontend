@@ -18,7 +18,13 @@ import { fetchMeals } from "@/redux/slices/mealSlice";
 import Image from "next/image";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { toast } from "sonner";
-
+import { addToCart } from "@/redux/slices/cartSlice";
+interface Meal {
+  _id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
 export default function MenuPage() {
   const { meals, loading, error } = useAppSelector(
     (store: RootState) => store.meal
@@ -30,10 +36,8 @@ export default function MenuPage() {
   const [cuisine, setCuisine] = useState("");
   const [category, setCategory] = useState("");
   const [time, setTime] = useState("");
-
   useEffect(() => {
     dispatch(fetchMeals());
-    console.log("refetched");
   }, [dispatch]);
 
   const filteredMeals = meals.filter(
@@ -52,11 +56,21 @@ export default function MenuPage() {
     setTime("");
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (meal: Meal) => {
     if (!user) {
       toast("Login to add items in cart!");
       return;
     }
+    dispatch(
+      addToCart({
+        id: meal._id,
+        name: meal.name,
+        price: meal.price,
+        quantity: 1,
+        availableQty: meal.quantity,
+      })
+    );
+    toast.success("Meal added to cart");
   };
 
   if (loading) return <LoadingSpinner message="Loading Meals..." />;
@@ -156,10 +170,11 @@ export default function MenuPage() {
               <div className="flex justify-between items-center">
                 <Button
                   className="mt-4 bg-blue-600 text-white px-4 rounded-md hover:bg-blue-700"
-                  onClick={handleAddToCart}
+                  onClick={() => handleAddToCart(meal)}
                 >
                   Add to cart
                 </Button>
+
                 <Button
                   size={"icon"}
                   className="bg-gray-200 border border-gray-300 shadow-md hover:bg-gray-300"

@@ -13,18 +13,20 @@ import storage from "redux-persist/lib/storage";
 import authReducer from "./slices/authSlice";
 import mealReducer from "./slices/mealSlice";
 import orderReducer from "./slices/orderSlice";
+import cartReducer from "./slices/cartSlice";
 
 const persistConfig = {
   key: "root",
   version: 1,
   storage,
-  whitelist: ["auth"],
+  whitelist: ["auth", "cart"],
 };
 
 const rootReducer = combineReducers({
   auth: authReducer,
   meal: mealReducer,
   order: orderReducer,
+  cart: cartReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

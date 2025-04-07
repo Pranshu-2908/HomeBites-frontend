@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { useAppSelector } from "@/redux/hooks";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { clearCart } from "@/redux/slices/cartSlice";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -19,17 +20,19 @@ const Navbar = () => {
   const isAuthenticated = useAppSelector(
     (store: RootState) => store.auth.isAuthenticated
   );
+  const { items } = useAppSelector((store: RootState) => store.cart);
   const user = useAppSelector((store) => store.auth.user);
 
   const handleLogout = async () => {
     const resp = await axiosInstance.get("/user/logout");
     dispatch(logout());
+    dispatch(clearCart());
     router.push("/");
     toast(resp.data.message);
   };
   return (
-    <div className="text-white flex flex-wrap justify-between items-center px-10 py-5 bg-gray-800 shadow-md w-full mx-auto">
-      <Link href="/" className="text-xl md:text-3xl font-bold">
+    <div className="text-white flex flex-wrap justify-between items-center px-10 py-3 bg-gray-800 shadow-md w-full mx-auto">
+      <Link href="/" className="text-xl md:text-3xl font-bold homebite-logo">
         HOMEBITES{" "}
       </Link>
 
@@ -40,13 +43,20 @@ const Navbar = () => {
         <NavLink href="/contact">Contact Us</NavLink>
       </div>
 
-      <div className="flex items-center gap-1">
-        <Link href="/cart">
-          <ShoppingCartIcon size={28} className="mx-4" />
-        </Link>
-        {/* {getTotalCartAmount() > 0 && (
-            <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></div>
-          )} */}
+      <div className="flex items-center gap-5">
+        <div className="relative flex items-center gap-1">
+          <div>
+            <Link href="/cart">
+              <ShoppingCartIcon size={28} className="mx-4" />
+            </Link>
+          </div>
+
+          {items.length > 0 && (
+            <div className="absolute -top-3 -right-1 bg-white text-black text-xs w-5 h-5 flex items-center justify-center rounded-full">
+              {items.length}
+            </div>
+          )}
+        </div>
 
         {isAuthenticated ? (
           <Popover>

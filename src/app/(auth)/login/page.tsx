@@ -34,16 +34,13 @@ const Login = () => {
       }
       // Redirect based on user role
       if (response.data.user.role === "chef") {
-        console.log("chef role");
         router.push("/chef-dashboard");
       } else {
-        console.log("customer role");
         router.push("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast(err.response?.data?.message);
-      console.log(err.response?.data?.message);
     } finally {
       setLoading(false);
     }

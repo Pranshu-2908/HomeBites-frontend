@@ -76,7 +76,6 @@ export const updateOrderStatus = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
-      console.log(`/order/${orderId}/status`);
       const resposne = await axiosInstance.patch(`/order/${orderId}/status`, {
         status,
       });

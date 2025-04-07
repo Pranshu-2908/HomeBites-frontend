@@ -17,7 +17,13 @@ import Image from "next/image";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-
+import { addToCart } from "@/redux/slices/cartSlice";
+interface Meal {
+  _id: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
 const reviews = [
   { id: 1, name: "Alice", text: "Absolutely delicious!", rating: 5 },
   { id: 2, name: "Bob", text: "Loved the flavors!", rating: 4 },
@@ -32,19 +38,27 @@ export default function MealDetailsPage() {
   const { selectedMeal, loading, error } = useAppSelector(
     (store: RootState) => store.meal
   );
-  console.log(selectedMeal, loading, error);
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!mealId) return;
     dispatch(fetchMealById(mealId));
-    console.log("dispatched");
   }, [dispatch, mealId]);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (meal: Meal) => {
     if (!user) {
       toast("Login to add items in cart!");
       return;
     }
+    dispatch(
+      addToCart({
+        id: meal._id,
+        name: meal.name,
+        price: meal.price,
+        quantity: 1,
+        availableQty: meal.quantity,
+      })
+    );
+    toast.success("Meal added to cart");
   };
   if (loading) return <LoadingSpinner message="Loading meal..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
@@ -115,7 +129,7 @@ export default function MealDetailsPage() {
 
             <Button
               className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-              onClick={handleAddToCart}
+              onClick={() => handleAddToCart(selectedMeal)}
             >
               Add to cart
             </Button>

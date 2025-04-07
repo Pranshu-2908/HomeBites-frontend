@@ -11,7 +11,11 @@ import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { clearCart, deleteCart, saveCart } from "@/redux/slices/cartSlice";
+import {
+  clearCartFromServer,
+  deleteCart,
+  saveCart,
+} from "@/redux/slices/cartSlice";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
@@ -28,7 +32,7 @@ const Navbar = () => {
     } else {
       await dispatch(deleteCart());
     }
-    dispatch(clearCart());
+    dispatch(clearCartFromServer());
     const resp = await axiosInstance.get("/user/logout");
     dispatch(logout());
     router.push("/");

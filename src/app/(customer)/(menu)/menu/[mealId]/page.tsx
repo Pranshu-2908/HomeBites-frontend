@@ -18,12 +18,6 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { addToCart } from "@/redux/slices/cartSlice";
-interface Meal {
-  _id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
 const reviews = [
   { id: 1, name: "Alice", text: "Absolutely delicious!", rating: 5 },
   { id: 2, name: "Bob", text: "Loved the flavors!", rating: 4 },
@@ -44,21 +38,22 @@ export default function MealDetailsPage() {
     dispatch(fetchMealById(mealId));
   }, [dispatch, mealId]);
 
-  const handleAddToCart = (meal: Meal) => {
+  const handleAddToCart = async (mealId: string, quantity: number) => {
     if (!user) {
       toast("Login to add items in cart!");
       return;
     }
-    dispatch(
+    const res = await dispatch(
       addToCart({
-        mealId: meal._id,
-        name: meal.name,
-        price: meal.price,
-        quantity: 1,
-        availableQty: meal.quantity,
+        mealId: mealId,
+        quantity,
       })
     );
-    toast.success("Meal added to cart");
+    if (addToCart.fulfilled.match(res)) {
+      toast.success("Meal added to cart");
+    } else {
+      toast.error("Failed to add meal to cart");
+    }
   };
   if (loading) return <LoadingSpinner message="Loading meal..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
@@ -129,7 +124,7 @@ export default function MealDetailsPage() {
 
             <Button
               className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-              onClick={() => handleAddToCart(selectedMeal)}
+              onClick={() => handleAddToCart(selectedMeal._id, 1)}
             >
               Add to cart
             </Button>

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Table,
   TableBody,
@@ -16,10 +16,12 @@ import ProtectedRoute from "@/utils/protectedRoute";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import {
-  decreaseQty,
-  increaseQty,
-  removeFromCart,
+  decreaseCartQty,
+  increaseCartQty,
+  loadCart,
+  removeCartItem,
 } from "@/redux/slices/cartSlice";
+
 interface CartItem {
   mealId: string;
   name: string;
@@ -36,6 +38,10 @@ const Cart: React.FC = () => {
   const { items, totalAmount } = useAppSelector(
     (store: RootState) => store.cart
   );
+  useEffect(() => {
+    console.log("load cart");
+    dispatch(loadCart());
+  }, [dispatch]);
 
   // For mobile view, group each item's information
   const MobileCartItem: React.FC<MobileCartItemProps> = ({ item, index }) => (
@@ -54,21 +60,21 @@ const Cart: React.FC = () => {
         <Button
           variant={"outline"}
           size={"sm"}
-          onClick={() => dispatch(increaseQty(item.mealId))}
+          onClick={() => dispatch(increaseCartQty(item.mealId))}
         >
           <Plus size={16} />
         </Button>
         <Button
           variant={"outline"}
           size={"sm"}
-          onClick={() => dispatch(decreaseQty(item.mealId))}
+          onClick={() => dispatch(decreaseCartQty(item.mealId))}
         >
           <Minus size={16} />
         </Button>
         <Button
           variant={"destructive"}
           size={"sm"}
-          onClick={() => dispatch(removeFromCart(item.mealId))}
+          onClick={() => dispatch(removeCartItem(item.mealId))}
         >
           <Trash size={16} />
         </Button>
@@ -110,21 +116,21 @@ const Cart: React.FC = () => {
                       <Button
                         variant={"outline"}
                         size={"icon"}
-                        onClick={() => dispatch(increaseQty(item.mealId))}
+                        onClick={() => dispatch(increaseCartQty(item.mealId))}
                       >
                         <Plus />
                       </Button>
                       <Button
                         variant={"outline"}
                         size={"icon"}
-                        onClick={() => dispatch(decreaseQty(item.mealId))}
+                        onClick={() => dispatch(decreaseCartQty(item.mealId))}
                       >
                         <Minus />
                       </Button>
                       <Button
                         variant={"destructive"}
                         size={"icon"}
-                        onClick={() => dispatch(removeFromCart(item.mealId))}
+                        onClick={() => dispatch(removeCartItem(item.mealId))}
                       >
                         <Trash />
                       </Button>

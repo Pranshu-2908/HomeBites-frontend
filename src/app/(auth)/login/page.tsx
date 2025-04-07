@@ -8,7 +8,6 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
-import { loadCart } from "@/redux/slices/cartSlice";
 import { useAppDispatch } from "@/redux/hooks";
 
 const Login = () => {
@@ -31,7 +30,6 @@ const Login = () => {
       });
       if (response.data) {
         dispatch(login(response.data.user));
-        dispatch(loadCart());
         toast(response.data.message);
       }
       // Redirect based on user role

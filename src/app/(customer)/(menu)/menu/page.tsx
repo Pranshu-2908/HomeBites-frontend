@@ -19,12 +19,7 @@ import Image from "next/image";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { toast } from "sonner";
 import { addToCart } from "@/redux/slices/cartSlice";
-interface Meal {
-  _id: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
+
 export default function MenuPage() {
   const { meals, loading, error } = useAppSelector(
     (store: RootState) => store.meal
@@ -56,21 +51,22 @@ export default function MenuPage() {
     setTime("");
   };
 
-  const handleAddToCart = (meal: Meal) => {
+  const handleAddToCart = async (mealId: string, quantity: number) => {
     if (!user) {
       toast("Login to add items in cart!");
       return;
     }
-    dispatch(
+    const res = await dispatch(
       addToCart({
-        mealId: meal._id,
-        name: meal.name,
-        price: meal.price,
-        quantity: 1,
-        availableQty: meal.quantity,
+        mealId: mealId,
+        quantity,
       })
     );
-    toast.success("Meal added to cart");
+    if (addToCart.fulfilled.match(res)) {
+      toast.success("Meal added to cart");
+    } else {
+      toast.error("Failed to add meal to cart");
+    }
   };
 
   if (loading) return <LoadingSpinner message="Loading Meals..." />;
@@ -170,7 +166,7 @@ export default function MenuPage() {
               <div className="flex justify-between items-center">
                 <Button
                   className="mt-4 bg-blue-600 text-white px-4 rounded-md hover:bg-blue-700"
-                  onClick={() => handleAddToCart(meal)}
+                  onClick={() => handleAddToCart(meal._id, 1)}
                 >
                   Add to cart
                 </Button>

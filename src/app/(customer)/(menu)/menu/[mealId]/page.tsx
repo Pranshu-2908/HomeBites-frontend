@@ -51,7 +51,7 @@ export default function MealDetailsPage() {
     }
     dispatch(
       addToCart({
-        id: meal._id,
+        mealId: meal._id,
         name: meal.name,
         price: meal.price,
         quantity: 1,

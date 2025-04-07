@@ -3,19 +3,18 @@ import { Button } from "@/components/ui/button";
 import { LogOut, ShoppingCartIcon, User2 } from "lucide-react";
 import Link from "next/link";
 import NavLink from "./Navlink";
-import { useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { logout } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { toast } from "sonner";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { clearCart } from "@/redux/slices/cartSlice";
+import { clearCart, deleteCart, saveCart } from "@/redux/slices/cartSlice";
 
 const Navbar = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const isAuthenticated = useAppSelector(
     (store: RootState) => store.auth.isAuthenticated
@@ -24,9 +23,14 @@ const Navbar = () => {
   const user = useAppSelector((store) => store.auth.user);
 
   const handleLogout = async () => {
+    if (items.length > 0) {
+      await dispatch(saveCart());
+    } else {
+      await dispatch(deleteCart());
+    }
+    dispatch(clearCart());
     const resp = await axiosInstance.get("/user/logout");
     dispatch(logout());
-    dispatch(clearCart());
     router.push("/");
     toast(resp.data.message);
   };

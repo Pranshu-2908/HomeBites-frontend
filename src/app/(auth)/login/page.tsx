@@ -3,18 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { loadCart } from "@/redux/slices/cartSlice";
+import { useAppDispatch } from "@/redux/hooks";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -30,6 +31,7 @@ const Login = () => {
       });
       if (response.data) {
         dispatch(login(response.data.user));
+        dispatch(loadCart());
         toast(response.data.message);
       }
       // Redirect based on user role

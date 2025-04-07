@@ -27,7 +27,7 @@ const Cart: React.FC = () => {
                 <TableHead className="text-center">Price</TableHead>
                 <TableHead className="text-center">Quantity</TableHead>
                 <TableHead className="text-center">Total</TableHead>
-                <TableHead className="text-center">Edit</TableHead>
+                <TableHead className="w-[200px] text-center">Edit</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -37,7 +37,7 @@ const Cart: React.FC = () => {
                 <TableCell className="text-center">150</TableCell>
                 <TableCell className="text-center">3</TableCell>
                 <TableCell className="text-center">450</TableCell>
-                <TableCell className="flex items-center justify-evenly">
+                <TableCell className="text-center flex items-center justify-center gap-2">
                   <Button variant={"outline"} size={"icon"}>
                     <Plus />
                   </Button>

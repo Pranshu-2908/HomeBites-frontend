@@ -15,6 +15,8 @@ import { useEffect } from "react";
 import { fetchMealById } from "@/redux/slices/mealSlice";
 import Image from "next/image";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const reviews = [
   { id: 1, name: "Alice", text: "Absolutely delicious!", rating: 5 },
@@ -26,6 +28,7 @@ const reviews = [
 
 export default function MealDetailsPage() {
   const { mealId } = useParams() as { mealId: string };
+  const { user } = useAppSelector((store: RootState) => store.auth);
   const { selectedMeal, loading, error } = useAppSelector(
     (store: RootState) => store.meal
   );
@@ -36,6 +39,13 @@ export default function MealDetailsPage() {
     dispatch(fetchMealById(mealId));
     console.log("dispatched");
   }, [dispatch, mealId]);
+
+  const handleAddToCart = () => {
+    if (!user) {
+      toast("Login to add items in cart!");
+      return;
+    }
+  };
   if (loading) return <LoadingSpinner message="Loading meal..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!selectedMeal) {
@@ -103,9 +113,12 @@ export default function MealDetailsPage() {
               </p>
             </div>
 
-            <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
+            <Button
+              className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+              onClick={handleAddToCart}
+            >
               Add to cart
-            </button>
+            </Button>
           </CardContent>
         </div>
       </Card>

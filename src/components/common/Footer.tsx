@@ -1,10 +1,10 @@
-import { Facebook, Linkedin, Twitter } from "lucide-react";
+// import { Facebook, Linkedin, Twitter } from "lucide-react";
 import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 text-gray-300 flex flex-col gap-5 px-8 py-10">
-      <div className="flex flex-col sm:flex-row justify-between gap-10">
+    <footer className="bg-gray-800 text-gray-300 flex flex-col gap-5 py-4">
+      {/* <div className="flex flex-col sm:flex-row justify-between gap-10">
         <div className="flex flex-col items-start gap-5">
           <h1 className="text-3xl italic text-center">HOMEBITES</h1>
           <p className="hidden md:inline text-sm leading-relaxed max-w-lg">
@@ -33,7 +33,7 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Right Section  */}
+          
           <div className="flex flex-col items-start gap-4">
             <h2 className="text-white text-lg font-semibold">GET IN TOUCH</h2>
             <ul className="space-y-2">
@@ -46,7 +46,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <hr className="w-full border-t border-gray-500 my-5" />
+      <hr className="w-full border-t border-gray-500 my-5" /> */}
 
       <p className="text-sm text-center">
         Copyright 2024 @ Homebite.com - All Rights Reserved

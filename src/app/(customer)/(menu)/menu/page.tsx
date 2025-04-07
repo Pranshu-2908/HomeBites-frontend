@@ -9,7 +9,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, X } from "lucide-react";
+import { ExternalLink, Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -17,11 +17,13 @@ import { RootState } from "@/redux/store";
 import { fetchMeals } from "@/redux/slices/mealSlice";
 import Image from "next/image";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { toast } from "sonner";
 
 export default function MenuPage() {
   const { meals, loading, error } = useAppSelector(
     (store: RootState) => store.meal
   );
+  const { user } = useAppSelector((store: RootState) => store.auth);
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [search, setSearch] = useState("");
@@ -49,6 +51,14 @@ export default function MenuPage() {
   const resetTimeFilter = () => {
     setTime("");
   };
+
+  const handleAddToCart = () => {
+    if (!user) {
+      toast("Login to add items in cart!");
+      return;
+    }
+  };
+
   if (loading) return <LoadingSpinner message="Loading Meals..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!meals) {
@@ -111,17 +121,14 @@ export default function MenuPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredMeals.map((meal) => (
-          <Card
-            key={meal._id}
-            className="overflow-hidden p-0"
-            onClick={() => router.push(`/menu/${meal._id}`)}
-          >
+          <Card key={meal._id} className="overflow-hidden p-0">
             <Image
               src={meal.images[0] || "/biryani.jpg"}
               alt={meal.name}
               width={400}
               height={160}
               className="w-full h-40 object-cover"
+              onClick={() => router.push(`/menu/${meal._id}`)}
             />
             <CardContent className="p-4">
               <h3 className="text-lg font-bold">{meal.name}</h3>
@@ -146,9 +153,21 @@ export default function MenuPage() {
                   <Star key={i} className="w-4 h-4 text-yellow-500" />
                 ))}
               </div>
-              <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700">
-                Add to cart
-              </button>
+              <div className="flex justify-between items-center">
+                <Button
+                  className="mt-4 bg-blue-600 text-white px-4 rounded-md hover:bg-blue-700"
+                  onClick={handleAddToCart}
+                >
+                  Add to cart
+                </Button>
+                <Button
+                  size={"icon"}
+                  className="bg-gray-200 border border-gray-300 shadow-md hover:bg-gray-300"
+                  onClick={() => router.push(`/menu/${meal._id}`)}
+                >
+                  <ExternalLink size={24} className="text-black" />
+                </Button>
+              </div>
             </CardContent>
           </Card>
         ))}

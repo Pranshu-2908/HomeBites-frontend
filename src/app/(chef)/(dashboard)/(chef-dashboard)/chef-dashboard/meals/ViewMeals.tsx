@@ -46,7 +46,6 @@ export default function ViewMeals() {
 
   const handleDeleteMeal = (mealId: string) => {
     if (!mealId) return;
-    console.log("Deleting meal:", mealId);
     dispatch(deleteMeal(mealId));
     setDeleteTargetMealId(null);
   };

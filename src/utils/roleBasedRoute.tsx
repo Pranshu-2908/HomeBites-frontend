@@ -21,7 +21,6 @@ const RoleBasedRoute = ({ allowedRoles, children }: RoleBasedRouteProps) => {
 
   useEffect(() => {
     if (!isAuthenticated || !user || !allowedRoles.includes(user.role)) {
-      console.log({ user });
       router.replace("/");
       toast("Access Denied");
     } else {

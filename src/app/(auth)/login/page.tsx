@@ -3,18 +3,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import { login } from "@/redux/slices/authSlice";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
+import { useAppDispatch } from "@/redux/hooks";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -34,16 +34,13 @@ const Login = () => {
       }
       // Redirect based on user role
       if (response.data.user.role === "chef") {
-        console.log("chef role");
         router.push("/chef-dashboard");
       } else {
-        console.log("customer role");
         router.push("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       toast(err.response?.data?.message);
-      console.log(err.response?.data?.message);
     } finally {
       setLoading(false);
     }

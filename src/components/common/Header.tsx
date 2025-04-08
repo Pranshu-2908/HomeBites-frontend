@@ -3,33 +3,45 @@ import { Button } from "@/components/ui/button";
 import { LogOut, ShoppingCartIcon, User2 } from "lucide-react";
 import Link from "next/link";
 import NavLink from "./Navlink";
-import { useDispatch } from "react-redux";
 import { RootState } from "@/redux/store";
 import { logout } from "@/redux/slices/authSlice";
 import { useRouter } from "next/navigation";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { toast } from "sonner";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-
+import { deleteCart, loadCart, saveCart } from "@/redux/slices/cartSlice";
+import { clearCart } from "@/redux/slices/cartSlice";
+import { useEffect } from "react";
 const Navbar = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const isAuthenticated = useAppSelector(
     (store: RootState) => store.auth.isAuthenticated
   );
+  const { items } = useAppSelector((store: RootState) => store.cart);
   const user = useAppSelector((store) => store.auth.user);
-
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(loadCart()); // ✅ only load if user is logged in
+    }
+  }, [dispatch, isAuthenticated]);
   const handleLogout = async () => {
+    if (items.length > 0) {
+      await dispatch(saveCart());
+    } else {
+      await dispatch(deleteCart());
+    }
+    dispatch(clearCart());
     const resp = await axiosInstance.get("/user/logout");
     dispatch(logout());
     router.push("/");
     toast(resp.data.message);
   };
   return (
-    <div className="text-white flex flex-wrap justify-between items-center px-10 py-5 bg-gray-800 shadow-md w-full mx-auto">
-      <Link href="/" className="text-xl md:text-3xl font-bold">
+    <div className="text-white flex flex-wrap justify-between items-center px-10 py-3 bg-gray-800 shadow-md w-full mx-auto">
+      <Link href="/" className="text-xl md:text-3xl font-bold homebite-logo">
         HOMEBITES{" "}
       </Link>
 
@@ -40,13 +52,20 @@ const Navbar = () => {
         <NavLink href="/contact">Contact Us</NavLink>
       </div>
 
-      <div className="flex items-center gap-1">
-        <Link href="/cart">
-          <ShoppingCartIcon size={28} className="mx-4" />
-        </Link>
-        {/* {getTotalCartAmount() > 0 && (
-            <div className="absolute top-0 right-0 w-2.5 h-2.5 bg-red-500 rounded-full"></div>
-          )} */}
+      <div className="flex items-center gap-5">
+        <div className="relative flex items-center gap-1">
+          <div>
+            <Link href="/cart">
+              <ShoppingCartIcon size={28} className="mx-4" />
+            </Link>
+          </div>
+
+          {items.length > 0 && (
+            <div className="absolute -top-3 -right-1 bg-white text-black text-xs w-5 h-5 flex items-center justify-center rounded-full">
+              {items.length}
+            </div>
+          )}
+        </div>
 
         {isAuthenticated ? (
           <Popover>

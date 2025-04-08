@@ -116,3 +116,16 @@
     @apply bg-background text-foreground;
   }
 }
+
+body {
+  font-family: var(--font-ubuntu), Courier, monospace;
+}
+
+.homebite-logo {
+  font-family: var(--font-rowdies-one), sans-serif;
+  font-style: normal;
+}
+.heading {
+  font-family: var(--font-rowdies-one), sans-serif;
+  font-style: normal;
+}

@@ -16,7 +16,7 @@ const HeroSection = () => {
           </div>
         </div>
 
-        <div className="font-bold text-4xl text-center max-w-sm sm:text-3xl sm:max-w-md lg:max-w-lg xl:max-w-xl lg:text-4xl xl:text-5xl mx-auto">
+        <div className="heading text-4xl text-center max-w-sm sm:text-3xl sm:max-w-md lg:max-w-lg xl:max-w-xl lg:text-4xl xl:text-5xl mx-auto">
           Authenticate Homemade Food Delivery Platform
         </div>
         <div className="text-sm sm:text-md lg:text-lg text-center px-4 lg:px-8 sm:max-w-md lg:max-w-lg xl:max-w-xl  text-slate-800">
@@ -28,7 +28,7 @@ const HeroSection = () => {
         </div>
 
         <div>
-          <Button className="text-base sm:text-lg lg:text-lg px-8 lg:px-12 py-6 sm:py-7 lg:py-8 rounded-full bg-linear-to-r from-slate-800 to-gray-600 hover:from-gray-600 hover:to-slate-800 shadow-lg">
+          <Button className="text-base sm:text-lg lg:text-lg px-8 lg:px-12 py-6 sm:py-7 lg:py-8 rounded-full bg-linear-to-r from-black to-gray-800 hover:from-gray-800 hover:to-black shadow-lg">
             <Link href="/menu" className="flex gap-2 items-center">
               Explore Menu
               <ArrowRight className="animate-pulse" />

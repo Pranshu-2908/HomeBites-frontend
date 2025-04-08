@@ -17,7 +17,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }, [status, isAuthenticated, router]);
 
   if (!isAuthenticated && status === "loading") {
-    console.log("checking auth from protected route");
     return (
       <div className="flex items-center justify-center min-h-screen">
         <p className="text-lg font-semibold">Loading....</p>

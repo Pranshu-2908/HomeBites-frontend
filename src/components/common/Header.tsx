@@ -72,17 +72,23 @@ const Navbar = () => {
             <PopoverTrigger asChild>
               <Avatar className="cursor-pointer size-12 bg-white">
                 <AvatarImage
-                  src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                  src={
+                    user?.profilePicture ||
+                    "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                  }
                   alt="@shadcn"
                 />
               </Avatar>
             </PopoverTrigger>
             <PopoverContent className="w-80 mr-2">
-              <div>
-                <div className="flex gap-4">
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-4 items-center">
                   <Avatar className="border-1 border-gray-300">
                     <AvatarImage
-                      src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                      src={
+                        user?.profilePicture ||
+                        "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                      }
                       alt="@shadcn"
                     />
                   </Avatar>
@@ -90,10 +96,6 @@ const Navbar = () => {
                     <h2 className="font-medium">
                       {user?.name || "Error Fetch"}
                     </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                      Quae, maiores.
-                    </p>
                   </div>
                 </div>
                 <div className="flex flex-col text-slate-600">

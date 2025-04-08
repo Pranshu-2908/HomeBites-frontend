@@ -11,11 +11,12 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Contact, Mail, MapPin, Pencil } from "lucide-react";
+import { Contact, Loader2, Mail, MapPin, Pencil } from "lucide-react";
 import Image from "next/image";
 import { Label } from "@/components/ui/label";
-import { useAppSelector } from "@/redux/hooks";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
+import { updateProfile } from "@/redux/slices/authSlice";
 
 const dummyOrders = [
   {
@@ -47,15 +48,28 @@ const statusColor: Record<string, string> = {
 };
 
 export default function UserProfile() {
-  const { user } = useAppSelector((store: RootState) => store.auth);
+  const dispatch = useAppDispatch();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { user, status } = useAppSelector((store: RootState) => store.auth);
+  const [profilePicture, setProfilePicture] = useState<File | null>(null);
+
   const [editData, setEditData] = useState({
     name: user?.name || "John Doe",
     phone: user?.phoneNumber || "",
     location: user?.location || "",
-    profilePhoto:
-      user?.profilePicture ||
-      "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
   });
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("name", editData.name);
+    formData.append("phoneNumber", editData.phone);
+    formData.append("location", editData.location);
+    if (profilePicture) {
+      formData.append("profilePicture", profilePicture);
+    }
+    await dispatch(updateProfile(formData));
+    setIsDialogOpen(false);
+  };
 
   return (
     <div className="flex flex-col gap-6 max-w-6xl mx-auto mt-10 p-4">
@@ -64,7 +78,10 @@ export default function UserProfile() {
         <CardContent className="flex flex-col sm:flex-row justify-between items-center gap-6 px-4 relative">
           <div className="flex items-center gap-4">
             <Image
-              src={editData.profilePhoto}
+              src={
+                user?.profilePicture ||
+                "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+              }
               alt="Profile"
               width={96}
               height={96}
@@ -93,11 +110,12 @@ export default function UserProfile() {
             </div>
           </div>
 
-          <Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button
                 size="icon"
                 className="absolute top-0 right-2 bg-gray-300 hover:bg-gray-400"
+                onClick={() => setIsDialogOpen(true)}
               >
                 <Pencil className="h-12 w-12 text-black" />
               </Button>
@@ -106,7 +124,7 @@ export default function UserProfile() {
               <DialogHeader>
                 <DialogTitle>Edit Profile</DialogTitle>
               </DialogHeader>
-              <form className="flex flex-col gap-4">
+              <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                   <Label>Name</Label>
                   <Input
@@ -142,19 +160,26 @@ export default function UserProfile() {
                   <Label>Profile</Label>
 
                   <Input
-                    placeholder="Profile Photo URL"
-                    value={editData.profilePhoto}
+                    type="file"
+                    accept="image/*"
                     onChange={(e) =>
-                      setEditData({ ...editData, profilePhoto: e.target.value })
+                      setProfilePicture(e.target.files?.[0] || null)
                     }
                   />
                 </div>
-                <Button
-                  type="submit"
-                  className="bg-blue-600 hover:bg-blue-600 w-full"
-                >
-                  Save
-                </Button>
+                {status === "loading" ? (
+                  <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
+                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                    Updating.....
+                  </Button>
+                ) : (
+                  <Button
+                    className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+                    type="submit"
+                  >
+                    Save Profile
+                  </Button>
+                )}
               </form>
             </DialogContent>
           </Dialog>

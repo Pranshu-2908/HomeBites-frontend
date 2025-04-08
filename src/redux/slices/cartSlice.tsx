@@ -74,19 +74,6 @@ export const removeCartItem = createAsyncThunk(
     }
   }
 );
-export const clearCartFromServer = createAsyncThunk(
-  "cart/clearCart",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await axiosInstance.delete("/cart/clear");
-      return res.data;
-    } catch (err: any) {
-      return rejectWithValue(
-        err.response?.data?.message || "Failed to clear cart"
-      );
-    }
-  }
-);
 export const saveCart = createAsyncThunk(
   "cart/save",
   async (_, { getState, rejectWithValue }) => {
@@ -138,7 +125,12 @@ const calTotalAmount = (items: CartItem[]) =>
 const cartSlice = createSlice({
   name: "cart",
   initialState,
-  reducers: {},
+  reducers: {
+    clearCart: (state) => {
+      state.items = [];
+      state.totalAmount = 0;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadCart.fulfilled, (state, action) => {
@@ -190,13 +182,9 @@ const cartSlice = createSlice({
         const removedId = action.meta.arg;
         state.items = state.items.filter((item) => item.mealId !== removedId);
         state.totalAmount = calTotalAmount(state.items);
-      })
-
-      .addCase(clearCartFromServer.fulfilled, (state) => {
-        state.items = [];
-        state.totalAmount = 0;
       });
   },
 });
 
+export const { clearCart } = cartSlice.actions;
 export default cartSlice.reducer;

@@ -11,12 +11,9 @@ import { toast } from "sonner";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import {
-  clearCartFromServer,
-  deleteCart,
-  saveCart,
-} from "@/redux/slices/cartSlice";
-
+import { deleteCart, loadCart, saveCart } from "@/redux/slices/cartSlice";
+import { clearCart } from "@/redux/slices/cartSlice";
+import { useEffect } from "react";
 const Navbar = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -25,14 +22,18 @@ const Navbar = () => {
   );
   const { items } = useAppSelector((store: RootState) => store.cart);
   const user = useAppSelector((store) => store.auth.user);
-
+  useEffect(() => {
+    if (isAuthenticated) {
+      dispatch(loadCart()); // ✅ only load if user is logged in
+    }
+  }, [dispatch, isAuthenticated]);
   const handleLogout = async () => {
     if (items.length > 0) {
       await dispatch(saveCart());
     } else {
       await dispatch(deleteCart());
     }
-    dispatch(clearCartFromServer());
+    dispatch(clearCart());
     const resp = await axiosInstance.get("/user/logout");
     dispatch(logout());
     router.push("/");

@@ -57,8 +57,7 @@ const Cart: React.FC = () => {
     try {
       setIsSummaryOpen(false);
       setLoading(true);
-      console.log(preferredTime);
-      console.log(items);
+
       await axiosInstance.post("/order", {
         meals: items.map((item) => ({
           mealId: item.mealId,

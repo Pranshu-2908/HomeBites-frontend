@@ -5,6 +5,7 @@ import { toast } from "sonner";
 
 export interface CartItem {
   mealId: string;
+  chefId: string;
   name: string;
   price: number;
   quantity: number;
@@ -82,9 +83,7 @@ export const saveCart = createAsyncThunk(
 
     if (items.length === 0) return;
     try {
-      console.log(items);
       axiosInstance.post("/cart", { items });
-      console.log("saved");
     } catch (error: any) {
       toast.error("unable to save the cart info");
       return rejectWithValue(
@@ -142,7 +141,6 @@ const cartSlice = createSlice({
         state.totalAmount = 0;
       })
       .addCase(addToCart.fulfilled, (state, action) => {
-        console.log(action.payload);
         const newItem = action.payload as CartItem;
         const index = state.items.findIndex((i) => i.mealId === newItem.mealId);
 

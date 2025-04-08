@@ -24,6 +24,7 @@ export default function MenuPage() {
   const { meals, loading, error } = useAppSelector(
     (store: RootState) => store.meal
   );
+  const { items } = useAppSelector((store: RootState) => store.cart);
   const { user } = useAppSelector((store: RootState) => store.auth);
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -51,9 +52,17 @@ export default function MenuPage() {
     setTime("");
   };
 
-  const handleAddToCart = async (mealId: string, quantity: number) => {
+  const handleAddToCart = async (
+    mealId: string,
+    quantity: number,
+    chefId: string
+  ) => {
     if (!user) {
       toast("Login to add items in cart!");
+      return;
+    }
+    if (items.length > 0 && items[0].chefId !== chefId) {
+      toast.error("You can only add meals from the same chef to the cart.");
       return;
     }
     const res = await dispatch(
@@ -166,7 +175,7 @@ export default function MenuPage() {
               <div className="flex justify-between items-center">
                 <Button
                   className="mt-4 bg-blue-600 text-white px-4 rounded-md hover:bg-blue-700"
-                  onClick={() => handleAddToCart(meal._id, 1)}
+                  onClick={() => handleAddToCart(meal._id, 1, meal.chefId._id)}
                 >
                   Add to cart
                 </Button>

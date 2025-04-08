@@ -24,7 +24,7 @@ const Navbar = () => {
   const user = useAppSelector((store) => store.auth.user);
   useEffect(() => {
     if (isAuthenticated) {
-      dispatch(loadCart()); // ✅ only load if user is logged in
+      dispatch(loadCart());
     }
   }, [dispatch, isAuthenticated]);
   const handleLogout = async () => {

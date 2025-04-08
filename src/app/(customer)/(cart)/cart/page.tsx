@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -17,10 +18,15 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import {
   decreaseCartQty,
+  deleteCart,
   increaseCartQty,
   loadCart,
   removeCartItem,
 } from "@/redux/slices/cartSlice";
+import { SummaryModal } from "@/components/common/SummaryModal";
+import { toast } from "sonner";
+import { axiosInstance } from "@/utils/axiosInstance";
+import { useRouter } from "next/navigation";
 
 interface CartItem {
   mealId: string;
@@ -35,13 +41,43 @@ interface MobileCartItemProps {
 }
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
+  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const { items, totalAmount } = useAppSelector(
     (store: RootState) => store.cart
   );
   useEffect(() => {
-    console.log("load cart");
     dispatch(loadCart());
   }, [dispatch]);
+  const handlePlaceOrder = async (preferredTime: {
+    hour: number;
+    minute: number;
+  }) => {
+    try {
+      setIsSummaryOpen(false);
+      setLoading(true);
+      console.log(preferredTime);
+      console.log(items);
+      await axiosInstance.post("/order", {
+        meals: items.map((item) => ({
+          mealId: item.mealId,
+          quantity: item.quantity,
+        })),
+        totalAmount,
+        preferredTime,
+      });
+
+      toast.success("Order placed successfully!");
+      await dispatch(deleteCart());
+      router.push("/profile");
+    } catch (err: any) {
+      toast.error(err?.response.data.message || "Failed to place order");
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // For mobile view, group each item's information
   const MobileCartItem: React.FC<MobileCartItemProps> = ({ item, index }) => (
@@ -225,13 +261,24 @@ const Cart: React.FC = () => {
                 <p>Total</p>
                 <p>₹{(totalAmount + totalAmount * 0.18 + 10).toFixed(2)}</p>
               </div>
-              <button className="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600">
+              <button
+                className="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
+                onClick={() => setIsSummaryOpen(true)}
+              >
                 PROCEED TO CHECKOUT
               </button>
             </div>
           </div>
         )}
       </div>
+      <SummaryModal
+        open={isSummaryOpen}
+        onClose={() => setIsSummaryOpen(false)}
+        cartItems={items}
+        totalAmount={totalAmount}
+        onConfirm={(preferredTime) => handlePlaceOrder(preferredTime)}
+        loading={loading}
+      />
     </ProtectedRoute>
   );
 };

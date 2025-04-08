@@ -30,7 +30,7 @@ interface Order {
     | "completed"
     | "cancelled"
     | "rejected";
-  createdAt?: string;
+  createdAt?: Date;
 }
 
 interface OrderState {
@@ -40,6 +40,7 @@ interface OrderState {
   completedOrders: Order[];
   cancelledOrders: Order[];
   rejectedOrders: Order[];
+  customerOrders: Order[];
   loading: boolean;
   error: string | null;
 }
@@ -51,6 +52,7 @@ const initialState: OrderState = {
   completedOrders: [],
   cancelledOrders: [],
   rejectedOrders: [],
+  customerOrders: [],
   loading: false,
   error: null,
 };
@@ -89,6 +91,19 @@ export const updateOrderStatus = createAsyncThunk(
     }
   }
 );
+export const fetchCustomerOrders = createAsyncThunk(
+  "order/fetchCustomerOrder",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/order/");
+      return res.data.orders;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.res?.data?.message || "unable to fetch orders"
+      );
+    }
+  }
+);
 
 const orderSlice = createSlice({
   name: "order",
@@ -110,6 +125,18 @@ const orderSlice = createSlice({
         state.rejectedOrders = action.payload.rejectedOrders;
       })
       .addCase(fetchChefOrdersByStatus.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchCustomerOrders.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCustomerOrders.fulfilled, (state, action) => {
+        state.loading = false;
+        state.customerOrders = [...action.payload].reverse();
+      })
+      .addCase(fetchCustomerOrders.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       })

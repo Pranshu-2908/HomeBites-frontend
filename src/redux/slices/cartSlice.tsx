@@ -135,7 +135,6 @@ const cartSlice = createSlice({
     builder
       .addCase(loadCart.fulfilled, (state, action) => {
         state.items = action.payload;
-        console.log("📦 loadCart triggered");
         state.totalAmount = calTotalAmount(action.payload);
       })
       .addCase(deleteCart.fulfilled, (state) => {

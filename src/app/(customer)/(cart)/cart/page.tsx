@@ -88,64 +88,76 @@ const Cart: React.FC = () => {
         <div className="bg-white shadow-md rounded-lg p-3 md:p-6">
           {/* Desktop view */}
           <div className="hidden md:block">
-            <Table>
-              <TableCaption className="text-xl">Your Cart</TableCaption>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[80px]">Item No.</TableHead>
-                  <TableHead className="text-center">Title</TableHead>
-                  <TableHead className="text-center">Price</TableHead>
-                  <TableHead className="text-center">Quantity</TableHead>
-                  <TableHead className="text-center">Total</TableHead>
-                  <TableHead className="w-[150px] text-center">Edit</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {items.map((item, ind) => (
-                  <TableRow key={ind}>
-                    <TableCell>{ind + 1}</TableCell>
-                    <TableCell className="text-center">{item.name}</TableCell>
-                    <TableCell className="text-center">{item.price}</TableCell>
-                    <TableCell className="text-center">
-                      {item.quantity}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      ₹{item.price * item.quantity}
-                    </TableCell>
-                    <TableCell className="text-center flex items-center justify-center gap-2">
-                      <Button
-                        variant={"outline"}
-                        size={"icon"}
-                        onClick={() => dispatch(increaseCartQty(item.mealId))}
-                      >
-                        <Plus />
-                      </Button>
-                      <Button
-                        variant={"outline"}
-                        size={"icon"}
-                        onClick={() => dispatch(decreaseCartQty(item.mealId))}
-                      >
-                        <Minus />
-                      </Button>
-                      <Button
-                        variant={"destructive"}
-                        size={"icon"}
-                        onClick={() => dispatch(removeCartItem(item.mealId))}
-                      >
-                        <Trash />
-                      </Button>
-                    </TableCell>
+            {items.length === 0 ? (
+              <p className="text-center text-gray-500 py-4">
+                Your cart is empty
+              </p>
+            ) : (
+              <Table>
+                <TableCaption className="text-xl">Your Cart</TableCaption>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[80px]">Item No.</TableHead>
+                    <TableHead className="text-center">Title</TableHead>
+                    <TableHead className="text-center">Price</TableHead>
+                    <TableHead className="text-center">Quantity</TableHead>
+                    <TableHead className="text-center">Total</TableHead>
+                    <TableHead className="w-[150px] text-center">
+                      Edit
+                    </TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={4}>Total</TableCell>
-                  <TableCell className="text-center">₹{totalAmount}</TableCell>
-                  <TableCell></TableCell>
-                </TableRow>
-              </TableFooter>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {items.map((item, ind) => (
+                    <TableRow key={ind}>
+                      <TableCell>{ind + 1}</TableCell>
+                      <TableCell className="text-center">{item.name}</TableCell>
+                      <TableCell className="text-center">
+                        {item.price}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {item.quantity}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        ₹{item.price * item.quantity}
+                      </TableCell>
+                      <TableCell className="text-center flex items-center justify-center gap-2">
+                        <Button
+                          variant={"outline"}
+                          size={"icon"}
+                          onClick={() => dispatch(increaseCartQty(item.mealId))}
+                        >
+                          <Plus />
+                        </Button>
+                        <Button
+                          variant={"outline"}
+                          size={"icon"}
+                          onClick={() => dispatch(decreaseCartQty(item.mealId))}
+                        >
+                          <Minus />
+                        </Button>
+                        <Button
+                          variant={"destructive"}
+                          size={"icon"}
+                          onClick={() => dispatch(removeCartItem(item.mealId))}
+                        >
+                          <Trash />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                <TableFooter>
+                  <TableRow>
+                    <TableCell colSpan={4}>Total</TableCell>
+                    <TableCell className="text-center">
+                      ₹{totalAmount}
+                    </TableCell>
+                    <TableCell></TableCell>
+                  </TableRow>
+                </TableFooter>
+              </Table>
+            )}
           </div>
 
           {/* Mobile view */}

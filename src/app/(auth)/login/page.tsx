@@ -7,7 +7,7 @@ import { login } from "@/redux/slices/authSlice";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Lock, Mail } from "lucide-react";
 import { useAppDispatch } from "@/redux/hooks";
 
 const Login = () => {
@@ -47,60 +47,69 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center mx-auto bg-linear-to-b from-purple-50 to-white">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white px-4">
       <form
         onSubmit={handleSubmit}
-        className="border border-gray-300 rounded-2xl p-4 my-10"
+        className="w-full max-w-md bg-white/80 border border-gray-200 shadow-xl rounded-2xl p-8"
       >
-        <h1 className="text-2xl md:text-3xl font-bold mb-5">Login</h1>
+        <h1 className="text-3xl font-bold text-center text-slate-800 mb-6">
+          Welcome Back
+        </h1>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-
-        <div className="my-5">
-          <Input
-            type="email"
-            name="email"
-            placeholder="E-mail"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="my-5">
-          <Input
-            type="password"
-            placeholder="Password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        {loading ? (
-          <Button
-            type="button"
-            className="cursor-pointer bg-slate-900 hover:bg-slate-600 w-full"
-          >
-            <Loader2 className="text-white animate-spin w-6 h-6" />
-            Submiting...
-          </Button>
-        ) : (
-          <Button
-            type="submit"
-            className="cursor-pointer bg-slate-900 hover:bg-slate-600 w-full"
-          >
-            Submit
-          </Button>
+        {error && (
+          <p className="text-red-500 text-sm text-center mb-4">{error}</p>
         )}
 
-        <div className="mt-5 flex gap-2 justify-center">
-          New to DreamHomes?
-          <Link className="text-slate-600 hover:text-blue-600" href="/register">
+        <div className="space-y-5">
+          <div className="relative">
+            <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              className="pl-10"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="relative">
+            <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              className="pl-10"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+        </div>
+        <div className="mt-6">
+          {loading ? (
+            <Button
+              disabled
+              className="w-full bg-slate-900 hover:bg-slate-800 text-white"
+            >
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              Submitting...
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="w-full bg-slate-900 hover:bg-slate-700 text-white transition"
+            >
+              Login
+            </Button>
+          )}
+        </div>
+        <p className="mt-5 text-center text-sm text-gray-600">
+          New to HomeBites?{" "}
+          <Link href="/register" className="text-blue-600 hover:underline">
             Register here
           </Link>
-        </div>
+        </p>
       </form>
     </div>
   );

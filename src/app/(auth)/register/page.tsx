@@ -10,7 +10,7 @@ import { login } from "@/redux/slices/authSlice";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Lock, Mail, User } from "lucide-react";
 
 const Signup = () => {
   const [loading, setLoading] = useState(false);
@@ -59,21 +59,24 @@ const Signup = () => {
   };
 
   return (
-    <div className="flex items-center justify-center mx-auto bg-linear-to-b from-purple-50 to-white">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white px-4">
       <form
         onSubmit={handleSubmit}
-        className="sm:w-1/3 border border-gray-300 rounded-2xl p-4 my-10"
+        className="w-full max-w-md bg-white/80 border border-gray-200 shadow-xl rounded-2xl p-8"
       >
-        <h1 className="text-3xl font-bold mb-5">Sign Up</h1>
+        <h1 className="text-3xl font-bold text-center text-slate-800 mb-6">
+          Create Your Account
+        </h1>
 
-        {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
-
-        <div className="my-5">
-          <Label className="text-lg">Signup as</Label>
+        {error && (
+          <p className="text-red-500 text-sm text-center mb-4">{error}</p>
+        )}
+        <div className="mb-6">
+          <Label className="text-lg block mb-2">Sign up as:</Label>
           <RadioGroup
             defaultValue={role}
             onValueChange={setRole}
-            className="flex gap-6 justify-start ml-5"
+            className="flex gap-6"
           >
             <div className="flex items-center space-x-2">
               <Input
@@ -82,7 +85,6 @@ const Signup = () => {
                 value="chef"
                 checked={role === "chef"}
                 onChange={() => setRole("chef")}
-                className="cursor-pointer"
               />
               <Label className="text-md sm:text-lg">Chef</Label>
             </div>
@@ -93,77 +95,82 @@ const Signup = () => {
                 value="customer"
                 checked={role === "customer"}
                 onChange={() => setRole("customer")}
-                className="cursor-pointer"
               />
               <Label className="text-md sm:text-lg">Customer</Label>
             </div>
           </RadioGroup>
         </div>
-
-        <div className="my-5">
+        <div className="relative mb-5">
+          <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input
             type="text"
             name="name"
             placeholder="Full Name"
+            className="pl-10"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
-        <div className="my-5">
+        <div className="relative mb-5">
+          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input
             type="email"
             name="email"
             placeholder="E-mail"
+            className="pl-10"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
-        <div className="my-5">
+        <div className="relative mb-5">
+          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input
             type="password"
-            placeholder="Password"
             name="password"
+            placeholder="Password"
+            className="pl-10"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
         </div>
-        <div className="my-5">
+        <div className="relative mb-5">
+          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <Input
             type="password"
-            placeholder="Confirm Password"
             name="passwordConfirm"
+            placeholder="Confirm Password"
+            className="pl-10"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             required
           />
         </div>
-
         {loading ? (
           <Button
             type="button"
-            className="cursor-pointer bg-slate-900 hover:bg-slate-600 w-full"
+            disabled
+            className="w-full bg-slate-900 hover:bg-slate-800 text-white"
           >
-            <Loader2 className="text-white animate-spin w-6 h-6" />
-            Submiting...
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+            Submitting...
           </Button>
         ) : (
           <Button
             type="submit"
-            className="cursor-pointer bg-slate-900 hover:bg-slate-600 w-full"
+            className="w-full bg-slate-900 hover:bg-slate-700 text-white"
           >
-            Submit
+            Sign Up
           </Button>
         )}
-
-        <span className="mt-5 flex gap-2 justify-center">
-          Already registered?
-          <Link className="text-slate-600 hover:text-blue-600" href="/login">
-            Login
+        <p className="mt-5 text-center text-sm text-gray-600">
+          Already registered?{" "}
+          <Link className="text-blue-600 hover:underline" href="/login">
+            Login here
           </Link>
-        </span>
+        </p>
       </form>
     </div>
   );

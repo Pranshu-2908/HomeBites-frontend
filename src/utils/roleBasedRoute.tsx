@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
 import { toast } from "sonner";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface RoleBasedRouteProps {
   allowedRoles: string[];
@@ -31,7 +32,7 @@ const RoleBasedRoute = ({ allowedRoles, children }: RoleBasedRouteProps) => {
   if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg font-semibold">Checking authentication...</p>
+        <LoadingSpinner message="checking for authentication...." />
       </div>
     );
   }

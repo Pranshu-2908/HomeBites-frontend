@@ -4,6 +4,7 @@ import { RootState } from "@/redux/store";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAppSelector } from "@/redux/hooks";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -19,13 +20,17 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   if (!isAuthenticated && status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p className="text-lg font-semibold">Loading....</p>
+        <LoadingSpinner message="checking for authentication...." />
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return null;
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <LoadingSpinner message="checking for authentication..." />
+      </div>
+    );
   }
 
   return <>{children}</>;

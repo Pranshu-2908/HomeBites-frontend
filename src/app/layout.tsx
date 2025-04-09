@@ -1,3 +1,4 @@
+"use client";
 import { Ubuntu, Rowdies } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";

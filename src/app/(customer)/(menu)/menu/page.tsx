@@ -78,14 +78,14 @@ export default function MenuPage() {
     }
   };
 
-  if (loading) return <LoadingSpinner message="Loading Meals..." />;
+  // if (loading) return <LoadingSpinner message="Loading Meals..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!meals) {
     return <p className="text-center text-red-500">Meal not found.</p>;
   }
   return (
-    <div className="container mx-auto p-4">
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6">
+    <div className="py-4">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 bg-gray-100 p-4 mx-4 rounded-lg sticky top-19 z-10">
         <Input
           placeholder="Search meals..."
           value={search}
@@ -137,8 +137,8 @@ export default function MenuPage() {
           </Button>
         </div>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {loading && <LoadingSpinner message="Loading Meals..." />}
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredMeals.map((meal) => (
           <Card key={meal._id} className="overflow-hidden p-0">
             <Image

@@ -3,9 +3,7 @@ import React, { ReactNode } from "react";
 import Header from "../../components/common/Header";
 import Footer from "@/components/common/Footer";
 
-
 function Layout({ children }: { children: ReactNode }) {
-
   return (
     <div className="flex flex-col min-h-screen">
       <div className="sticky top-0 z-50 bg-white shadow-md">

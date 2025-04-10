@@ -63,7 +63,7 @@ export default function WhyChooseUs() {
             >
               <Card className="h-full">
                 <CardContent className="p-6 flex flex-col items-start gap-4 text-left">
-                  <feature.icon className="w-8 h-8 text-purple-600" />
+                  <feature.icon className="w-8 h-8 text-gray-600" />
                   <h3 className="text-lg font-semibold">{feature.title}</h3>
                   <p className="text-sm text-gray-600">{feature.description}</p>
                 </CardContent>

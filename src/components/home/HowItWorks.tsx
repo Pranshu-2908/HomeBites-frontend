@@ -5,24 +5,24 @@ import { CookingPot, Search, ShoppingCart, Truck } from "lucide-react";
 
 const steps = [
   {
-    icon: <Search className="w-10 h-10 text-purple-700" />,
+    icon: <Search className="w-10 h-10 text-gray-700" />,
     title: "Browse Meals",
     description:
       "Explore a variety of homemade dishes prepared by local chefs.",
   },
   {
-    icon: <ShoppingCart className="w-10 h-10 text-purple-700" />,
+    icon: <ShoppingCart className="w-10 h-10 text-gray-700" />,
     title: "Place Order",
     description: "Order easily and securely through our platform.",
   },
   {
-    icon: <CookingPot className="w-10 h-10 text-purple-700" />,
+    icon: <CookingPot className="w-10 h-10 text-gray-700" />,
     title: "Chef Prepares",
     description:
       "Your selected home chef prepares your meal fresh and hygienically.",
   },
   {
-    icon: <Truck className="w-10 h-10 text-purple-700" />,
+    icon: <Truck className="w-10 h-10 text-gray-700" />,
     title: "Delivery",
     description: "Enjoy doorstep delivery right when your meal is ready.",
   },
@@ -43,12 +43,12 @@ export default function HowItWorks() {
           {steps.map((step, index) => (
             <Card
               key={index}
-              className="hover:shadow-lg transition-all duration-300"
+              className="sahdow-lg hover:shadow-xl hover:scale-110 transition-all duration-300 bg-gray-200"
             >
               <CardContent className="flex flex-col items-center text-center p-6 space-y-4">
                 {step.icon}
                 <h3 className="text-xl font-semibold">{step.title}</h3>
-                <p className="text-gray-600 text-sm">{step.description}</p>
+                <p className="text-gray-900 text-sm">{step.description}</p>
               </CardContent>
             </Card>
           ))}

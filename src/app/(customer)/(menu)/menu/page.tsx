@@ -31,6 +31,7 @@ export default function MenuPage() {
   const [search, setSearch] = useState("");
   const [cuisine, setCuisine] = useState("");
   const [category, setCategory] = useState("");
+  const [chefName, setchefName] = useState("");
   const [time, setTime] = useState("");
   useEffect(() => {
     dispatch(fetchMeals());
@@ -39,6 +40,7 @@ export default function MenuPage() {
   const filteredMeals = meals.filter(
     (meal) =>
       meal.name.toLowerCase().includes(search.toLowerCase()) &&
+      meal.chefId.name.toLowerCase().includes(chefName.toLowerCase()) &&
       (cuisine === "" ||
         meal.cuisine.toLowerCase().includes(cuisine.toLowerCase())) &&
       (category === "" ||
@@ -85,7 +87,7 @@ export default function MenuPage() {
   }
   return (
     <div className="py-4">
-      <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 bg-gray-100 p-4 mx-4 rounded-lg sticky top-19 z-10">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-6 bg-gray-100 p-4 mx-4 rounded-lg md:sticky md:top-19 z-10">
         <Input
           placeholder="Search meals..."
           value={search}
@@ -93,54 +95,62 @@ export default function MenuPage() {
           className="w-full md:w-1/3"
         />
         <Input
+          placeholder="Enter chef name..."
+          value={chefName}
+          onChange={(e) => setchefName(e.target.value)}
+          className="w-full md:w-1/4"
+        />
+        <Input
           placeholder="Enter Cuisine..."
           value={cuisine}
           onChange={(e) => setCuisine(e.target.value)}
           className="w-full md:w-1/4"
         />
-        <div className="flex gap-1 items-center">
-          <Select onValueChange={(value) => setCategory(value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="type" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="vegetarian">Veg</SelectItem>
-              <SelectItem value="non-veg">Non-Veg</SelectItem>
-              <SelectItem value="vegan">Vegan</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            size={"icon"}
-            onClick={resetTypeFilter}
-            className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
-          >
-            <X className="text-black" />
-          </Button>
-        </div>
-        <div className="flex gap-1 items-center">
-          <Select onValueChange={(value) => setTime(value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Delivery Time" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="15">15 min</SelectItem>
-              <SelectItem value="30">30 min</SelectItem>
-              <SelectItem value="45">45 min</SelectItem>
-            </SelectContent>
-          </Select>
-          <Button
-            size={"icon"}
-            onClick={resetTimeFilter}
-            className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
-          >
-            <X className="text-black" />
-          </Button>
+        <div className="flex justify-between md:justify-center gap-6">
+          <div className="flex gap-1 items-center">
+            <Select onValueChange={(value) => setCategory(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="vegetarian">Veg</SelectItem>
+                <SelectItem value="non-veg">Non-Veg</SelectItem>
+                <SelectItem value="vegan">Vegan</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              size={"icon"}
+              onClick={resetTypeFilter}
+              className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
+            >
+              <X className="text-black" />
+            </Button>
+          </div>
+          <div className="flex gap-1 items-center">
+            <Select onValueChange={(value) => setTime(value)}>
+              <SelectTrigger>
+                <SelectValue placeholder="Preparation Time" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="15">15 min</SelectItem>
+                <SelectItem value="30">30 min</SelectItem>
+                <SelectItem value="45">45 min</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button
+              size={"icon"}
+              onClick={resetTimeFilter}
+              className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
+            >
+              <X className="text-black" />
+            </Button>
+          </div>
         </div>
       </div>
       {loading && <LoadingSpinner message="Loading Meals..." />}
       <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredMeals.map((meal) => (
-          <Card key={meal._id} className="overflow-hidden p-0">
+          <Card key={meal._id} className="overflow-hidden p-0 m-2 md:m-0">
             <Image
               src={meal.images[0] || "/biryani.jpg"}
               alt={meal.name}
@@ -150,7 +160,10 @@ export default function MenuPage() {
               onClick={() => router.push(`/menu/${meal._id}`)}
             />
             <CardContent className="p-4">
-              <h3 className="text-lg font-bold">{meal.name}</h3>
+              <div className="flex justify-between">
+                <h3 className="text-lg font-bold">{meal.name}</h3>
+                <h3 className="text-md italic">- by {meal.chefId.name}</h3>
+              </div>
               <p className="text-sm text-gray-600">{meal.description}</p>
               <div className="flex items-center justify-between mt-2">
                 <span className="font-semibold">₹{meal.price}</span>

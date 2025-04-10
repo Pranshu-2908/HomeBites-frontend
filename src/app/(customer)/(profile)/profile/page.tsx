@@ -180,7 +180,7 @@ export default function UserProfile() {
       ) : (
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-6">Your Orders</h2>
-          <div className="grid grid-cols-1 gap-6">
+          <div className="grid grid-cols-1 gap-6 bg-white rounded-xl p-4">
             {customerOrders.map((order) => (
               <Card
                 key={order._id}

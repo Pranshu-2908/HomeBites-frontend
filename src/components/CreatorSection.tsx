@@ -6,7 +6,7 @@ import { Github, Linkedin, Instagram } from "lucide-react";
 
 export default function CreatorSection() {
   return (
-    <section className="py-12 px-6 md:px-20 bg-white text-gray-800">
+    <section className="py-12 px-6 md:px-20  text-gray-800">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
         <div className="w-full md:w-2/3 space-y-4">
           <h2 className="text-3xl font-bold">Pranshu Patel</h2>

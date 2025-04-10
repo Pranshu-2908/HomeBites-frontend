@@ -34,6 +34,7 @@ interface Meal {
   quantity: number;
   rating: number;
   availability: boolean;
+  averageRating: string;
   createdAt: Date;
   updatedAt: Date;
 }

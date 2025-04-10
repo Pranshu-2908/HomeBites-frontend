@@ -3,7 +3,7 @@ import { RootState } from "../store";
 import { axiosInstanceWithFormData } from "@/utils/axiosInstance";
 import { toast } from "sonner";
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   role: "chef" | "customer";

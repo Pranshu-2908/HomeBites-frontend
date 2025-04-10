@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useAppSelector } from "@/redux/hooks";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import { toast } from "sonner";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
@@ -15,7 +14,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if ((status === "succeeded" || status === "idle") && !isAuthenticated) {
       router.push("/login");
-      toast.error("Login first to continue");
     }
   }, [status, isAuthenticated, router]);
 

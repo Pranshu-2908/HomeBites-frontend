@@ -14,6 +14,7 @@ import authReducer from "./slices/authSlice";
 import mealReducer from "./slices/mealSlice";
 import orderReducer from "./slices/orderSlice";
 import cartReducer from "./slices/cartSlice";
+import reviewReducer from "./slices/reviewSlice";
 
 const persistConfig = {
   key: "root",
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   meal: mealReducer,
   order: orderReducer,
   cart: cartReducer,
+  review: reviewReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

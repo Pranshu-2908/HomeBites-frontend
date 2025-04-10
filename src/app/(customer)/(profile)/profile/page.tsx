@@ -19,6 +19,7 @@ import { RootState } from "@/redux/store";
 import { updateProfile } from "@/redux/slices/authSlice";
 import { fetchCustomerOrders } from "@/redux/slices/orderSlice";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import ReviewModal from "./reviewModal";
 
 const statusColor: Record<string, string> = {
   completed: "bg-green-500",
@@ -33,6 +34,9 @@ export default function UserProfile() {
   const dispatch = useAppDispatch();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { user, status } = useAppSelector((store: RootState) => store.auth);
+  const [activeReviewOrderId, setActiveReviewOrderId] = useState<string | null>(
+    null
+  );
   const { customerOrders, loading } = useAppSelector(
     (store: RootState) => store.order
   );
@@ -60,178 +64,206 @@ export default function UserProfile() {
   };
 
   return (
-    <div className="flex flex-col gap-6 max-w-6xl mx-auto mt-10 p-4">
-      <Card className="bg-white border shadow-md rounded-2xl overflow-hidden p-2">
-        <CardContent className="flex flex-col sm:flex-row justify-between items-center gap-6 px-4 relative">
-          <div className="flex items-center gap-4">
-            <Image
-              src={
-                user?.profilePicture ||
-                "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
-              }
-              alt="Profile"
-              width={96}
-              height={96}
-              className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
-            />
-            <div className="flex flex-col">
-              <div className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
-                {editData.name}
+
+        <div className="flex flex-col gap-6 max-w-6xl mx-auto mt-10 p-4">
+          <Card className="bg-white border shadow-md rounded-2xl overflow-hidden p-2">
+            <CardContent className="flex flex-col sm:flex-row justify-between items-center gap-6 px-4 relative">
+              <div className="flex items-center gap-4">
+                <Image
+                  src={
+                    user?.profilePicture ||
+                    "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                  }
+                  alt="Profile"
+                  width={96}
+                  height={96}
+                  className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+                />
+                <div className="flex flex-col">
+                  <div className="text-xl sm:text-2xl font-semibold text-gray-800 mb-1">
+                    {editData.name}
+                  </div>
+                  <div className="flex flex-col sm:flex-row gap-2 text-gray-600">
+                    <div className="flex gap-2 items-center">
+                      <Mail className="text-black font-bold" />
+                      {user?.email}
+                    </div>
+                    <hr className="hidden sm:inline border-2 border-black h-6" />
+                    <div className="flex gap-2 items-center">
+                      <Contact className="text-black font-bold" />
+                      {editData.phone}
+                    </div>
+                    <hr className="hidden sm:inline border-2 border-black h-6" />
+                    <div className="flex gap-2 items-center">
+                      <MapPin className="text-black font-bold" />
+                      {editData.location}
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 text-gray-600">
-                <div className="flex gap-2">
-                  <Mail className="text-black font-bold" />
-                  {user?.email}
-                </div>
-                <hr className="hidden sm:inline border-2 border-black h-6" />
-                <div className="flex gap-2">
-                  <Contact className="text-black font-bold" />
-                  {editData.phone}
-                </div>
-                <hr className="hidden sm:inline border-2 border-black h-6" />
-                <div className="flex gap-2">
-                  <MapPin className="text-black font-bold" />
-                  {editData.location}
-                </div>
+
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    size="icon"
+                    className="absolute top-0 right-2 bg-gray-300 hover:bg-gray-400"
+                    onClick={() => setIsDialogOpen(true)}
+                  >
+                    <Pencil className="h-12 w-12 text-black" />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Edit Profile</DialogTitle>
+                  </DialogHeader>
+                  <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                    <div className="space-y-2">
+                      <Label>Name</Label>
+                      <Input
+                        placeholder="Name"
+                        value={editData.name}
+                        onChange={(e) =>
+                          setEditData({ ...editData, name: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Phone Number</Label>
+                      <Input
+                        placeholder="Phone"
+                        value={editData.phone}
+                        onChange={(e) =>
+                          setEditData({ ...editData, phone: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Location</Label>
+
+                      <Input
+                        placeholder="Location"
+                        value={editData.location}
+                        onChange={(e) =>
+                          setEditData({ ...editData, location: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Profile</Label>
+
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) =>
+                          setProfilePicture(e.target.files?.[0] || null)
+                        }
+                      />
+                    </div>
+                    {status === "loading" ? (
+                      <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
+                        <Loader2 className="animate-spin mr-2 h-4 w-4" />
+                        Updating.....
+                      </Button>
+                    ) : (
+                      <Button
+                        className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+                        type="submit"
+                      >
+                        Save Profile
+                      </Button>
+                    )}
+                  </form>
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
+
+          {loading ? (
+            <LoadingSpinner message="Loading your orders..." />
+          ) : customerOrders.length <= 0 ? (
+            <div className="text-xl text-center">Place orders to see here</div>
+          ) : (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">
+                Your Orders
+              </h2>
+              <div className="grid grid-cols-1 gap-6 bg-white rounded-xl p-4">
+                {customerOrders.map((order) => (
+                  <Card
+                    key={order._id}
+                    className="rounded-xl border shadow-sm hover:shadow-md transition-shadow"
+                  >
+                    <CardContent className="flex flex-col gap-3">
+                      <div>
+                        <h1>#{order._id}</h1>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <p className="text-sm text-gray-500">
+                            Ordered on -{" "}
+                            {order.createdAt
+                              ? order.createdAt.toLocaleString()
+                              : "N/A"}
+                          </p>
+                        </div>
+                        <Badge
+                          className={`${
+                            statusColor[order.status]
+                          } text-black text-xs px-3 py-1 rounded-full`}
+                        >
+                          {order.status}
+                        </Badge>
+                      </div>
+                      <hr className="w-full px-2 border-2 border-gray-200" />
+
+                      <div className="space-y-2">
+                        {order.meals.map((item, index) => (
+                          <div
+                            key={index}
+                            className="text-sm text-gray-700 flex justify-between"
+                          >
+                            <span className="font-medium">
+                              {item.mealId.name} --- x{item.quantity}
+                            </span>
+                            <span>₹{item.mealId.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                      <hr className="w-full px-2 border-2 border-gray-200" />
+                      <div className="flex justify-between">
+                        {order.status === "completed" && !order.reviewed ? (
+                          <>
+                            <Button
+                              onClick={() => setActiveReviewOrderId(order._id)}
+                              className="bg-yellow-300 animate-pulse hover:bg-amber-300 text-black"
+                            >
+                              Leave a Review
+                            </Button>
+                            {activeReviewOrderId === order._id && (
+                              <ReviewModal
+                                order={order}
+                                open={true}
+                                onClose={() => setActiveReviewOrderId(null)}
+                              />
+                            )}
+                          </>
+                        ) : order.reviewed ? (
+                          <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium w-fit">
+                            Reviewed
+                          </div>
+                        ) : null}
+
+                        <div className="text-right font-semibold text-gray-800">
+                          Total: ₹{order.totalAmount}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
               </div>
             </div>
-          </div>
-
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                size="icon"
-                className="absolute top-0 right-2 bg-gray-300 hover:bg-gray-400"
-                onClick={() => setIsDialogOpen(true)}
-              >
-                <Pencil className="h-12 w-12 text-black" />
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Profile</DialogTitle>
-              </DialogHeader>
-              <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                <div className="space-y-2">
-                  <Label>Name</Label>
-                  <Input
-                    placeholder="Name"
-                    value={editData.name}
-                    onChange={(e) =>
-                      setEditData({ ...editData, name: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Phone Number</Label>
-                  <Input
-                    placeholder="Phone"
-                    value={editData.phone}
-                    onChange={(e) =>
-                      setEditData({ ...editData, phone: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Location</Label>
-
-                  <Input
-                    placeholder="Location"
-                    value={editData.location}
-                    onChange={(e) =>
-                      setEditData({ ...editData, location: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label>Profile</Label>
-
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) =>
-                      setProfilePicture(e.target.files?.[0] || null)
-                    }
-                  />
-                </div>
-                {status === "loading" ? (
-                  <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white">
-                    <Loader2 className="animate-spin mr-2 h-4 w-4" />
-                    Updating.....
-                  </Button>
-                ) : (
-                  <Button
-                    className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
-                    type="submit"
-                  >
-                    Save Profile
-                  </Button>
-                )}
-              </form>
-            </DialogContent>
-          </Dialog>
-        </CardContent>
-      </Card>
-
-      {loading ? (
-        <LoadingSpinner message="Loading your orders..." />
-      ) : customerOrders.length <= 0 ? (
-        <div className="text-xl text-center">Place orders to see here</div>
-      ) : (
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-6">Your Orders</h2>
-          <div className="grid grid-cols-1 gap-6 bg-white rounded-xl p-4">
-            {customerOrders.map((order) => (
-              <Card
-                key={order._id}
-                className="rounded-xl border shadow-sm hover:shadow-md transition-shadow"
-              >
-                <CardContent className="flex flex-col gap-3">
-                  <div>
-                    <h1>#{order._id}</h1>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <p className="text-sm text-gray-500">
-                        Ordered on -{" "}
-                        {order.createdAt
-                          ? order.createdAt.toLocaleString()
-                          : "N/A"}
-                      </p>
-                    </div>
-                    <Badge
-                      className={`${
-                        statusColor[order.status]
-                      } text-black text-xs px-3 py-1 rounded-full`}
-                    >
-                      {order.status}
-                    </Badge>
-                  </div>
-                  <hr className="w-full px-2 border-2 border-gray-200" />
-
-                  <div className="space-y-2">
-                    {order.meals.map((item, index) => (
-                      <div
-                        key={index}
-                        className="text-sm text-gray-700 flex justify-between"
-                      >
-                        <span className="font-medium">
-                          {item.mealId.name} --- x{item.quantity}
-                        </span>
-                        <span>₹{item.mealId.price}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <hr className="w-full px-2 border-2 border-gray-200" />
-                  <div className="text-right font-semibold text-gray-800">
-                    Total: ₹{order.totalAmount}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+          )}
         </div>
-      )}
-    </div>
+
   );
 }

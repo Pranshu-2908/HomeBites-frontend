@@ -34,7 +34,7 @@ const Login = () => {
       }
       // Redirect based on user role
       if (response.data.user.role === "chef") {
-        router.push("/chef-dashboard");
+        router.replace("/chef-dashboard");
       } else {
         router.push("/");
       }

@@ -30,6 +30,7 @@ interface Order {
     | "completed"
     | "cancelled"
     | "rejected";
+  reviewed: boolean;
   createdAt?: Date;
 }
 
@@ -57,7 +58,6 @@ const initialState: OrderState = {
   error: null,
 };
 
-// Async thunk: Fetch a chef's orders
 export const fetchChefOrdersByStatus = createAsyncThunk(
   "order/fetchChefOrdersByStatus",
   async (_, { rejectWithValue }) => {

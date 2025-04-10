@@ -147,64 +147,73 @@ export default function MenuPage() {
           </div>
         </div>
       </div>
-      {loading && <LoadingSpinner message="Loading Meals..." />}
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredMeals.map((meal) => (
-          <Card key={meal._id} className="overflow-hidden p-0 m-2 md:m-0">
-            <Image
-              src={meal.images[0] || "/biryani.jpg"}
-              alt={meal.name}
-              width={400}
-              height={160}
-              className="w-full h-40 object-cover"
-              onClick={() => router.push(`/menu/${meal._id}`)}
-            />
-            <CardContent className="p-4">
-              <div className="flex justify-between">
-                <h3 className="text-lg font-bold">{meal.name}</h3>
-                <h3 className="text-md italic">- by {meal.chefId.name}</h3>
-              </div>
-              <p className="text-sm text-gray-600">{meal.description}</p>
-              <div className="flex items-center justify-between mt-2">
-                <span className="font-semibold">₹{meal.price}</span>
-                <span
-                  className={
-                    meal.category === "vegetarian"
-                      ? "text-green-600"
-                      : "text-red-600"
-                  }
-                >
-                  {meal.category}
-                </span>
-              </div>
-              <p className="text-xs text-gray-500">
-                {meal.quantity} available • {meal.preparationTime} prep time
-              </p>
-              <div className="flex mt-2">
-                {[...Array(meal.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-500" />
-                ))}
-              </div>
-              <div className="flex justify-between items-center">
-                <Button
-                  className="mt-4 bg-blue-600 text-white px-4 rounded-md hover:bg-blue-700"
-                  onClick={() => handleAddToCart(meal._id, 1, meal.chefId._id)}
-                >
-                  Add to cart
-                </Button>
+      {loading ? (
+        <LoadingSpinner message="Loading Meals..." />
+      ) : (
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredMeals.map((meal) => (
+            <Card key={meal._id} className="overflow-hidden p-0 m-2 md:m-0">
+              <Image
+                src={meal.images[0] || "/biryani.jpg"}
+                alt={meal.name}
+                width={400}
+                height={160}
+                className="w-full h-40 object-cover"
+                onClick={() => router.push(`/menu/${meal._id}`)}
+              />
+              <CardContent className="p-4">
+                <div className="flex justify-between">
+                  <h3 className="text-lg font-bold">{meal.name}</h3>
+                  <h3 className="text-md italic">- by {meal.chefId.name}</h3>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <span className="font-semibold">₹{meal.price}</span>
+                  <span
+                    className={
+                      meal.category === "vegetarian"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }
+                  >
+                    {meal.category}
+                  </span>
+                </div>
+                <p className="text-xs text-gray-500">
+                  {meal.quantity} available • {meal.preparationTime} prep time
+                </p>
+                <div className="flex items-center mt-2 gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg shadow-blue-800/50 text-white w-fit transition duration-300 hover:scale-105">
+                  <Star
+                    className="text-yellow-400 w-4 h-4 drop-shadow-sm"
+                    strokeWidth="3"
+                  />
+                  <p className="font-semibold text-sm tracking-wide">
+                    {meal.averageRating}
+                  </p>
+                </div>
 
-                <Button
-                  size={"icon"}
-                  className="bg-gray-200 border border-gray-300 shadow-md hover:bg-gray-300"
-                  onClick={() => router.push(`/menu/${meal._id}`)}
-                >
-                  <ExternalLink size={24} className="text-black" />
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+                <div className="flex justify-between items-center mt-4">
+                  <Button
+                    className=" bg-blue-900 text-white px-4 rounded-md hover:bg-blue-950"
+                    onClick={() =>
+                      handleAddToCart(meal._id, 1, meal.chefId._id)
+                    }
+                  >
+                    Add to cart
+                  </Button>
+
+                  <Button
+                    size={"icon"}
+                    className="bg-gray-200 border border-gray-300 shadow-md hover:bg-gray-300"
+                    onClick={() => router.push(`/menu/${meal._id}`)}
+                  >
+                    <ExternalLink size={24} className="text-black" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

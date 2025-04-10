@@ -10,7 +10,7 @@ import {
   FaClock,
   FaSpinner,
 } from "react-icons/fa";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   LineChart,
@@ -20,6 +20,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useAppDispatch, useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+import { getChefAverageRating } from "@/redux/slices/reviewSlice";
 
 const orderTrends = [
   { date: "Mar 25", orders: 15 },
@@ -41,6 +44,16 @@ const chefStats = {
 };
 
 function Page() {
+  const { user } = useAppSelector((store: RootState) => store.auth);
+  console.log(user?._id);
+  const { chefAverageRating, totalReviewOfAChef } = useAppSelector(
+    (store: RootState) => store.review
+  );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getChefAverageRating(user?._id || ""));
+  }, [dispatch, user?._id]);
   const router = useRouter();
   return (
     <DashboardPage title="DASHBOARD" hideBackButton={true}>
@@ -81,9 +94,9 @@ function Page() {
               <CardTitle className="text-sm sm:text-base">Rating</CardTitle>
             </CardHeader>
             <CardContent className="pt-0 pb-4 px-4">
-              <p className="text-lg font-bold">{chefStats.rating} ⭐</p>
+              <p className="text-lg font-bold">{chefAverageRating} ⭐</p>
               <p className="text-xs sm:text-sm text-gray-600">
-                ({chefStats.totalRatings} rated)
+                ({totalReviewOfAChef} rated)
               </p>
             </CardContent>
           </Card>

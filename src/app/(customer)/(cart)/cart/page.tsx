@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash } from "lucide-react";
-import ProtectedRoute from "@/utils/protectedRoute";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import {
@@ -118,7 +117,7 @@ const Cart: React.FC = () => {
   );
 
   return (
-    <ProtectedRoute>
+    <>
       <div className="mt-6 md:mt-10 px-2 md:px-4 max-w-6xl mx-auto">
         <div className="bg-white shadow-md rounded-lg p-3 md:p-6">
           {/* Desktop view */}
@@ -278,7 +277,7 @@ const Cart: React.FC = () => {
         onConfirm={(preferredTime) => handlePlaceOrder(preferredTime)}
         loading={loading}
       />
-    </ProtectedRoute>
+    </>
   );
 };
 

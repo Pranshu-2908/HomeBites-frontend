@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux/store";
-import { toast } from "sonner";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface RoleBasedRouteProps {
@@ -23,7 +22,6 @@ const RoleBasedRoute = ({ allowedRoles, children }: RoleBasedRouteProps) => {
   useEffect(() => {
     if (!isAuthenticated || !user || !allowedRoles.includes(user.role)) {
       router.replace("/");
-      toast("Access Denied");
     } else {
       setIsCheckingAuth(false);
     }

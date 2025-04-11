@@ -14,11 +14,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { deleteCart, loadCart, saveCart } from "@/redux/slices/cartSlice";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { useEffect } from "react";
+import { Skeleton } from "../ui/skeleton";
 const Navbar = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const isAuthenticated = useAppSelector(
-    (store: RootState) => store.auth.isAuthenticated
+  const { isAuthenticated, loading } = useAppSelector(
+    (store: RootState) => store.auth
   );
   const { items } = useAppSelector((store: RootState) => store.cart);
   const user = useAppSelector((store) => store.auth.user);
@@ -67,7 +68,9 @@ const Navbar = () => {
           )}
         </div>
 
-        {isAuthenticated ? (
+        {loading ? (
+          <Skeleton className="h-12 w-12 rounded-full bg-gray-800" />
+        ) : isAuthenticated ? (
           <Popover>
             <PopoverTrigger asChild>
               <Avatar className="cursor-pointer size-12 bg-white">

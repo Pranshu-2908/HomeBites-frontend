@@ -26,6 +26,7 @@ import { SummaryModal } from "@/components/common/SummaryModal";
 import { toast } from "sonner";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 interface CartItem {
   mealId: string;
@@ -43,7 +44,7 @@ const Cart: React.FC = () => {
   const router = useRouter();
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { items, totalAmount } = useAppSelector(
+  const { items, totalAmount, cartLoading } = useAppSelector(
     (store: RootState) => store.cart
   );
   useEffect(() => {
@@ -122,7 +123,9 @@ const Cart: React.FC = () => {
         <div className="bg-white shadow-md rounded-lg p-3 md:p-6">
           {/* Desktop view */}
           <div className="hidden md:block">
-            {items.length === 0 ? (
+            {cartLoading ? (
+              <LoadingSpinner message="Loading your cart..." />
+            ) : items.length === 0 ? (
               <p className="text-center text-gray-500 py-4">
                 Your cart is empty
               </p>

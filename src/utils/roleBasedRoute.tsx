@@ -27,7 +27,7 @@ const RoleBasedRoute = ({ allowedRoles, children }: RoleBasedRouteProps) => {
     }
   }, [status, isAuthenticated, user, allowedRoles, router]);
 
-  if (isCheckingAuth) {
+  if (status !== "succeeded" || isCheckingAuth) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner message="checking for authentication...." />

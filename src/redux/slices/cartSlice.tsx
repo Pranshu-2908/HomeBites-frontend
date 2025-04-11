@@ -15,11 +15,13 @@ export interface CartItem {
 interface CartState {
   items: CartItem[];
   totalAmount: number;
+  cartLoading: boolean;
 }
 
 const initialState: CartState = {
   items: [],
   totalAmount: 0,
+  cartLoading: false,
 };
 export const addToCart = createAsyncThunk(
   "cart/addToCart",
@@ -132,9 +134,13 @@ const cartSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(loadCart.pending, (state) => {
+        state.cartLoading = true;
+      })
       .addCase(loadCart.fulfilled, (state, action) => {
         state.items = action.payload;
         state.totalAmount = calTotalAmount(action.payload);
+        state.cartLoading = false;
       })
       .addCase(deleteCart.fulfilled, (state) => {
         state.items = [];

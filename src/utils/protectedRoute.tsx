@@ -8,27 +8,20 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
-  const { isAuthenticated, status } = useAppSelector(
+  const { isAuthenticated, status, loading } = useAppSelector(
     (state: RootState) => state.auth
   );
   useEffect(() => {
-    if ((status === "succeeded" || status === "idle") && !isAuthenticated) {
-      router.push("/login");
+    if (!loading && !isAuthenticated) {
+      console.log("sent from protected route");
+      router.replace("/login");
     }
-  }, [status, isAuthenticated, router]);
+  }, [isAuthenticated, router, loading]);
 
-  if (!isAuthenticated && status === "loading") {
+  if (status !== "succeeded") {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <LoadingSpinner message="checking for authentication...." />
-      </div>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <LoadingSpinner message="checking for authentication..." />
       </div>
     );
   }

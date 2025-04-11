@@ -24,6 +24,7 @@ interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   status: "idle" | "succeeded" | "loading";
+  loading: boolean;
   error: string | null;
 }
 
@@ -31,12 +32,13 @@ const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   status: "idle",
+  loading: true,
   error: null,
 };
 export const updateProfile = createAsyncThunk<
-  User, // Return type
-  FormData, // Argument type
-  { rejectValue: string; state: RootState } // Options
+  User,
+  FormData,
+  { rejectValue: string; state: RootState }
 >("auth/updateProfile", async (formData, { rejectWithValue }) => {
   try {
     const response = await axiosInstanceWithFormData.patch(
@@ -63,11 +65,22 @@ const authSlice = createSlice({
       state.user = action.payload;
       state.isAuthenticated = true;
       state.status = "succeeded";
+      state.loading = false;
+    },
+    setUser: (state, action: PayloadAction<User>) => {
+      state.user = action.payload;
+      state.isAuthenticated = true;
+      state.loading = false;
+      state.status = "succeeded";
     },
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
       state.status = "idle";
+      state.loading = false;
+    },
+    setAuthLoading: (state, action: PayloadAction<boolean>) => {
+      state.loading = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -87,5 +100,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { login, logout } = authSlice.actions;
+export const { login, logout, setUser, setAuthLoading } = authSlice.actions;
 export default authSlice.reducer;

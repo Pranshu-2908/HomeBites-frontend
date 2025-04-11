@@ -1,8 +1,10 @@
+/* eslint-disable jsx-a11y/aria-unsupported-elements */
 "use client";
 import { Ubuntu, Rowdies } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import { StoreProvider } from "@/redux/storeProvider"; // Correct import
+import { StoreProvider } from "@/redux/storeProvider";
+import AuthProvider from "@/utils/AuthProvider";
 
 const ubuntu = Ubuntu({
   variable: "--font-ubuntu",
@@ -29,7 +31,8 @@ export default function RootLayout({
       </head>
       <body className={`${ubuntu.variable} ${rowdies.variable} antialiased`}>
         <StoreProvider>
-          {children}
+          <AuthProvider>{children}</AuthProvider>
+
           <Toaster />
         </StoreProvider>
       </body>

@@ -27,6 +27,9 @@ import { toast } from "sonner";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { AnimatePresence, motion } from "framer-motion";
+
+const MotionTr = motion(TableRow);
 
 interface CartItem {
   mealId: string;
@@ -145,44 +148,62 @@ const Cart: React.FC = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {items.map((item, ind) => (
-                    <TableRow key={ind}>
-                      <TableCell>{ind + 1}</TableCell>
-                      <TableCell className="text-center">{item.name}</TableCell>
-                      <TableCell className="text-center">
-                        {item.price}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        {item.quantity}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        ₹{item.price * item.quantity}
-                      </TableCell>
-                      <TableCell className="text-center flex items-center justify-center gap-2">
-                        <Button
-                          variant={"outline"}
-                          size={"icon"}
-                          onClick={() => dispatch(increaseCartQty(item.mealId))}
-                        >
-                          <Plus />
-                        </Button>
-                        <Button
-                          variant={"outline"}
-                          size={"icon"}
-                          onClick={() => dispatch(decreaseCartQty(item.mealId))}
-                        >
-                          <Minus />
-                        </Button>
-                        <Button
-                          variant={"destructive"}
-                          size={"icon"}
-                          onClick={() => dispatch(removeCartItem(item.mealId))}
-                        >
-                          <Trash />
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  <AnimatePresence>
+                    {items.map((item, ind) => (
+                      <MotionTr
+                        key={ind}
+                        layout
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className="transition-all"
+                      >
+                        <TableCell>{ind + 1}</TableCell>
+                        <TableCell className="text-center">
+                          {item.name}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {item.price}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {item.quantity}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          ₹{item.price * item.quantity}
+                        </TableCell>
+                        <TableCell className="text-center flex items-center justify-center gap-2">
+                          <Button
+                            variant={"outline"}
+                            size={"icon"}
+                            onClick={() =>
+                              dispatch(increaseCartQty(item.mealId))
+                            }
+                          >
+                            <Plus />
+                          </Button>
+                          <Button
+                            variant={"outline"}
+                            size={"icon"}
+                            onClick={() =>
+                              dispatch(decreaseCartQty(item.mealId))
+                            }
+                          >
+                            <Minus />
+                          </Button>
+                          <Button
+                            variant={"destructive"}
+                            size={"icon"}
+                            onClick={() =>
+                              dispatch(removeCartItem(item.mealId))
+                            }
+                          >
+                            <Trash />
+                          </Button>
+                        </TableCell>
+                      </MotionTr>
+                    ))}
+                  </AnimatePresence>
                 </TableBody>
                 <TableFooter>
                   <TableRow>
@@ -209,7 +230,14 @@ const Cart: React.FC = () => {
             ) : (
               <>
                 {items.map((item, ind) => (
-                  <MobileCartItem key={ind} item={item} index={ind} />
+                  <motion.div
+                    key={ind}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.3, delay: ind * 0.1 }}
+                  >
+                    <MobileCartItem item={item} index={ind} />
+                  </motion.div>
                 ))}
                 <div className="mt-4 p-3 border-t font-semibold flex justify-between">
                   <span>Subtotal:</span>
@@ -225,7 +253,13 @@ const Cart: React.FC = () => {
         ) : (
           <div className="flex flex-col gap-4 my-4 md:my-8">
             {/* Promo code section */}
-            <div className="bg-white shadow-md rounded-lg p-4 md:p-6 w-full">
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              className="bg-white shadow-md rounded-lg p-4 md:p-6 w-full"
+            >
               <p className="text-gray-600">
                 If you have a promo code, enter it here:
               </p>
@@ -239,10 +273,15 @@ const Cart: React.FC = () => {
                   Apply
                 </button>
               </div>
-            </div>
+            </motion.div>
 
             {/* Cart totals section */}
-            <div className="bg-white shadow-md rounded-lg p-4 md:p-6 w-full">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ type: "spring", stiffness: 120, delay: 0.7 }}
+              className="bg-white shadow-md rounded-lg p-4 md:p-6 w-full"
+            >
               <h2 className="text-lg font-semibold">Cart Totals</h2>
               <div className="flex justify-between text-gray-600 mt-2">
                 <p>Subtotal</p>
@@ -268,7 +307,7 @@ const Cart: React.FC = () => {
               >
                 PROCEED TO CHECKOUT
               </button>
-            </div>
+            </motion.div>
           </div>
         )}
       </div>

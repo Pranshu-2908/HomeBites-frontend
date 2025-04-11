@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { useAppDispatch } from "@/redux/hooks";
+import { motion } from "framer-motion";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -47,7 +48,13 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white px-4">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+      transition={{ duration: 0.5 }}
+      className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white px-4"
+    >
       <form
         onSubmit={handleSubmit}
         className="w-full max-w-md bg-white/80 border border-gray-200 shadow-xl rounded-2xl p-8"
@@ -111,7 +118,7 @@ const Login = () => {
           </Link>
         </p>
       </form>
-    </div>
+    </motion.div>
   );
 };
 

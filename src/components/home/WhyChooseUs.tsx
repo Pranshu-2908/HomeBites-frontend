@@ -7,6 +7,7 @@ import {
   HeartHandshake,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import { motion } from "framer-motion";
 
 const features = [
   {
@@ -42,7 +43,14 @@ const features = [
 export default function WhyChooseUs() {
   return (
     <section className="bg-white text-gray-800 py-16 px-4">
-      <div className="max-w-6xl mx-auto text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        viewport={{ once: true, amount: 0.3 }}
+        className="max-w-6xl mx-auto text-center"
+      >
+        {" "}
         <h2 className="heading text-3xl md:text-4xl font-bold mb-4">
           Why Choose HomeBites?
         </h2>
@@ -50,11 +58,14 @@ export default function WhyChooseUs() {
           We’re not just a food delivery service — we’re a movement for home
           chefs and homemade goodness.
         </p>
-
         <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-10">
           {features.map((feature, index) => (
-            <div
+            <motion.div
               key={index}
+              initial={{ opacity: 0, scale: 0.95, y: 30 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.15 }}
+              viewport={{ once: true, amount: 0.3 }}
               className={`w-full sm:w-[270px] max-w-[90vw] ${
                 index % 2 === 0
                   ? "scale-105 shadow-lg bg-purple-50"
@@ -68,10 +79,10 @@ export default function WhyChooseUs() {
                   <p className="text-sm text-gray-600">{feature.description}</p>
                 </CardContent>
               </Card>
-            </div>
+            </motion.div>
           ))}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

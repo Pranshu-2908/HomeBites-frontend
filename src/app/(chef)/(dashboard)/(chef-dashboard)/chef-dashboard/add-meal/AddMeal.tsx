@@ -19,6 +19,7 @@ import { RootState } from "@/redux/store";
 import { Loader2 } from "lucide-react";
 import { createMeal } from "@/redux/slices/mealSlice";
 import { useRouter } from "next/navigation";
+import { motion } from "framer-motion";
 
 export default function AddMeal() {
   const router = useRouter();
@@ -64,7 +65,12 @@ export default function AddMeal() {
     router.push("/chef-dashboard/meals");
   };
   return (
-    <div className="w-full max-w-4xl mx-auto p-2 md:p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full max-w-4xl mx-auto p-2 md:p-6"
+    >
       <Card className="shadow-sm">
         <CardContent className="pt-6">
           <h1 className="text-xl sm:text-2xl font-semibold mb-6">Add a Meal</h1>
@@ -202,6 +208,6 @@ export default function AddMeal() {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

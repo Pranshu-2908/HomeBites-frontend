@@ -2,13 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Github, Linkedin, Instagram } from "lucide-react";
 
 export default function CreatorSection() {
   return (
     <section className="py-12 px-6 md:px-20  text-gray-800">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-        <div className="w-full md:w-2/3 space-y-4">
+        <motion.div
+          className="w-full md:w-2/3 space-y-4"
+          initial={{ opacity: 0, x: 50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <h2 className="text-3xl font-bold">Pranshu Patel</h2>
           <p className="text-xl text-slate-700 font-semibold">
             Full-Stack Developer
@@ -44,15 +51,21 @@ export default function CreatorSection() {
               <Instagram className="w-6 h-6 text-gray-700 hover:text-pink-600" />
             </Link>
           </div>
-        </div>
-        <div className="w-full md:w-1/3 relative h-72 md:h-96">
+        </motion.div>
+        <motion.div
+          className="w-full md:w-1/3 relative h-72 md:h-96"
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <Image
             src="/random.jpg"
             alt="Pranshu Patel"
             fill
             className="object-cover rounded-xl shadow-md"
           />
-        </div>
+        </motion.div>
       </div>
     </section>
   );

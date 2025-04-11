@@ -18,6 +18,9 @@ import {
   updateOrderStatus,
 } from "@/redux/slices/orderSlice";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { motion } from "framer-motion";
+
+const MotionTr = motion(TableRow);
 
 export default function ViewOrders() {
   const { pendingOrders, acceptedOrders, preparingOrders, loading } =
@@ -52,7 +55,12 @@ export default function ViewOrders() {
   };
   if (loading) return <LoadingSpinner message="Loading live orders...." />;
   return (
-    <div className="p-2 md:p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="p-2 md:p-6"
+    >
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>Live Orders</CardTitle>
@@ -72,8 +80,13 @@ export default function ViewOrders() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order._id}>
+                {orders.map((order, ind) => (
+                  <MotionTr
+                    key={order._id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: ind * 0.1 }}
+                  >
                     <TableCell>{order._id}</TableCell>
                     <TableCell className="text-center">
                       {order.customerId?.name}
@@ -132,7 +145,7 @@ export default function ViewOrders() {
                         </Button>
                       )}
                     </TableCell>
-                  </TableRow>
+                  </MotionTr>
                 ))}
               </TableBody>
             </Table>
@@ -217,6 +230,6 @@ export default function ViewOrders() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

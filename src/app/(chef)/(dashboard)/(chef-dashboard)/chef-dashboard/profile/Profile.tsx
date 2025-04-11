@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { updateProfile } from "@/redux/slices/authSlice";
 import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function CreateProfile() {
   const { user, status } = useAppSelector((store: RootState) => store.auth);
@@ -49,7 +50,12 @@ export default function CreateProfile() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto p-2 md:p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full max-w-4xl mx-auto p-2 md:p-6"
+    >
       <Card className="shadow-sm">
         <CardContent className="pt-6">
           <h1 className="text-xl md:text-2xl font-semibold mb-4">
@@ -166,6 +172,6 @@ export default function CreateProfile() {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

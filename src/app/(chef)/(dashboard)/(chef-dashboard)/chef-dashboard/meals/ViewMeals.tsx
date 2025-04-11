@@ -25,6 +25,8 @@ import { deleteMeal, fetchChefMeals } from "@/redux/slices/mealSlice";
 import { Edit2, Loader2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { motion } from "framer-motion";
+const MotionTr = motion(TableRow);
 
 export default function ViewMeals() {
   const router = useRouter();
@@ -51,7 +53,12 @@ export default function ViewMeals() {
   };
   if (loading) return <LoadingSpinner message="Loading your meals..." />;
   return (
-    <div className="w-full">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="w-full"
+    >
       <Card className="shadow-md">
         <CardHeader>
           <CardTitle className="text-center text-xl sm:text-2xl">
@@ -74,8 +81,13 @@ export default function ViewMeals() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {chefMeals.map((meal) => (
-                  <TableRow key={meal._id}>
+                {chefMeals.map((meal, ind) => (
+                  <MotionTr
+                    key={meal._id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: ind * 0.1 }}
+                  >
                     <TableCell>{meal.name}</TableCell>
                     <TableCell className="text-center">
                       {meal.category}
@@ -139,7 +151,7 @@ export default function ViewMeals() {
                         </DialogContent>
                       </Dialog>
                     </TableCell>
-                  </TableRow>
+                  </MotionTr>
                 ))}
               </TableBody>
             </Table>
@@ -236,6 +248,6 @@ export default function ViewMeals() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

@@ -15,6 +15,7 @@ import { deleteCart, loadCart, saveCart } from "@/redux/slices/cartSlice";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
+
 const Navbar = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -35,7 +36,9 @@ const Navbar = () => {
       await dispatch(deleteCart());
     }
     dispatch(clearCart());
-    const resp = await axiosInstance.get("/user/logout");
+    const resp = await axiosInstance.get("/user/logout", {
+      withCredentials: true,
+    });
     dispatch(logout());
     router.push("/");
     toast(resp.data.message);

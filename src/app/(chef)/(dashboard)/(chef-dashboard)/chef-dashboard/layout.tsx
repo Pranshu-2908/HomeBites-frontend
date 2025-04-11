@@ -128,7 +128,7 @@ export default function ChefDashboardLayout({
               "sticky top-0 h-screen"
             )}
           >
-            {/* Desktop profile*/}
+            {/* Desktop */}
             <div className="flex items-center p-4 gap-3 ">
               <div className="hidden md:block text-xl font-semibold">
                 {user?.name}

@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { motion } from "framer-motion";
 
 export default function EditMealPage() {
   const { mealId } = useParams();
@@ -87,7 +88,12 @@ export default function EditMealPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="max-w-4xl mx-auto"
+    >
       <Card>
         <CardHeader>
           <h2 className="text-3xl font-bold text-center">Edit Meal</h2>
@@ -215,6 +221,6 @@ export default function EditMealPage() {
           </form>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

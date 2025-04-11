@@ -14,6 +14,9 @@ import { useEffect } from "react";
 import { fetchChefOrdersByStatus } from "@/redux/slices/orderSlice";
 import { RootState } from "@/redux/store";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { motion } from "framer-motion";
+
+const MotionTr = motion(TableRow);
 
 export default function OrderHistory() {
   const { completedOrders, cancelledOrders, rejectedOrders, loading, error } =
@@ -35,7 +38,12 @@ export default function OrderHistory() {
     return "bg-orange-500 text-white";
   };
   return (
-    <div className="p-2 md:p-6">
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="p-2 md:p-6"
+    >
       <Card className="mb-4">
         <CardHeader>
           <CardTitle>Completed Orders</CardTitle>
@@ -55,8 +63,13 @@ export default function OrderHistory() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {orders.map((order) => (
-                  <TableRow key={order._id}>
+                {orders.map((order, ind) => (
+                  <MotionTr
+                    key={order._id}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: ind * 0.1 }}
+                  >
                     <TableCell>{order._id}</TableCell>
                     <TableCell className="text-center">
                       {order.customerId?.name}
@@ -78,7 +91,7 @@ export default function OrderHistory() {
                         {order.status}
                       </Badge>
                     </TableCell>
-                  </TableRow>
+                  </MotionTr>
                 ))}
               </TableBody>
             </Table>
@@ -89,7 +102,9 @@ export default function OrderHistory() {
             {orders.map((order) => (
               <Card key={order._id} className="p-4 border shadow-sm">
                 <div className="flex justify-between items-start mb-2">
-                  <div className="font-medium">{order._id}</div>
+                  <div className="hidden sm:inline font-medium">
+                    {order._id}
+                  </div>
                   <Badge className={getStatusBadgeClass(order.status)}>
                     {order.status}
                   </Badge>
@@ -128,6 +143,6 @@ export default function OrderHistory() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

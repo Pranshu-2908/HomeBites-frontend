@@ -60,7 +60,7 @@ export default function CreatorSection() {
           transition={{ duration: 0.6, ease: "easeOut" }}
         >
           <Image
-            src="/random.jpg"
+            src="/about.jpg"
             alt="Pranshu Patel"
             fill
             className="object-cover rounded-xl shadow-md"

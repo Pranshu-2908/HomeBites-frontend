@@ -117,12 +117,12 @@ const orderSlice = createSlice({
       })
       .addCase(fetchChefOrdersByStatus.fulfilled, (state, action) => {
         state.loading = false;
-        state.pendingOrders = action.payload.pendingOrders;
-        state.acceptedOrders = action.payload.acceptedOrders;
-        state.preparingOrders = action.payload.preparingOrders;
-        state.completedOrders = action.payload.completedOrders;
-        state.cancelledOrders = action.payload.cancelledOrders;
-        state.rejectedOrders = action.payload.rejectedOrders;
+        state.pendingOrders = [...action.payload.pendingOrders].reverse();
+        state.acceptedOrders = [...action.payload.acceptedOrders].reverse();
+        state.preparingOrders = [...action.payload.preparingOrders].reverse();
+        state.completedOrders = [...action.payload.completedOrders].reverse();
+        state.cancelledOrders = [...action.payload.cancelledOrders].reverse();
+        state.rejectedOrders = [...action.payload.rejectedOrders].reverse();
       })
       .addCase(fetchChefOrdersByStatus.rejected, (state, action) => {
         state.loading = false;

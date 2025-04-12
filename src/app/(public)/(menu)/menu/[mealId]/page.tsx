@@ -24,6 +24,7 @@ import {
   getMealReviews,
 } from "@/redux/slices/reviewSlice";
 import { motion } from "framer-motion";
+import { formatTime } from "@/utils/formatTime";
 
 export default function MealDetailsPage() {
   const { mealId } = useParams() as { mealId: string };
@@ -75,17 +76,17 @@ export default function MealDetailsPage() {
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <Card className="overflow-hidden">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5">
-            <Image
-              src={selectedMeal.images?.[0] || "/biryani.jpg"}
-              alt={selectedMeal?.name || "Meal Image"}
-              width={500}
-              height={256}
-              className="w-auto h-64 object-cover rounded-lg mx-auto"
-            />
-            <CardContent className="flex flex-col justify-between">
-              <div>
+        <Card className="overflow-hidden p-0 gap-0">
+          <div className="flex flex-col gap-6 p-5">
+            <div className="flex gap-4">
+              <Image
+                src={selectedMeal.images?.[0] || "/biryani.jpg"}
+                alt={selectedMeal?.name || "Meal Image"}
+                width={500}
+                height={256}
+                className="basis-1/2 w-fit h-64 object-cover rounded-lg"
+              />
+              <div className="basis-1/2 p-4">
                 <h1 className="text-2xl font-bold">{selectedMeal.name}</h1>
                 <p className="text-gray-600 mt-2">{selectedMeal.description}</p>
                 <div className="flex items-center justify-between mt-3">
@@ -117,41 +118,58 @@ export default function MealDetailsPage() {
                     {selectedMeal.averageRating}
                   </p>
                 </div>
+                <Button
+                  className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full"
+                  onClick={() => handleAddToCart(selectedMeal._id, 1)}
+                >
+                  Add to cart
+                </Button>
               </div>
-
-              <div className="mt-6">
-                <h2 className="text-lg font-semibold">Chef Information</h2>
-                <p className="text-gray-600">
-                  👨‍🍳 Chef : {selectedMeal?.chefId?.name}
-                </p>
-                <p className="text-gray-600">
-                  ⭐ Chef rating :{" "}
-                  <span className="font-bold text-black">
-                    {chefAverageRating}
-                  </span>
-                </p>
-                <p className="text-gray-600">
-                  📅 bio : {selectedMeal.chefId?.bio}
-                </p>
-                <p className="text-gray-600">
-                  📍 Location : {selectedMeal.chefId?.location}
-                </p>
-                <p className="text-gray-600">
-                  🕒 Working Hours : From{" "}
-                  {selectedMeal.chefId?.workingHours?.startHour}:
-                  {selectedMeal.chefId?.workingHours?.startMinute} to{" "}
-                  {selectedMeal.chefId?.workingHours?.endHour}:
-                  {selectedMeal.chefId?.workingHours?.endMinute}
-                </p>
+            </div>
+            <div className="flex gap-2 justify-between">
+              <div className="flex flex-col justify-between">
+                <div className="text-lg">
+                  <h2 className="text-xl font-bold mb-4">Chef Information</h2>
+                  <p className="text-gray-600">
+                    👨‍🍳 <span className="font-bold">Name :</span>{" "}
+                    {selectedMeal?.chefId?.name}
+                  </p>
+                  <p className="text-gray-600">
+                    ⭐ <span className="font-bold">Rating :</span>{" "}
+                    <span className="font-bold text-black">
+                      {chefAverageRating}
+                    </span>
+                  </p>
+                  <p className="text-gray-600">
+                    📅 <span className="font-bold">Bio :</span>{" "}
+                    {selectedMeal.chefId?.bio}
+                  </p>
+                  <p className="text-gray-600">
+                    📍<span className="font-bold">Location :</span>{" "}
+                    {selectedMeal.chefId?.location}
+                  </p>
+                  <p className="text-gray-600">
+                    🕒 <span className="font-bold">Working Hours :</span> From{" "}
+                    {formatTime(
+                      selectedMeal.chefId?.workingHours?.startHour ?? 0,
+                      selectedMeal.chefId?.workingHours?.startMinute ?? 0
+                    )}{" "}
+                    to{" "}
+                    {formatTime(
+                      selectedMeal.chefId?.workingHours?.endHour ?? 0,
+                      selectedMeal.chefId?.workingHours?.endMinute ?? 0
+                    )}
+                  </p>
+                </div>
               </div>
-
-              <Button
-                className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700"
-                onClick={() => handleAddToCart(selectedMeal._id, 1)}
-              >
-                Add to cart
-              </Button>
-            </CardContent>
+              <Image
+                src={selectedMeal.chefId?.profilePicture || "/profile.jpg"}
+                alt={selectedMeal.chefId?.profilePicture || "chef Image"}
+                width={200}
+                height={200}
+                className="w-35 h-40 object-fit"
+              />
+            </div>
           </div>
         </Card>
       </motion.div>

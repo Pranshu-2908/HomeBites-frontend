@@ -5,46 +5,11 @@ import { Star } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { motion } from "framer-motion";
-
-const chefs = [
-  {
-    name: "Anita Sharma",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-    cuisines: ["North Indian", "Vegan"],
-    rating: 4.8,
-  },
-  {
-    name: "Rahul Mehra",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-    cuisines: ["Mughlai", "Chinese"],
-    rating: 4.7,
-  },
-  {
-    name: "Fatima Sheikh",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-    cuisines: ["Hyderabadi", "South Indian"],
-    rating: 4.9,
-  },
-  {
-    name: "Suresh Nair",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-    cuisines: ["Kerala", "Seafood"],
-    rating: 4.6,
-  },
-  {
-    name: "Meena Gupta",
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png",
-    cuisines: ["Gujarati", "Snacks"],
-    rating: 4.5,
-  },
-];
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
 
 export default function FeaturedChefs() {
+  const { chefs } = useAppSelector((store: RootState) => store.auth);
   const [sliderRef] = useKeenSlider<HTMLDivElement>({
     loop: true,
     mode: "snap",
@@ -87,27 +52,23 @@ export default function FeaturedChefs() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: index * 0.2 }}
                 viewport={{ once: true, amount: 0.3 }}
-                className="keen-slider__slide"
+                className="keen-slider__slide p-4"
               >
-                <Card className="hover:shadow-xl transition-all duration-300 h-full">
+                <Card className="hover:shadow-xl transition-all duration-300 h-full p-0">
                   <CardContent className="p-6 text-left space-y-4">
-                    <div className="w-full h-48 relative rounded-xl overflow-hidden">
+                    <div className="w-full h-72 relative rounded-xl overflow-hidden">
                       <Image
-                        src={chef.image}
+                        src={chef.profilePicture ?? ""}
                         alt={chef.name}
                         fill
                         className="object-cover"
                       />
                     </div>
                     <h3 className="text-xl font-bold">{chef.name}</h3>
-                    <p className="text-sm text-gray-600">
-                      Cuisines: {chef.cuisines.join(", ")}
-                    </p>
+                    <p className="text-sm text-gray-600">Bio: {chef.bio}</p>
                     <div className="flex items-center gap-1 text-yellow-500">
                       <Star className="w-5 h-5 fill-yellow-500" />
-                      <span className="text-md font-medium">
-                        {chef.rating.toFixed(1)}
-                      </span>
+                      <span className="text-md font-medium">{4}</span>
                     </div>
                   </CardContent>
                 </Card>

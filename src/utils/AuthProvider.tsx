@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useEffect } from "react";
@@ -17,8 +17,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           withCredentials: true,
         });
         dispatch(setUser(res.data));
-      } catch (err: any) {
-        console.log(err);
+      } catch (error) {
         dispatch(logout());
       }
     };

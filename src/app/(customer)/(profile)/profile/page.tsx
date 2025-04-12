@@ -213,6 +213,7 @@ export default function UserProfile() {
                   order.status !== "completed" &&
                   order.status !== "cancelled" &&
                   order.status !== "rejected";
+                const isCompleted = order.status === "completed";
                 return (
                   <motion.div
                     key={order._id}
@@ -225,7 +226,9 @@ export default function UserProfile() {
                       className={`rounded-xl border shadow-sm hover:shadow-md transition-shadow ${
                         isLive
                           ? "border-yellow-400 bg-yellow-50"
-                          : "border-gray-200 bg-white"
+                          : isCompleted
+                          ? "border-green-200 bg-green-50"
+                          : "border-red-200 bg-red-50"
                       }`}
                     >
                       <CardContent className="flex flex-col gap-3">
@@ -237,7 +240,17 @@ export default function UserProfile() {
                             <p className="text-sm text-gray-500">
                               Ordered on -{" "}
                               {order.createdAt
-                                ? order.createdAt.toLocaleString()
+                                ? new Date(order.createdAt).toLocaleString(
+                                    "en-IN",
+                                    {
+                                      day: "2-digit",
+                                      month: "long",
+                                      year: "numeric",
+                                      hour: "numeric",
+                                      minute: "2-digit",
+                                      hour12: true,
+                                    }
+                                  )
                                 : "N/A"}
                             </p>
                           </div>
@@ -285,7 +298,7 @@ export default function UserProfile() {
                               )}
                             </>
                           ) : order.reviewed ? (
-                            <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium w-fit">
+                            <div className="bg-yellow-200 text-black-800 px-3 py-1 rounded-full text-sm font-medium w-fit">
                               Reviewed
                             </div>
                           ) : null}

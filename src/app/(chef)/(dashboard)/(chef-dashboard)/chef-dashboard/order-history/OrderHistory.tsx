@@ -58,7 +58,9 @@ export default function OrderHistory() {
                   <TableHead className="text-center">Customer</TableHead>
                   <TableHead className="text-center">Meal</TableHead>
                   <TableHead className="text-center">Total Price (₹)</TableHead>
-                  <TableHead className="text-center">Delivery Time</TableHead>
+                  <TableHead className="text-center">
+                    Order Date & Time
+                  </TableHead>
                   <TableHead className="text-center">Status</TableHead>
                 </TableRow>
               </TableHeader>
@@ -85,7 +87,19 @@ export default function OrderHistory() {
                     <TableCell className="text-center">
                       ₹{order.totalAmount}
                     </TableCell>
-                    <TableCell className="text-center">N/A</TableCell>
+                    <TableCell className="text-center">
+                      {new Date(order?.createdAt || "").toLocaleString(
+                        "en-IN",
+                        {
+                          day: "2-digit",
+                          month: "long",
+                          year: "numeric",
+                          hour: "numeric",
+                          minute: "2-digit",
+                          hour12: true,
+                        }
+                      )}
+                    </TableCell>
                     <TableCell className="text-center">
                       <Badge className={getStatusBadgeClass(order.status)}>
                         {order.status}

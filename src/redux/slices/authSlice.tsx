@@ -1,6 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-import { axiosInstanceWithFormData } from "@/utils/axiosInstance";
+import {
+  axiosInstance,
+  axiosInstanceWithFormData,
+} from "@/utils/axiosInstance";
 import { toast } from "sonner";
 interface User {
   _id: string;
@@ -22,6 +26,7 @@ interface User {
 
 interface AuthState {
   user: User | null;
+  chefs: User[];
   isAuthenticated: boolean;
   status: "idle" | "succeeded" | "loading";
   loading: boolean;
@@ -31,6 +36,7 @@ interface AuthState {
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
+  chefs: [],
   status: "idle",
   loading: true,
   error: null,
@@ -47,8 +53,6 @@ export const updateProfile = createAsyncThunk<
     );
     toast.success(response.data.message);
     return response.data.user;
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     toast.error(err.response?.data?.message || "Failed to update profile");
     return rejectWithValue(
@@ -56,7 +60,19 @@ export const updateProfile = createAsyncThunk<
     );
   }
 });
-
+export const fetchAllchefs = createAsyncThunk(
+  "auth/fetchAllChef",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await axiosInstance.get("/user/chefs");
+      return res.data.chefs;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "unable to fetch chefs"
+      );
+    }
+  }
+);
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -96,6 +112,10 @@ const authSlice = createSlice({
       })
       .addCase(updateProfile.rejected, (state, action) => {
         state.error = action.payload || "Failed to update profile";
+      })
+      .addCase(fetchAllchefs.fulfilled, (state, action) => {
+        state.chefs = action.payload;
+        state.error = null;
       });
   },
 });

@@ -9,7 +9,7 @@ function Layout({ children }: { children: ReactNode }) {
       <div className="sticky top-0 z-50 bg-white shadow-md">
         <Header />
       </div>
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 bg-gray-300">{children}</main>
       <Footer />
     </div>
   );

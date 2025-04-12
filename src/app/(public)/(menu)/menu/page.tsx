@@ -170,8 +170,8 @@ export default function MenuPage() {
                   src={meal.images[0] || "/biryani.jpg"}
                   alt={meal.name}
                   width={400}
-                  height={160}
-                  className="w-full h-40 object-cover"
+                  height={250}
+                  className="w-full h-60 object-cover"
                   onClick={() => router.push(`/menu/${meal._id}`)}
                 />
                 <CardContent className="p-4">

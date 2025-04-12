@@ -125,7 +125,7 @@ export default function MealDetailsPage() {
                   👨‍🍳 Chef : {selectedMeal?.chefId?.name}
                 </p>
                 <p className="text-gray-600">
-                  👨‍🍳 Chef rating :{" "}
+                  ⭐ Chef rating :{" "}
                   <span className="font-bold text-black">
                     {chefAverageRating}
                   </span>
@@ -137,7 +137,7 @@ export default function MealDetailsPage() {
                   📍 Location : {selectedMeal.chefId?.location}
                 </p>
                 <p className="text-gray-600">
-                  📍 Working Hours : From{" "}
+                  🕒 Working Hours : From{" "}
                   {selectedMeal.chefId?.workingHours?.startHour}:
                   {selectedMeal.chefId?.workingHours?.startMinute} to{" "}
                   {selectedMeal.chefId?.workingHours?.endHour}:

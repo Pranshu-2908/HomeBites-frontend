@@ -208,85 +208,97 @@ export default function UserProfile() {
               Your Orders
             </h2>
             <div className="grid grid-cols-1 gap-6 bg-white rounded-xl p-4">
-              {customerOrders.map((order, index) => (
-                <motion.div
-                  key={order._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.2 }}
-                >
-                  <Card
+              {customerOrders.map((order, index) => {
+                const isLive =
+                  order.status !== "completed" &&
+                  order.status !== "cancelled" &&
+                  order.status !== "rejected";
+                return (
+                  <motion.div
                     key={order._id}
-                    className="rounded-xl border shadow-sm hover:shadow-md transition-shadow"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3, delay: index * 0.2 }}
                   >
-                    <CardContent className="flex flex-col gap-3">
-                      <div>
-                        <h1>#{order._id}</h1>
-                      </div>
-                      <div className="flex justify-between items-center">
+                    <Card
+                      key={order._id}
+                      className={`rounded-xl border shadow-sm hover:shadow-md transition-shadow ${
+                        isLive
+                          ? "border-yellow-400 bg-yellow-50"
+                          : "border-gray-200 bg-white"
+                      }`}
+                    >
+                      <CardContent className="flex flex-col gap-3">
                         <div>
-                          <p className="text-sm text-gray-500">
-                            Ordered on -{" "}
-                            {order.createdAt
-                              ? order.createdAt.toLocaleString()
-                              : "N/A"}
-                          </p>
+                          <h1>#{order._id}</h1>
                         </div>
-                        <Badge
-                          className={`${
-                            statusColor[order.status]
-                          } text-black text-xs px-3 py-1 rounded-full`}
-                        >
-                          {order.status}
-                        </Badge>
-                      </div>
-                      <hr className="w-full px-2 border-2 border-gray-200" />
-
-                      <div className="space-y-2">
-                        {order.meals.map((item, index) => (
-                          <div
-                            key={index}
-                            className="text-sm text-gray-700 flex justify-between"
+                        <div className="flex justify-between items-center">
+                          <div>
+                            <p className="text-sm text-gray-500">
+                              Ordered on -{" "}
+                              {order.createdAt
+                                ? order.createdAt.toLocaleString()
+                                : "N/A"}
+                            </p>
+                          </div>
+                          <Badge
+                            className={`${
+                              statusColor[order.status]
+                            } text-black text-xs px-3 py-1 rounded-full`}
                           >
-                            <span className="font-medium">
-                              {item.mealId.name} --- x{item.quantity}
-                            </span>
-                            <span>₹{item.mealId.price}</span>
-                          </div>
-                        ))}
-                      </div>
-                      <hr className="w-full px-2 border-2 border-gray-200" />
-                      <div className="flex justify-between">
-                        {order.status === "completed" && !order.reviewed ? (
-                          <>
-                            <Button
-                              onClick={() => setActiveReviewOrderId(order._id)}
-                              className="bg-yellow-300 animate-pulse hover:bg-amber-300 text-black"
-                            >
-                              Leave a Review
-                            </Button>
-                            {activeReviewOrderId === order._id && (
-                              <ReviewModal
-                                order={order}
-                                open={true}
-                                onClose={() => setActiveReviewOrderId(null)}
-                              />
-                            )}
-                          </>
-                        ) : order.reviewed ? (
-                          <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium w-fit">
-                            Reviewed
-                          </div>
-                        ) : null}
-
-                        <div className="text-right font-semibold text-gray-800">
-                          Total: ₹{order.totalAmount}
+                            {order.status}
+                          </Badge>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              ))}
+                        <hr className="w-full px-2 border-2 border-gray-200" />
+
+                        <div className="space-y-2">
+                          {order.meals.map((item, index) => (
+                            <div
+                              key={index}
+                              className="text-sm text-gray-700 flex justify-between"
+                            >
+                              <span className="font-medium">
+                                {item.mealId.name} --- x{item.quantity}
+                              </span>
+                              <span>₹{item.mealId.price}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <hr className="w-full px-2 border-2 border-gray-200" />
+                        <div className="flex justify-between">
+                          {order.status === "completed" && !order.reviewed ? (
+                            <>
+                              <Button
+                                onClick={() =>
+                                  setActiveReviewOrderId(order._id)
+                                }
+                                className="bg-yellow-300 animate-pulse hover:bg-amber-300 text-black"
+                              >
+                                Leave a Review
+                              </Button>
+                              {activeReviewOrderId === order._id && (
+                                <ReviewModal
+                                  order={order}
+                                  open={true}
+                                  onClose={() => setActiveReviewOrderId(null)}
+                                />
+                              )}
+                            </>
+                          ) : order.reviewed ? (
+                            <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium w-fit">
+                              Reviewed
+                            </div>
+                          ) : null}
+
+                          <div className="text-right font-semibold text-gray-800">
+                            Total: ₹{order.totalAmount}
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         )}

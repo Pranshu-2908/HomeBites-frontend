@@ -22,10 +22,9 @@ import {
   loadCart,
   removeCartItem,
 } from "@/redux/slices/cartSlice";
-import { SummaryModal } from "@/components/common/SummaryModal";
+import { SummaryModal } from "@/app/(customer)/(cart)/cart/SummaryModal";
 import { toast } from "sonner";
 import { axiosInstance } from "@/utils/axiosInstance";
-import { useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -44,7 +43,6 @@ interface MobileCartItemProps {
 }
 const Cart: React.FC = () => {
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const { items, totalAmount, cartLoading } = useAppSelector(
@@ -61,7 +59,7 @@ const Cart: React.FC = () => {
       setIsSummaryOpen(false);
       setLoading(true);
 
-      await axiosInstance.post("/order", {
+      const res = await axiosInstance.post("/order", {
         meals: items.map((item) => ({
           mealId: item.mealId,
           quantity: item.quantity,
@@ -70,9 +68,26 @@ const Cart: React.FC = () => {
         preferredTime,
       });
 
-      toast.success("Order placed successfully!");
-      await dispatch(deleteCart());
-      router.push("/profile");
+      const orderId = res.data.order._id;
+
+      //stripe checkout session creation
+      const checkoutRes = await axiosInstance.post(
+        "/payment/create-checkout-session",
+        {
+          cartItems: items,
+          orderId,
+        }
+      );
+
+      const checkoutUrl = checkoutRes.data.url;
+
+      // redirect user to stripe payment page
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      } else {
+        throw new Error("Stripe checkout session URL not received.");
+      }
+      dispatch(deleteCart());
     } catch (err: any) {
       toast.error(err?.response.data.message || "Failed to place order");
       throw err;

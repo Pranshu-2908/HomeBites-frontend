@@ -14,7 +14,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "../../../../components/ui/select";
 import { Loader2 } from "lucide-react";
 type PreferredTime = {
   hour: number;

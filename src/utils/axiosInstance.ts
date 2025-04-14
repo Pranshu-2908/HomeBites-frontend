@@ -1,6 +1,12 @@
 import axios from "axios";
+import dotenv from "dotenv";
 
-const API_URL = "http://localhost:5001/api/v1";
+dotenv.config({ path: "./.env" });
+
+const API_URL =
+  process.env.MODE === "developemnt"
+    ? "http://localhost:3002/api/v1"
+    : "https://homebite-pro.onrender.com/api/v1";
 
 export const axiosInstance = axios.create({
   baseURL: API_URL,

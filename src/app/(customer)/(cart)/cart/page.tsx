@@ -87,7 +87,7 @@ const Cart: React.FC = () => {
       } else {
         throw new Error("Stripe checkout session URL not received.");
       }
-      dispatch(deleteCart());
+      await dispatch(deleteCart());
     } catch (err: any) {
       toast.error(err?.response.data.message || "Failed to place order");
       throw err;

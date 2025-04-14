@@ -30,7 +30,7 @@ function DashboardPage({
               <Button
                 onClick={() => router.push(backHref || "/chef-dashboard")}
                 variant="outline"
-                className="w-fit bg-white"
+                className="w-fit bg-white cursor-pointer"
                 size="sm"
               >
                 <ArrowLeft className="h-4 w-4" />

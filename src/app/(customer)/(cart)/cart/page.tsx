@@ -194,6 +194,7 @@ const Cart: React.FC = () => {
                             onClick={() =>
                               dispatch(increaseCartQty(item.mealId))
                             }
+                            className="cursor-pointer"
                           >
                             <Plus />
                           </Button>
@@ -203,6 +204,7 @@ const Cart: React.FC = () => {
                             onClick={() =>
                               dispatch(decreaseCartQty(item.mealId))
                             }
+                            className="cursor-pointer"
                           >
                             <Minus />
                           </Button>
@@ -212,6 +214,7 @@ const Cart: React.FC = () => {
                             onClick={() =>
                               dispatch(removeCartItem(item.mealId))
                             }
+                            className="cursor-pointer"
                           >
                             <Trash />
                           </Button>
@@ -284,7 +287,7 @@ const Cart: React.FC = () => {
                   placeholder="Promo code"
                   className="flex-1 px-3 py-2 bg-transparent outline-none"
                 />
-                <button className="bg-black text-white px-4 py-2 whitespace-nowrap">
+                <button className="bg-black text-white px-4 py-2 whitespace-nowrap cursor-pointer">
                   Apply
                 </button>
               </div>
@@ -305,19 +308,19 @@ const Cart: React.FC = () => {
               <hr className="my-2" />
               <div className="flex justify-between text-gray-600">
                 <p>Tax</p>
-                <p>₹{(totalAmount * 0.18).toFixed(2)}</p>
+                <p>₹{0}</p>
               </div>
               <div className="flex justify-between text-gray-600">
                 <p>Platform Fee</p>
-                <p>₹10</p>
+                <p>₹0</p>
               </div>
               <hr className="my-2" />
               <div className="flex justify-between font-semibold">
                 <p>Total</p>
-                <p>₹{(totalAmount + totalAmount * 0.18 + 10).toFixed(2)}</p>
+                <p>₹{totalAmount}</p>
               </div>
               <button
-                className="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600"
+                className="mt-4 w-full bg-red-500 text-white py-2 rounded-md hover:bg-red-600 cursor-pointer"
                 onClick={() => setIsSummaryOpen(true)}
               >
                 PROCEED TO CHECKOUT

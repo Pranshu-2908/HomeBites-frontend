@@ -105,7 +105,7 @@ const Login = () => {
           ) : (
             <Button
               type="submit"
-              className="w-full bg-slate-900 hover:bg-slate-700 text-white transition"
+              className="w-full bg-slate-900 hover:bg-slate-700 text-white transition cursor-pointer"
             >
               Login
             </Button>

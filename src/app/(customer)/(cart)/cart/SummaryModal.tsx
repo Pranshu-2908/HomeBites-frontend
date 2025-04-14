@@ -62,15 +62,15 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
           <hr />
           <div className="flex justify-between text-gray-600">
             <p>Tax</p>
-            <p>₹{(totalAmount * 0.18).toFixed(2)}</p>
+            <p>₹{0}</p>
           </div>
           <div className="flex justify-between text-gray-600">
             <p>Platform Fee</p>
-            <p>₹10</p>
+            <p>₹0</p>
           </div>
           <hr />
           <div className="text-right font-bold text-lg">
-            Total: ₹{(totalAmount + totalAmount * 0.18 + 10).toFixed(2)}
+            Total: ₹{totalAmount}
           </div>
         </div>
         <div className="flex items-center gap-3 mt-4">
@@ -116,7 +116,11 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
         </div>
 
         <DialogFooter className="mt-4 flex justify-end gap-4">
-          <Button variant="secondary" onClick={onClose}>
+          <Button
+            variant="secondary"
+            onClick={onClose}
+            className="cursor-pointer"
+          >
             Cancel
           </Button>
           {loading ? (
@@ -129,6 +133,7 @@ export const SummaryModal: React.FC<SummaryModalProps> = ({
               onClick={() =>
                 onConfirm({ hour: parseInt(hour), minute: parseInt(minute) })
               }
+              className="cursor-pointer"
             >
               Place Order
             </Button>

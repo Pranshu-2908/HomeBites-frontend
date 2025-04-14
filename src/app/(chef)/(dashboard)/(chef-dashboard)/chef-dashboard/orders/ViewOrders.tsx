@@ -114,6 +114,7 @@ export default function ViewOrders() {
                             variant="outline"
                             size="sm"
                             onClick={() => handleAccept(order._id)}
+                            className="cursor-pointer"
                           >
                             Accept
                           </Button>
@@ -121,6 +122,7 @@ export default function ViewOrders() {
                             variant="outline"
                             size="sm"
                             onClick={() => handleReject(order._id)}
+                            className="cursor-pointer"
                           >
                             Reject
                           </Button>
@@ -131,6 +133,7 @@ export default function ViewOrders() {
                           variant="outline"
                           size="sm"
                           onClick={() => handlePreparing(order._id)}
+                          className="cursor-pointer"
                         >
                           Mark in Progress
                         </Button>
@@ -140,6 +143,7 @@ export default function ViewOrders() {
                           variant="outline"
                           size="sm"
                           onClick={() => handleCompleted(order._id)}
+                          className="cursor-pointer"
                         >
                           Mark as Completed
                         </Button>

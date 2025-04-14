@@ -94,7 +94,11 @@ export default function ChefDashboardLayout({
                       <div className="flex flex-col text-slate-600">
                         <div className="flex w-fit items-center cursor-pointer">
                           <LogOut />
-                          <Button variant="link" onClick={handleLogout}>
+                          <Button
+                            variant="link"
+                            onClick={handleLogout}
+                            className="cursor-pointer"
+                          >
                             Logout
                           </Button>
                         </div>
@@ -171,7 +175,11 @@ export default function ChefDashboardLayout({
                       <div className="flex flex-col text-slate-600">
                         <div className="flex w-fit items-center cursor-pointer">
                           <LogOut />
-                          <Button variant="link" onClick={handleLogout}>
+                          <Button
+                            variant="link"
+                            onClick={handleLogout}
+                            className="cursor-pointer"
+                          >
                             Logout
                           </Button>
                         </div>

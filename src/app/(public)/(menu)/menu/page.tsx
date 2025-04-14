@@ -127,7 +127,7 @@ export default function MenuPage() {
             <Button
               size={"icon"}
               onClick={resetTypeFilter}
-              className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
+              className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
             >
               <X className="text-black" />
             </Button>
@@ -146,7 +146,7 @@ export default function MenuPage() {
             <Button
               size={"icon"}
               onClick={resetTimeFilter}
-              className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300"
+              className="h-6 w-6 bg-gray-200 rounded-md hover:bg-gray-300 cursor-pointer"
             >
               <X className="text-black" />
             </Button>
@@ -171,7 +171,7 @@ export default function MenuPage() {
                   alt={meal.name}
                   width={400}
                   height={250}
-                  className="w-full h-60 object-cover"
+                  className="w-full h-60 object-cover cursor-pointer"
                   onClick={() => router.push(`/menu/${meal._id}`)}
                 />
                 <CardContent className="p-4">
@@ -206,7 +206,7 @@ export default function MenuPage() {
 
                   <div className="flex justify-between items-center mt-4">
                     <Button
-                      className=" bg-blue-900 text-white px-4 rounded-md hover:bg-blue-950"
+                      className=" bg-blue-900 text-white px-4 rounded-md hover:bg-blue-950 cursor-pointer"
                       onClick={() =>
                         handleAddToCart(meal._id, 1, meal.chefId._id)
                       }
@@ -216,10 +216,10 @@ export default function MenuPage() {
 
                     <Button
                       size={"icon"}
-                      className="bg-gray-200 border border-gray-300 shadow-md hover:bg-gray-300"
+                      className="bg-gray-200 border border-gray-300 shadow-md hover:bg-gray-300 cursor-pointer"
                       onClick={() => router.push(`/menu/${meal._id}`)}
                     >
-                      <ExternalLink size={24} className="text-black" />
+                      <ExternalLink size={24} className="text-black " />
                     </Button>
                   </div>
                 </CardContent>

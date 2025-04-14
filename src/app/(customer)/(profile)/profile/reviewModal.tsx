@@ -114,7 +114,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ order, open, onClose }) => {
           ))}
         </div>
 
-        <Button className="w-full mt-6" onClick={handleSubmit}>
+        <Button className="w-full mt-6 cursor-pointer" onClick={handleSubmit}>
           Submit Reviews
         </Button>
       </DialogContent>

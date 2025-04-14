@@ -109,6 +109,7 @@ export default function ViewMeals() {
                         onClick={() =>
                           router.push(`/chef-dashboard/meals/${meal._id}`)
                         }
+                        className="cursor-pointer"
                       >
                         <Edit2 className="text-black w-6 h-6 animate-pulse mr-1" />
                         Edit
@@ -120,6 +121,7 @@ export default function ViewMeals() {
                             variant="destructive"
                             size="sm"
                             onClick={() => setDeleteTargetMealId(meal._id)}
+                            className="cursor-pointer"
                           >
                             <Trash2 className="text-black w-6 h-6 animate-pulse mr-1" />
                             Delete
@@ -143,6 +145,7 @@ export default function ViewMeals() {
                               <Button
                                 variant="destructive"
                                 onClick={() => handleDeleteMeal(meal._id)}
+                                className="cursor-pointer"
                               >
                                 Confirm Delete
                               </Button>

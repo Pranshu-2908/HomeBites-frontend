@@ -126,7 +126,7 @@ export default function UserProfile() {
               <DialogTrigger asChild>
                 <Button
                   size="icon"
-                  className="absolute top-0 right-2 bg-gray-300 hover:bg-gray-400"
+                  className="absolute top-0 right-2 bg-gray-300 hover:bg-gray-400 cursor-pointer"
                   onClick={() => setIsDialogOpen(true)}
                 >
                   <Pencil className="h-12 w-12 text-black" />
@@ -186,7 +186,7 @@ export default function UserProfile() {
                     </Button>
                   ) : (
                     <Button
-                      className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white"
+                      className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white cursor-pointer"
                       type="submit"
                     >
                       Save Profile
@@ -285,7 +285,7 @@ export default function UserProfile() {
                                 onClick={() =>
                                   setActiveReviewOrderId(order._id)
                                 }
-                                className="bg-yellow-300 animate-pulse hover:bg-amber-300 text-black"
+                                className="bg-yellow-300 animate-pulse hover:bg-amber-300 text-black cursor-pointer"
                               >
                                 Leave a Review
                               </Button>
@@ -301,7 +301,9 @@ export default function UserProfile() {
                             <div className="bg-yellow-200 text-black-800 px-3 py-1 rounded-full text-sm font-medium w-fit">
                               Reviewed
                             </div>
-                          ) : null}
+                          ) : (
+                            <div></div>
+                          )}
 
                           <div className="text-right font-semibold text-gray-800">
                             Total: ₹{order.totalAmount}

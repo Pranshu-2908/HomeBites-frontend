@@ -119,7 +119,7 @@ export default function MealDetailsPage() {
                   </p>
                 </div>
                 <Button
-                  className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full"
+                  className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full cursor-pointer"
                   onClick={() => handleAddToCart(selectedMeal._id, 1)}
                 >
                   Add to cart

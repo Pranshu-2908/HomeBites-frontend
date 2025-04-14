@@ -49,7 +49,7 @@ export default function MealDetailsPage() {
   }, [dispatch, selectedMeal?.chefId?._id]);
   const handleAddToCart = async (mealId: string, quantity: number) => {
     if (!user) {
-      toast("Login to add items in cart!");
+      toast.error("Login to add items in cart!");
       return;
     }
     const res = await dispatch(

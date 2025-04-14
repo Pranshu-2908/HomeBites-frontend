@@ -43,6 +43,7 @@ interface MealState {
   meals: Meal[];
   selectedMeal: Meal;
   chefMeals: Meal[];
+  chefMealsById: Meal[];
   loading: boolean;
   error: string | null;
 }
@@ -51,6 +52,7 @@ const initialState: MealState = {
   meals: [],
   selectedMeal: {} as Meal,
   chefMeals: [],
+  chefMealsById: [],
   loading: false,
   error: null,
 };
@@ -80,6 +82,18 @@ export const fetchChefMeals = createAsyncThunk(
   async () => {
     try {
       const response = await axiosInstance.get("/meal/chef");
+      return response.data.meals;
+    } catch (error: any) {
+      toast(error.response?.data?.message || "Failed to fetch meals");
+      throw error;
+    }
+  }
+);
+export const getChefMealsById = createAsyncThunk(
+  "meals/fetchChefMealsById",
+  async (chefId: ParamValue) => {
+    try {
+      const response = await axiosInstance.get(`/meal/chef/${chefId}`);
       return response.data.meals;
     } catch (error: any) {
       toast(error.response?.data?.message || "Failed to fetch meals");
@@ -188,6 +202,17 @@ const mealSlice = createSlice({
         state.chefMeals = action.payload;
       })
       .addCase(fetchChefMeals.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to fetch meals";
+      })
+      .addCase(getChefMealsById.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getChefMealsById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.chefMealsById = action.payload;
+      })
+      .addCase(getChefMealsById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch meals";
       })

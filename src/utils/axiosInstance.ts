@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env.local" });
 
 const API_URL =
-  process.env.MODE === "development"
+  process.env.NEXT_PUBLIC_MODE === "development"
     ? "http://localhost:5001/api/v1"
     : "https://homebite-pro.onrender.com/api/v1";
 

@@ -113,8 +113,13 @@ const authSlice = createSlice({
       .addCase(updateProfile.rejected, (state, action) => {
         state.error = action.payload || "Failed to update profile";
       })
+      .addCase(fetchAllchefs.pending, (state) => {
+        state.error = null;
+        state.loading = true;
+      })
       .addCase(fetchAllchefs.fulfilled, (state, action) => {
         state.chefs = action.payload;
+        state.loading = false;
         state.error = null;
       });
   },

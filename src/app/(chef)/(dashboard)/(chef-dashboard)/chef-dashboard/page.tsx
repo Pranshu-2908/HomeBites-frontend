@@ -24,32 +24,17 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import { getChefAverageRating } from "@/redux/slices/reviewSlice";
 import { motion } from "framer-motion";
+import { fetchChefStats, fetchOrderTrends } from "@/redux/slices/chefSlice";
 
 const fadeUp = (delay = 0) => ({
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0, transition: { duration: 0.5, delay } },
 });
 
-const orderTrends = [
-  { date: "Mar 25", orders: 15 },
-  { date: "Mar 26", orders: 22 },
-  { date: "Mar 27", orders: 30 },
-  { date: "Mar 28", orders: 25 },
-  { date: "Mar 29", orders: 40 },
-];
-const chefStats = {
-  rating: 4.8,
-  totalRatings: 120,
-  totalMeals: 35,
-  totalOrdersDelivered: 520,
-  liveOrders: 5,
-  revenue: 15200, // Assume this is in USD or INR
-  mostPopularDish: "Spicy Paneer Wrap",
-  pendingOrders: 3,
-  avgPrepTime: 25, // in minutes
-};
-
 function Page() {
+  const { chefStats, orderTrends } = useAppSelector(
+    (store: RootState) => store.chef
+  );
   const { user } = useAppSelector((store: RootState) => store.auth);
   console.log(user?._id);
   const { chefAverageRating, totalReviewOfAChef } = useAppSelector(
@@ -58,9 +43,12 @@ function Page() {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    dispatch(fetchOrderTrends(user?._id || ""));
     dispatch(getChefAverageRating(user?._id || ""));
+    dispatch(fetchChefStats());
   }, [dispatch, user?._id]);
   const router = useRouter();
+  console.log(orderTrends);
   return (
     <DashboardPage title="DASHBOARD" hideBackButton={true}>
       <div className="flex flex-col gap-6">
@@ -135,12 +123,12 @@ function Page() {
               <CardHeader className="flex flex-row items-center gap-2 p-4">
                 <FaCheckCircle className="text-green-500 text-xl" />
                 <CardTitle className="text-sm sm:text-base">
-                  Orders Delivered
+                  Orders Completed
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0 pb-4 px-4">
                 <p className="text-lg font-bold">
-                  {chefStats.totalOrdersDelivered}
+                  {chefStats.totalOrdersCompleted}
                 </p>
               </CardContent>
             </Card>
@@ -173,9 +161,7 @@ function Page() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="pt-0 pb-4 px-4">
-                <p className="text-lg font-bold">
-                  ₹{chefStats.revenue.toLocaleString()}
-                </p>
+                <p className="text-lg font-bold">₹{chefStats.revenue}</p>
               </CardContent>
             </Card>
           </motion.div>

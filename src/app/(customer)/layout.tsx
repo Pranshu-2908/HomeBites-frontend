@@ -22,12 +22,9 @@ export default function CustomerLayout({ children }: { children: ReactNode }) {
   console.log(socket);
   useEffect(() => {
     if (socket) {
-      console.log("Socket connected:", socket.connected);
-
       socket.on("newNotification", (notification: Notification) => {
         toast(notification.message);
         dispatch(fetchCustomerOrders());
-        console.log("New notification received:", notification);
       });
     }
 

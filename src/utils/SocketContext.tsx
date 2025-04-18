@@ -4,7 +4,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import io from "socket.io-client";
 import { addNotification } from "@/redux/slices/notificationSlice";
-import { toast } from "sonner";
 import { useAppDispatch } from "@/redux/hooks";
 
 interface SocketContextType {
@@ -32,7 +31,6 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
 
     newSocket.on("newNotification", (notification: any) => {
       dispatch(addNotification(notification));
-      toast(notification.message);
     });
 
     return () => {

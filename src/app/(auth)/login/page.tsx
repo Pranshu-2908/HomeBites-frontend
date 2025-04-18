@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { useAppDispatch } from "@/redux/hooks";
 import { motion } from "framer-motion";
+import { useSocket } from "@/utils/SocketContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -18,7 +19,7 @@ const Login = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
+  const { socket } = useSocket();
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -32,6 +33,10 @@ const Login = () => {
       if (response.data) {
         dispatch(login(response.data.user));
         toast(response.data.message);
+
+        if (socket) {
+          socket.emit("register", response.data.user._id);
+        }
       }
       // Redirect based on user role
       if (response.data.user.role === "chef") {

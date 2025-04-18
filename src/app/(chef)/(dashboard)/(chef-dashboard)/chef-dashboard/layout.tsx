@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,8 @@ import {
 import { axiosInstance } from "@/utils/axiosInstance";
 import { toast } from "sonner";
 import ProtectedRoute from "@/utils/protectedRoute";
+import { useSocket } from "@/utils/SocketContext";
+import { fetchChefOrdersByStatus } from "@/redux/slices/orderSlice";
 
 // Sidebar navigation items
 const navItems = [
@@ -32,6 +35,8 @@ export default function ChefDashboardLayout({
 }: {
   children: ReactNode;
 }) {
+  const { socket } = useSocket();
+  console.log(socket);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathName = usePathname();
@@ -48,6 +53,24 @@ export default function ChefDashboardLayout({
     router.push("/");
     toast(resp.data.message);
   };
+
+  useEffect(() => {
+    if (socket) {
+      console.log("Socket connected:", socket.connected);
+      socket.on("newNotification", (notification: any) => {
+        toast(notification.message);
+        dispatch(fetchChefOrdersByStatus());
+        console.log("New notification received:", notification);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("newNotification");
+      }
+    };
+  }, [socket, dispatch]);
+
   return (
     <ProtectedRoute>
       <RoleBasedRoute allowedRoles={["chef"]}>

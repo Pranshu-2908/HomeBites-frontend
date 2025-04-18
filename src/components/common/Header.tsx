@@ -15,6 +15,7 @@ import { deleteCart, loadCart, saveCart } from "@/redux/slices/cartSlice";
 import { clearCart } from "@/redux/slices/cartSlice";
 import { useEffect } from "react";
 import { Skeleton } from "../ui/skeleton";
+import NotificationBell from "../NotificationBell";
 
 const Navbar = () => {
   const dispatch = useAppDispatch();
@@ -75,57 +76,60 @@ const Navbar = () => {
         {loading ? (
           <Skeleton className="h-12 w-12 rounded-full bg-gray-800" />
         ) : isAuthenticated ? (
-          <Popover>
-            <PopoverTrigger asChild>
-              <Avatar className="cursor-pointer size-12 bg-white">
-                <AvatarImage
-                  src={
-                    user?.profilePicture ||
-                    "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
-                  }
-                  alt="@shadcn"
-                />
-              </Avatar>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 mr-2">
-              <div className="flex flex-col gap-3">
-                <div className="flex gap-4 items-center">
-                  <Avatar className="border-1 border-gray-300">
-                    <AvatarImage
-                      src={
-                        user?.profilePicture ||
-                        "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
-                      }
-                      alt="@shadcn"
-                    />
-                  </Avatar>
-                  <div>
-                    <h2 className="font-medium">
-                      {user?.name || "Error Fetch"}
-                    </h2>
+          <div className="flex gap-4">
+            <NotificationBell />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Avatar className="cursor-pointer size-12 bg-white">
+                  <AvatarImage
+                    src={
+                      user?.profilePicture ||
+                      "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                    }
+                    alt="@shadcn"
+                  />
+                </Avatar>
+              </PopoverTrigger>
+              <PopoverContent className="w-80 mr-2">
+                <div className="flex flex-col gap-3">
+                  <div className="flex gap-4 items-center">
+                    <Avatar className="border-1 border-gray-300">
+                      <AvatarImage
+                        src={
+                          user?.profilePicture ||
+                          "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                        }
+                        alt="@shadcn"
+                      />
+                    </Avatar>
+                    <div>
+                      <h2 className="font-medium">
+                        {user?.name || "Error Fetch"}
+                      </h2>
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col text-slate-600">
-                  {user?.role === "customer" ? (
+                  <div className="flex flex-col text-slate-600">
+                    {user?.role === "customer" ? (
+                      <div className="flex w-fit items-center cursor-pointer">
+                        <User2 />
+                        <Button variant="link">
+                          <Link href="/profile">View Profile</Link>
+                        </Button>
+                      </div>
+                    ) : (
+                      <div></div>
+                    )}
                     <div className="flex w-fit items-center cursor-pointer">
-                      <User2 />
-                      <Button variant="link">
-                        <Link href="/profile">View Profile</Link>
+                      <LogOut />
+                      <Button variant="link" onClick={handleLogout}>
+                        Logout
                       </Button>
                     </div>
-                  ) : (
-                    <div></div>
-                  )}
-                  <div className="flex w-fit items-center cursor-pointer">
-                    <LogOut />
-                    <Button variant="link" onClick={handleLogout}>
-                      Logout
-                    </Button>
                   </div>
                 </div>
-              </div>
-            </PopoverContent>
-          </Popover>
+              </PopoverContent>
+            </Popover>
+          </div>
         ) : (
           <Button variant="outline" className="ml-1">
             <Link href="/login">Sign-in</Link>

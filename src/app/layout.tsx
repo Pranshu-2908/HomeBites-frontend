@@ -5,6 +5,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import { StoreProvider } from "@/redux/storeProvider";
 import AuthProvider from "@/utils/AuthProvider";
+import { SocketProvider } from "@/utils/SocketContext";
 
 const ubuntu = Ubuntu({
   variable: "--font-ubuntu",
@@ -31,7 +32,10 @@ export default function RootLayout({
       </head>
       <body className={`${ubuntu.variable} ${rowdies.variable} antialiased`}>
         <StoreProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <SocketProvider>
+            <AuthProvider>{children}</AuthProvider>{" "}
+          </SocketProvider>
+
           <Toaster />
         </StoreProvider>
       </body>

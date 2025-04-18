@@ -1,11 +1,42 @@
 "use client";
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect } from "react";
 import Header from "./../../components/common/Header";
 import Footer from "@/components/common/Footer";
 import ProtectedRoute from "@/utils/protectedRoute";
 import RoleBasedRoute from "@/utils/roleBasedRoute";
+import { useAppDispatch } from "@/redux/hooks";
+import { useSocket } from "@/utils/SocketContext";
+import { toast } from "sonner";
+import { fetchCustomerOrders } from "@/redux/slices/orderSlice";
 
+interface Notification {
+  _id: string;
+  userId: string;
+  message: string;
+  read: boolean;
+  createdAt: Date;
+}
 export default function CustomerLayout({ children }: { children: ReactNode }) {
+  const dispatch = useAppDispatch();
+  const { socket } = useSocket();
+  console.log(socket);
+  useEffect(() => {
+    if (socket) {
+      console.log("Socket connected:", socket.connected);
+
+      socket.on("newNotification", (notification: Notification) => {
+        toast(notification.message);
+        dispatch(fetchCustomerOrders());
+        console.log("New notification received:", notification);
+      });
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("newNotification");
+      }
+    };
+  }, [socket, dispatch]);
   return (
     <ProtectedRoute>
       <RoleBasedRoute allowedRoles={["customer"]}>

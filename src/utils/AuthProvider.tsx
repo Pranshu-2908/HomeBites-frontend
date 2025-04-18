@@ -5,10 +5,11 @@ import { useEffect } from "react";
 import { setUser, logout, setAuthLoading } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/redux/hooks";
 import { axiosInstance } from "./axiosInstance";
+import { useSocket } from "./SocketContext";
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();
-
+  const { socket } = useSocket();
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -16,6 +17,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         const res = await axiosInstance.get("user/me", {
           withCredentials: true,
         });
+        if (socket) {
+          socket.emit("register", res.data._id);
+        }
         dispatch(setUser(res.data));
       } catch (error) {
         dispatch(logout());
@@ -23,7 +27,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     fetchUser();
-  }, [dispatch]);
+  }, [dispatch, socket]);
 
   return <>{children}</>;
 };

@@ -13,12 +13,24 @@ export interface workingHours {
   endHour: number;
   endMinute: number;
 }
+
+export interface address {
+  addressLine: string;
+  city: string;
+  state: string;
+  pincode: string;
+  coordinates: {
+    lat: number;
+    lng: number;
+  };
+}
 export interface Chef {
   _id: string;
   name: string;
   profilePicture?: string;
   workingHours?: workingHours;
   location?: string;
+  address?: address;
   bio?: string;
 }
 interface Meal {

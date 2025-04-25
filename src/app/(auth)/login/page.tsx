@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import React, { useState } from "react";
-import { login } from "@/redux/slices/authSlice";
+import { login, updateUserLocation } from "@/redux/slices/authSlice";
 import { axiosInstance } from "@/utils/axiosInstance";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -20,6 +20,7 @@ const Login = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { socket } = useSocket();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -38,10 +39,28 @@ const Login = () => {
           socket.emit("register", response.data.user._id);
         }
       }
+
       // Redirect based on user role
       if (response.data.user.role === "chef") {
-        router.replace("/chef-dashboard");
+        if (response.data.user.onBoardingSteps < 2) {
+          console.log("onboarding");
+          router.push("/chef-onboarding");
+        } else {
+          console.log("dashboard");
+          router.push("/chef-dashboard");
+        }
       } else {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const { latitude, longitude } = position.coords;
+              dispatch(updateUserLocation({ latitude, longitude }));
+            },
+            (error) => {
+              toast.error(`${error}`);
+            }
+          );
+        }
         router.push("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -44,7 +44,7 @@ export default function CreatorSection() {
               <Linkedin className="w-6 h-6 text-gray-700 hover:text-blue-600" />
             </Link>
             <Link
-              href="https://instagram.com/pranshu.codes"
+              href="https://instagram.com/pranshu_2908"
               target="_blank"
               aria-label="Instagram"
             >

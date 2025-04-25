@@ -16,12 +16,23 @@ interface User {
   bio?: string;
   certifications?: string;
   profilePicture?: string;
+  address?: {
+    addressLine: string;
+    city: string;
+    state: string;
+    pincode: string;
+    coordinates: {
+      lat: number;
+      lng: number;
+    };
+  };
   workingHours?: {
     startHour: number;
     startMinute: number;
     endHour: number;
     endMinute: number;
   };
+  onBoardingSteps: number;
 }
 
 interface AuthState {
@@ -73,6 +84,27 @@ export const fetchAllchefs = createAsyncThunk(
     }
   }
 );
+
+export const updateUserLocation = createAsyncThunk(
+  "user/updateLocation",
+  async (
+    { latitude, longitude }: { latitude: number; longitude: number },
+    { rejectWithValue }
+  ) => {
+    try {
+      const res = await axiosInstance.put("/user/update-location", {
+        latitude,
+        longitude,
+      });
+      return res.data;
+    } catch (err: any) {
+      return rejectWithValue(
+        err.response?.data?.message || "Failed to update location"
+      );
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
@@ -121,6 +153,18 @@ const authSlice = createSlice({
         state.chefs = action.payload;
         state.loading = false;
         state.error = null;
+      })
+      .addCase(updateUserLocation.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateUserLocation.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload.user;
+      })
+      .addCase(updateUserLocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

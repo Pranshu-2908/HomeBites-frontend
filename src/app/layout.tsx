@@ -33,9 +33,8 @@ export default function RootLayout({
       <body className={`${ubuntu.variable} ${rowdies.variable} antialiased`}>
         <StoreProvider>
           <SocketProvider>
-            <AuthProvider>{children}</AuthProvider>{" "}
+            <AuthProvider>{children}</AuthProvider>
           </SocketProvider>
-
           <Toaster />
         </StoreProvider>
       </body>

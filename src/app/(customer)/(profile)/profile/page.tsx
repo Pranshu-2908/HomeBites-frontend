@@ -21,7 +21,8 @@ import { fetchCustomerOrders } from "@/redux/slices/orderSlice";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ReviewModal from "./reviewModal";
 import { motion } from "framer-motion";
-
+import "leaflet/dist/leaflet.css";
+import MapPicker from "./MapPicker";
 const container = {
   hidden: {},
   show: {
@@ -58,14 +59,31 @@ export default function UserProfile() {
   const [editData, setEditData] = useState({
     name: user?.name || "",
     phone: user?.phoneNumber || "",
-    location: user?.location || "",
+    address: {
+      addressLine: user?.address?.addressLine || "",
+      city: user?.address?.city || "",
+      state: user?.address?.state || "",
+      pincode: user?.address?.pincode || "",
+      coordinates: {
+        lat: user?.address?.coordinates?.lat || null,
+        lng: user?.address?.coordinates?.lng || null,
+      },
+    },
   });
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("name", editData.name);
     formData.append("phoneNumber", editData.phone);
-    formData.append("location", editData.location);
+    formData.append("addressLine", editData.address.addressLine);
+    formData.append("city", editData.address.city);
+    formData.append("state", editData.address.state);
+    formData.append("pincode", editData.address.pincode);
+    formData.append(
+      "coordinates",
+      JSON.stringify(editData.address.coordinates)
+    );
+
     if (profilePicture) {
       formData.append("profilePicture", profilePicture);
     }
@@ -80,7 +98,7 @@ export default function UserProfile() {
       animate="show"
       variants={container}
     >
-      <div className="flex flex-col gap-6 max-w-6xl mx-auto mt-10 p-4">
+      <div className="flex flex-col gap-6 max-w-6xl mx-auto mt-5 p-4">
         <Card className="bg-white border shadow-md rounded-2xl overflow-hidden p-2">
           <CardContent className="flex flex-col sm:flex-row justify-between items-center gap-6 px-4 relative">
             <motion.div
@@ -116,7 +134,7 @@ export default function UserProfile() {
                   <hr className="hidden sm:inline border-2 border-black h-6" />
                   <div className="flex gap-2 items-center">
                     <MapPin className="text-black font-bold" />
-                    {editData.location}
+                    {editData.address.city}
                   </div>
                 </div>
               </div>
@@ -158,13 +176,76 @@ export default function UserProfile() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Location</Label>
+                    <Label>Address</Label>
 
                     <Input
-                      placeholder="Location"
-                      value={editData.location}
+                      placeholder="Address Line"
+                      value={editData?.address.addressLine || ""}
                       onChange={(e) =>
-                        setEditData({ ...editData, location: e.target.value })
+                        setEditData({
+                          ...editData,
+                          address: {
+                            ...editData.address,
+                            addressLine: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                      <Input
+                        placeholder="City"
+                        value={editData.address.city}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            address: {
+                              ...editData.address,
+                              city: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="State"
+                        value={editData.address.state}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            address: {
+                              ...editData.address,
+                              state: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                      <Input
+                        placeholder="Pincode"
+                        type="number"
+                        value={editData.address.pincode}
+                        onChange={(e) =>
+                          setEditData({
+                            ...editData,
+                            address: {
+                              ...editData.address,
+                              pincode: e.target.value,
+                            },
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Choose Location on Map</Label>
+                    <MapPicker
+                      coordinates={{
+                        lat: editData?.address?.coordinates?.lat ?? 0,
+                        lng: editData?.address?.coordinates?.lng ?? 0,
+                      }}
+                      setCoordinates={(coords) =>
+                        setEditData({
+                          ...editData,
+                          address: { ...editData.address, coordinates: coords },
+                        })
                       }
                     />
                   </div>

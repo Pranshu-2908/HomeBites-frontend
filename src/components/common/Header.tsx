@@ -46,7 +46,7 @@ const Navbar = () => {
   };
   return (
     <div className="text-white flex flex-wrap justify-between items-center px-10 py-3 bg-gray-800 shadow-md w-full mx-auto">
-      <Link href="/" className="text-xl md:text-3xl font-bold homebite-logo">
+      <Link href="/" className="text-lg md:text-3xl font-bold homebite-logo">
         HOMEBITES{" "}
       </Link>
 
@@ -58,11 +58,11 @@ const Navbar = () => {
         <NavLink href="/contact">Contact Us</NavLink>
       </div>
 
-      <div className="flex items-center gap-5">
+      <div className="flex items-center gap-2 md:gap-5">
         <div className="relative flex items-center gap-1">
           <div>
             <Link href="/cart">
-              <ShoppingCartIcon size={28} className="mx-4" />
+              <ShoppingCartIcon size={28} className="mx-2 md:mx-4" />
             </Link>
           </div>
 
@@ -76,7 +76,7 @@ const Navbar = () => {
         {loading ? (
           <Skeleton className="h-12 w-12 rounded-full bg-gray-800" />
         ) : isAuthenticated ? (
-          <div className="flex gap-4">
+          <div className="flex gap-1 md:gap-4">
             <NotificationBell />
             <Popover>
               <PopoverTrigger asChild>
@@ -106,6 +106,9 @@ const Navbar = () => {
                       <h2 className="font-medium">
                         {user?.name || "Error Fetch"}
                       </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {user?.address?.city}, {user?.address?.state}
+                      </p>
                     </div>
                   </div>
                   <div className="flex flex-col text-slate-600">
@@ -121,7 +124,11 @@ const Navbar = () => {
                     )}
                     <div className="flex w-fit items-center cursor-pointer">
                       <LogOut />
-                      <Button variant="link" onClick={handleLogout}>
+                      <Button
+                        variant="link"
+                        onClick={handleLogout}
+                        className="cursor-pointer"
+                      >
                         Logout
                       </Button>
                     </div>

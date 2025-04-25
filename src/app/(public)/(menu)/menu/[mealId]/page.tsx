@@ -25,6 +25,8 @@ import {
 } from "@/redux/slices/reviewSlice";
 import { motion } from "framer-motion";
 import { formatTime } from "@/utils/formatTime";
+import { getDistance } from "geolib";
+import { Badge } from "@/components/ui/badge";
 
 export default function MealDetailsPage() {
   const { mealId } = useParams() as { mealId: string };
@@ -64,6 +66,28 @@ export default function MealDetailsPage() {
       toast.error("Failed to add meal to cart");
     }
   };
+  const chefLocation = selectedMeal.chefId?.address?.coordinates;
+  const userCoordinates = user?.address?.coordinates
+    ? {
+        latitude: user.address.coordinates.lat,
+        longitude: user.address.coordinates.lng,
+      }
+    : null;
+  let distanceInKm = null;
+  if (
+    userCoordinates?.latitude &&
+    userCoordinates?.longitude &&
+    chefLocation?.lat &&
+    chefLocation?.lng
+  ) {
+    const chefCoordinates = {
+      latitude: chefLocation.lat,
+      longitude: chefLocation.lng,
+    };
+    const distance = getDistance(userCoordinates, chefCoordinates); // in meters
+    distanceInKm = distance / 1000;
+  }
+  const maxDistanceKm = 20;
   if (loading) return <LoadingSpinner message="Loading meal..." />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!selectedMeal) {
@@ -78,13 +102,13 @@ export default function MealDetailsPage() {
       >
         <Card className="overflow-hidden p-0 gap-0">
           <div className="flex flex-col gap-6 p-5">
-            <div className="flex gap-4">
+            <div className="flex flex-col md:flex-row gap-4">
               <Image
                 src={selectedMeal.images?.[0] || "/biryani.jpg"}
                 alt={selectedMeal?.name || "Meal Image"}
                 width={500}
                 height={256}
-                className="basis-1/2 w-fit h-64 object-cover rounded-lg"
+                className="basis-1/2 w-fit h-64 object-cover rounded-lg mx-auto"
               />
               <div className="basis-1/2 p-4">
                 <h1 className="text-2xl font-bold">{selectedMeal.name}</h1>
@@ -118,12 +142,18 @@ export default function MealDetailsPage() {
                     {selectedMeal.averageRating}
                   </p>
                 </div>
-                <Button
-                  className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full cursor-pointer"
-                  onClick={() => handleAddToCart(selectedMeal._id, 1)}
-                >
-                  Add to cart
-                </Button>
+                {distanceInKm !== null && distanceInKm >= maxDistanceKm ? (
+                  <Badge className="bg-rose-600 text-white rounded-md px-4 py-2 text-sm mt-4 w-full">
+                    Unable to deliver to your location
+                  </Badge>
+                ) : (
+                  <Button
+                    className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full cursor-pointer"
+                    onClick={() => handleAddToCart(selectedMeal._id, 1)}
+                  >
+                    Add to cart
+                  </Button>
+                )}
               </div>
             </div>
             <div className="flex gap-2 justify-between">
@@ -145,8 +175,9 @@ export default function MealDetailsPage() {
                     {selectedMeal.chefId?.bio}
                   </p>
                   <p className="text-gray-600">
-                    📍<span className="font-bold">Location :</span>{" "}
-                    {selectedMeal.chefId?.location}
+                    📍<span className="font-bold">Address :</span>{" "}
+                    {selectedMeal.chefId?.address?.city},{" "}
+                    {selectedMeal.chefId?.address?.state}
                   </p>
                   <p className="text-gray-600">
                     🕒 <span className="font-bold">Working Hours :</span> From{" "}
@@ -180,20 +211,23 @@ export default function MealDetailsPage() {
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
       >
-        <Carousel className="mt-4 w-full">
+        <Carousel className="mt-4 w-full ">
           <CarouselContent className="flex">
             {reviews.map((review, index) => (
-              <motion.div
+              <CarouselItem
                 key={index}
-                initial={{ opacity: 0, scale: 0.95 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="basis-full sm:basis-1/2 lg:basis-1/3 p-2"
+                className="w-full sm:basis-1/2 lg:basis-1/3"
               >
-                <CarouselItem key={index}>
-                  <Card className="border rounded-lg ml-2 p-4">
-                    <CardContent className="flex flex-col gap-2">
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
+                  viewport={{ once: true }}
+                  className="h-full flex"
+                >
+                  <Card className="border rounded-lg p-4 flex flex-col justify-between w-full">
+                    <CardContent className="flex flex-col gap-2 w-full overflow-hidden flex-grow">
                       <div className="flex gap-2 justify-start">
                         <Image
                           src={`${review.customerId?.profilePicture}`}
@@ -217,13 +251,17 @@ export default function MealDetailsPage() {
                           </div>
                         </div>
                       </div>
-                      <p className="text-gray-700 mt-1 ml-4">
-                        “{review.comment}”
+                      <p className="text-gray-700 mt-1 ml-4 flex-grow">
+                        “
+                        {review.comment && review.comment.length < 50
+                          ? review.comment
+                          : review.comment.slice(0, 50) + "..."}
+                        ”
                       </p>
                     </CardContent>
                   </Card>
-                </CarouselItem>
-              </motion.div>
+                </motion.div>
+              </CarouselItem>
             ))}
           </CarouselContent>
           <CarouselPrevious className="hidden lg:inline" />

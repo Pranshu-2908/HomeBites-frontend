@@ -9,18 +9,40 @@ import { RootState } from "@/redux/store";
 import { updateProfile } from "@/redux/slices/authSlice";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Label } from "@/components/ui/label";
+import dynamic from "next/dynamic";
+import "leaflet/dist/leaflet.css";
+const DynamicMapPicker = dynamic(
+  () => import("@/app/(customer)/(profile)/profile/MapPicker"),
+  {
+    ssr: false,
+  }
+);
 
 export default function CreateProfile() {
   const { user, status } = useAppSelector((store: RootState) => store.auth);
   const [name, setName] = useState(user?.name);
-  const [location, setLocation] = useState(user?.location || "");
   const [bio, setBio] = useState(user?.bio || "");
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
   const [certifications, setCertifications] = useState(
     user?.certifications || ""
   );
+  const [editData, setEditData] = useState({
+    address: {
+      coordinates: {
+        lat: user?.address?.coordinates?.lat || null,
+        lng: user?.address?.coordinates?.lng || null,
+      },
+    },
+  });
   const [startTime, setStartTime] = useState("00:00");
   const [endTime, setEndTime] = useState("00:00");
+  const [addressLine, setAdressLine] = useState(
+    user?.address?.addressLine || ""
+  );
+  const [city, setCity] = useState(user?.address?.city || "");
+  const [state, setState] = useState(user?.address?.state || "");
+  const [pincode, setPincode] = useState(user?.address?.pincode || "");
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   const dispatch = useAppDispatch();
@@ -34,13 +56,20 @@ export default function CreateProfile() {
     const formData = new FormData();
     formData.append("name", name || "");
     formData.append("phoneNumber", phoneNumber);
-    formData.append("location", location);
+    formData.append("addressLine", addressLine);
+    formData.append("city", city);
+    formData.append("state", state);
+    formData.append("pincode", pincode);
     formData.append("bio", bio);
     formData.append("certifications", certifications);
     formData.append("startHour", String(startHour));
     formData.append("startMinute", String(startMinute));
     formData.append("endHour", String(endHour));
     formData.append("endMinute", String(endMinute));
+    formData.append(
+      "coordinates",
+      JSON.stringify(editData.address.coordinates)
+    );
 
     if (profilePicture) {
       formData.append("profilePicture", profilePicture);
@@ -74,16 +103,62 @@ export default function CreateProfile() {
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Location
-              </label>
-              <Input
-                type="text"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="w-full"
-              />
+            <div className="space-y-2">
+              <Label>Address</Label>
+              <div className="space-y-4 border-2 p-2 rounded-lg">
+                <div className="space-y-2">
+                  <Label>Select Location on map</Label>
+                  <DynamicMapPicker
+                    coordinates={{
+                      lat: editData?.address?.coordinates?.lat ?? 0,
+                      lng: editData?.address?.coordinates?.lng ?? 0,
+                    }}
+                    setCoordinates={(coords) =>
+                      setEditData({
+                        ...editData,
+                        address: { ...editData.address, coordinates: coords },
+                      })
+                    }
+                  />
+                </div>
+                <div className="space-y-1">
+                  {" "}
+                  <Label>Street</Label>
+                  <Input
+                    placeholder="Address Line"
+                    value={addressLine}
+                    onChange={(e) => setAdressLine(e.target.value)}
+                  />
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                  <div className="space-y-1">
+                    {" "}
+                    <Label>City</Label>
+                    <Input
+                      placeholder="City"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>State</Label>
+                    <Input
+                      placeholder="State"
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>Pincode</Label>
+                    <Input
+                      placeholder="Pincode"
+                      type="number"
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div>

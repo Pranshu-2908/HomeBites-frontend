@@ -23,7 +23,7 @@ import { fetchChefOrdersByStatus } from "@/redux/slices/orderSlice";
 
 // Sidebar navigation items
 const navItems = [
-  { href: "/chef-dashboard/profile", label: "Create Profile", icon: "📝" },
+  { href: "/chef-dashboard/profile", label: "Update Profile", icon: "📝" },
   { href: "/chef-dashboard/add-meal", label: "Add a Meal", icon: "🍽️" },
   { href: "/chef-dashboard/meals", label: "View Meals", icon: "📜" },
   { href: "/chef-dashboard/orders", label: "View Orders", icon: "📦" },
@@ -109,8 +109,7 @@ export default function ChefDashboardLayout({
                             {user?.name || "Error Fetch"}
                           </h2>
                           <p className="text-sm text-muted-foreground">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Quae, maiores.
+                            {user?.address?.city}, {user?.address?.state}
                           </p>
                         </div>
                       </div>
@@ -190,8 +189,7 @@ export default function ChefDashboardLayout({
                             {user?.name || "Error Fetch"}
                           </h2>
                           <p className="text-sm text-muted-foreground">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Quae, maiores.
+                            {user?.address?.city}, {user?.address?.state}
                           </p>
                         </div>
                       </div>

@@ -50,66 +50,72 @@ export default function OrderHistory() {
         </CardHeader>
         <CardContent>
           {/* Large screen only*/}
-          <div className="hidden xl:block overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead className="text-center">Customer</TableHead>
-                  <TableHead className="text-center">Meal</TableHead>
-                  <TableHead className="text-center">Total Price (₹)</TableHead>
-                  <TableHead className="text-center">
-                    Order Date & Time
-                  </TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders.map((order, ind) => (
-                  <MotionTr
-                    key={order._id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: ind * 0.1 }}
-                  >
-                    <TableCell>{order._id}</TableCell>
-                    <TableCell className="text-center">
-                      {order.customerId?.name}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {order.meals.map((meal, index) => (
-                        <div key={index}>
-                          {meal.mealId?.name} - {meal.quantity}x (₹
-                          {meal.mealId?.price})
-                        </div>
-                      ))}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      ₹{order.totalAmount}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {new Date(order?.createdAt || "").toLocaleString(
-                        "en-IN",
-                        {
-                          day: "2-digit",
-                          month: "long",
-                          year: "numeric",
-                          hour: "numeric",
-                          minute: "2-digit",
-                          hour12: true,
-                        }
-                      )}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Badge className={getStatusBadgeClass(order.status)}>
-                        {order.status}
-                      </Badge>
-                    </TableCell>
-                  </MotionTr>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          {orders.length > 0 ? (
+            <div className="hidden xl:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead className="text-center">Customer</TableHead>
+                    <TableHead className="text-center">Meal</TableHead>
+                    <TableHead className="text-center">
+                      Total Price (₹)
+                    </TableHead>
+                    <TableHead className="text-center">
+                      Order Date & Time
+                    </TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders.map((order, ind) => (
+                    <MotionTr
+                      key={order._id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: ind * 0.1 }}
+                    >
+                      <TableCell>{order._id}</TableCell>
+                      <TableCell className="text-center">
+                        {order.customerId?.name}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {order.meals.map((meal, index) => (
+                          <div key={index}>
+                            {meal.mealId?.name} - {meal.quantity}x (₹
+                            {meal.mealId?.price})
+                          </div>
+                        ))}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        ₹{order.totalAmount}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {new Date(order?.createdAt || "").toLocaleString(
+                          "en-IN",
+                          {
+                            day: "2-digit",
+                            month: "long",
+                            year: "numeric",
+                            hour: "numeric",
+                            minute: "2-digit",
+                            hour12: true,
+                          }
+                        )}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge className={getStatusBadgeClass(order.status)}>
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                    </MotionTr>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div>No Order History available</div>
+          )}
 
           {/* Mobile card and tablet view */}
           <div className="xl:hidden space-y-4">

@@ -47,7 +47,7 @@ export default function NotificationBell() {
       <DropdownMenuTrigger className="relative cursor-pointer">
         <Bell className="mr-4" size={28} />
         {unreadCount > 0 && (
-          <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1 text-md font-bold text-gray-800 bg-white rounded-full">
+          <span className="absolute top-0 right-1 inline-flex items-center justify-center px-2 text-md font-bold text-gray-800 bg-white rounded-full">
             {unreadCount}
           </span>
         )}

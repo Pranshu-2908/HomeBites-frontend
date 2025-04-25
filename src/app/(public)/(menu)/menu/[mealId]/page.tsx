@@ -1,7 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/carousel";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchMealById } from "@/redux/slices/mealSlice";
 import Image from "next/image";
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -37,6 +37,8 @@ export default function MealDetailsPage() {
   const { selectedMeal, loading, error } = useAppSelector(
     (store: RootState) => store.meal
   );
+  const [addingMealId, setAddingMealId] = useState<string | null>(null);
+
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (!mealId) return;
@@ -50,6 +52,7 @@ export default function MealDetailsPage() {
     dispatch(getChefAverageRating(selectedMeal?.chefId?._id));
   }, [dispatch, selectedMeal?.chefId?._id]);
   const handleAddToCart = async (mealId: string, quantity: number) => {
+    setAddingMealId(mealId);
     if (!user) {
       toast.error("Login to add items in cart!");
       return;
@@ -65,6 +68,7 @@ export default function MealDetailsPage() {
     } else {
       toast.error("Failed to add meal to cart");
     }
+    setAddingMealId(null);
   };
   const chefLocation = selectedMeal.chefId?.address?.coordinates;
   const userCoordinates = user?.address?.coordinates
@@ -151,7 +155,13 @@ export default function MealDetailsPage() {
                     className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full cursor-pointer"
                     onClick={() => handleAddToCart(selectedMeal._id, 1)}
                   >
-                    Add to cart
+                    {addingMealId === selectedMeal._id ? (
+                      <div className="flex gap-2">
+                        <Loader2 className="animate-spin" /> Adding...
+                      </div>
+                    ) : (
+                      <p>Add to Cart</p>
+                    )}
                   </Button>
                 )}
               </div>

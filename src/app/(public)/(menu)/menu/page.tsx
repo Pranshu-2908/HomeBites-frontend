@@ -9,7 +9,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Card, CardContent } from "@/components/ui/card";
-import { ExternalLink, Star, X } from "lucide-react";
+import { ExternalLink, Loader2, Star, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
@@ -41,6 +41,7 @@ export default function MenuPage() {
   useEffect(() => {
     dispatch(fetchMeals());
   }, [dispatch]);
+  const [addingMealId, setAddingMealId] = useState<string | null>(null);
 
   const filteredMeals = meals.filter(
     (meal) =>
@@ -64,6 +65,7 @@ export default function MenuPage() {
     quantity: number,
     chefId: string
   ) => {
+    setAddingMealId(mealId);
     if (!user) {
       toast("Login to add items in cart!");
       return;
@@ -83,6 +85,7 @@ export default function MenuPage() {
     } else {
       toast.error("Failed to add meal to cart");
     }
+    setAddingMealId(null);
   };
   const userCoordinates = user?.address?.coordinates
     ? {
@@ -164,7 +167,7 @@ export default function MenuPage() {
       </div>
       {loading ? (
         <LoadingSpinner message="Loading Meals..." />
-      ) : (
+      ) : user ? (
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMeals.map((meal, index) => {
             const chefLocation = meal.chefId.address?.coordinates;
@@ -251,7 +254,13 @@ export default function MenuPage() {
                               handleAddToCart(meal._id, 1, meal.chefId._id)
                             }
                           >
-                            Add to cart
+                            {addingMealId === meal._id ? (
+                              <div className="flex gap-2">
+                                <Loader2 className="animate-spin" /> Adding...
+                              </div>
+                            ) : (
+                              <p>Add to Cart</p>
+                            )}
                           </Button>
                         )}
 
@@ -269,6 +278,78 @@ export default function MenuPage() {
               );
             }
           })}
+        </div>
+      ) : (
+        <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredMeals.map((meal, index) => (
+            <motion.div
+              key={meal._id}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.2 }}
+              transition={{ duration: 0.8, delay: index * 0.1 }}
+            >
+              <Card className="overflow-hidden p-0 m-2 md:m-0">
+                <Image
+                  src={meal.images[0] || "/biryani.jpg"}
+                  alt={meal.name}
+                  width={400}
+                  height={250}
+                  className="w-full h-60 object-cover cursor-pointer"
+                  onClick={() => router.push(`/menu/${meal._id}`)}
+                />
+                <CardContent className="p-4">
+                  <div className="flex justify-between">
+                    <h3 className="text-lg font-bold">{meal.name}</h3>
+                    <h3 className="text-md italic">- by {meal.chefId.name}</h3>
+                  </div>
+                  <div className="flex items-center justify-between mt-2">
+                    <span className="font-semibold">₹{meal.price}</span>
+                    <span
+                      className={
+                        meal.category === "vegetarian"
+                          ? "text-green-600"
+                          : "text-red-600"
+                      }
+                    >
+                      {meal.category}
+                    </span>
+                  </div>
+                  <p className="text-xs text-gray-500">
+                    {meal.quantity} available • {meal.preparationTime} prep time
+                  </p>
+                  <div className="flex items-center mt-2 gap-1 px-3 py-1 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg shadow-blue-800/50 text-white w-fit transition duration-300 hover:scale-105">
+                    <Star
+                      className="text-yellow-400 w-4 h-4 drop-shadow-sm"
+                      strokeWidth="3"
+                    />
+                    <p className="font-semibold text-sm tracking-wide">
+                      {meal.averageRating}
+                    </p>
+                  </div>
+
+                  <div className="flex justify-between items-center mt-4">
+                    <Button
+                      className=" bg-blue-900 text-white px-4 rounded-md hover:bg-blue-950 cursor-pointer"
+                      onClick={() =>
+                        handleAddToCart(meal._id, 1, meal.chefId._id)
+                      }
+                    >
+                      Add to cart
+                    </Button>
+
+                    <Button
+                      size={"icon"}
+                      className="bg-gray-200 border border-gray-300 shadow-md hover:bg-gray-300 cursor-pointer"
+                      onClick={() => router.push(`/menu/${meal._id}`)}
+                    >
+                      <ExternalLink size={24} className="text-black " />
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       )}
     </motion.div>

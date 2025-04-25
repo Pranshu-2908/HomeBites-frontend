@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Minus, Plus, Trash } from "lucide-react";
+import { Loader2, Minus, Plus, Trash } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import {
@@ -48,6 +48,28 @@ const Cart: React.FC = () => {
   const { items, totalAmount, cartLoading } = useAppSelector(
     (store: RootState) => store.cart
   );
+  const [loadingAction, setLoadingAction] = useState<{
+    id: string;
+    type: "add" | "minus" | "delete";
+  } | null>(null);
+  const handleCartAction = async (
+    id: string,
+    type: "add" | "minus" | "delete"
+  ) => {
+    setLoadingAction({ id, type });
+
+    try {
+      if (type === "add") await dispatch(increaseCartQty(id)).unwrap();
+      else if (type === "minus") await dispatch(decreaseCartQty(id)).unwrap();
+      else if (type === "delete") await dispatch(removeCartItem(id)).unwrap();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      toast.error("unable to perform the action");
+    } finally {
+      setLoadingAction(null);
+    }
+  };
+
   useEffect(() => {
     dispatch(loadCart());
   }, [dispatch]);
@@ -113,23 +135,48 @@ const Cart: React.FC = () => {
         <Button
           variant={"outline"}
           size={"sm"}
-          onClick={() => dispatch(increaseCartQty(item.mealId))}
+          onClick={() => handleCartAction(item.mealId, "add")}
+          disabled={
+            loadingAction?.id === item.mealId && loadingAction?.type === "add"
+          }
         >
-          <Plus size={16} />
+          {loadingAction?.id === item.mealId &&
+          loadingAction?.type === "add" ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Plus size={16} />
+          )}
         </Button>
         <Button
           variant={"outline"}
           size={"sm"}
-          onClick={() => dispatch(decreaseCartQty(item.mealId))}
+          onClick={() => handleCartAction(item.mealId, "minus")}
+          disabled={
+            loadingAction?.id === item.mealId && loadingAction?.type === "minus"
+          }
         >
-          <Minus size={16} />
+          {loadingAction?.id === item.mealId &&
+          loadingAction?.type === "minus" ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Minus size={16} />
+          )}
         </Button>
         <Button
           variant={"destructive"}
           size={"sm"}
-          onClick={() => dispatch(removeCartItem(item.mealId))}
+          onClick={() => handleCartAction(item.mealId, "delete")}
+          disabled={
+            loadingAction?.id === item.mealId &&
+            loadingAction?.type === "delete"
+          }
         >
-          <Trash size={16} />
+          {loadingAction?.id === item.mealId &&
+          loadingAction?.type === "delete" ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Trash size={16} />
+          )}
         </Button>
       </div>
     </div>
@@ -191,32 +238,57 @@ const Cart: React.FC = () => {
                           <Button
                             variant={"outline"}
                             size={"icon"}
-                            onClick={() =>
-                              dispatch(increaseCartQty(item.mealId))
+                            onClick={() => handleCartAction(item.mealId, "add")}
+                            disabled={
+                              loadingAction?.id === item.mealId &&
+                              loadingAction?.type === "add"
                             }
                             className="cursor-pointer"
                           >
-                            <Plus />
+                            {loadingAction?.id === item.mealId &&
+                            loadingAction?.type === "add" ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Plus />
+                            )}
                           </Button>
                           <Button
                             variant={"outline"}
                             size={"icon"}
                             onClick={() =>
-                              dispatch(decreaseCartQty(item.mealId))
+                              handleCartAction(item.mealId, "minus")
+                            }
+                            disabled={
+                              loadingAction?.id === item.mealId &&
+                              loadingAction?.type === "minus"
                             }
                             className="cursor-pointer"
                           >
-                            <Minus />
+                            {loadingAction?.id === item.mealId &&
+                            loadingAction?.type === "minus" ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Minus />
+                            )}
                           </Button>
                           <Button
                             variant={"destructive"}
                             size={"icon"}
                             onClick={() =>
-                              dispatch(removeCartItem(item.mealId))
+                              handleCartAction(item.mealId, "delete")
+                            }
+                            disabled={
+                              loadingAction?.id === item.mealId &&
+                              loadingAction?.type === "delete"
                             }
                             className="cursor-pointer"
                           >
-                            <Trash />
+                            {loadingAction?.id === item.mealId &&
+                            loadingAction?.type === "delete" ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : (
+                              <Trash />
+                            )}
                           </Button>
                         </TableCell>
                       </MotionTr>

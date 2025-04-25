@@ -67,93 +67,99 @@ export default function ViewOrders() {
         </CardHeader>
         <CardContent>
           {/* Desktop View */}
-          <div className="hidden xl:block overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Order ID</TableHead>
-                  <TableHead className="text-center">Customer</TableHead>
-                  <TableHead className="text-center">Meals</TableHead>
-                  <TableHead className="text-center">Total Price (₹)</TableHead>
-                  <TableHead className="text-center">Status</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {orders.map((order, ind) => (
-                  <MotionTr
-                    key={order._id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: ind * 0.1 }}
-                  >
-                    <TableCell>{order._id}</TableCell>
-                    <TableCell className="text-center">
-                      {order.customerId?.name}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {order.meals.map((meal, index) => (
-                        <div key={index}>
-                          {meal.mealId?.name} - {meal.quantity}x (₹
-                          {meal.mealId?.price})
-                        </div>
-                      ))}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      ₹{order.totalAmount}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      <Badge className={getStatusBadgeClass(order.status)}>
-                        {order.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {order.status === "pending" && (
-                        <div className="flex items-center justify-center gap-2">
+          {orders.length > 0 ? (
+            <div className="hidden xl:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Order ID</TableHead>
+                    <TableHead className="text-center">Customer</TableHead>
+                    <TableHead className="text-center">Meals</TableHead>
+                    <TableHead className="text-center">
+                      Total Price (₹)
+                    </TableHead>
+                    <TableHead className="text-center">Status</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {orders.map((order, ind) => (
+                    <MotionTr
+                      key={order._id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: ind * 0.1 }}
+                    >
+                      <TableCell>{order._id}</TableCell>
+                      <TableCell className="text-center">
+                        {order.customerId?.name}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {order.meals.map((meal, index) => (
+                          <div key={index}>
+                            {meal.mealId?.name} - {meal.quantity}x (₹
+                            {meal.mealId?.price})
+                          </div>
+                        ))}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        ₹{order.totalAmount}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        <Badge className={getStatusBadgeClass(order.status)}>
+                          {order.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {order.status === "pending" && (
+                          <div className="flex items-center justify-center gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleAccept(order._id)}
+                              className="cursor-pointer"
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleReject(order._id)}
+                              className="cursor-pointer"
+                            >
+                              Reject
+                            </Button>
+                          </div>
+                        )}
+                        {order.status === "accepted" && (
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleAccept(order._id)}
+                            onClick={() => handlePreparing(order._id)}
                             className="cursor-pointer"
                           >
-                            Accept
+                            Mark in Progress
                           </Button>
+                        )}
+                        {order.status === "preparing" && (
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleReject(order._id)}
+                            onClick={() => handleCompleted(order._id)}
                             className="cursor-pointer"
                           >
-                            Reject
+                            Mark as Completed
                           </Button>
-                        </div>
-                      )}
-                      {order.status === "accepted" && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handlePreparing(order._id)}
-                          className="cursor-pointer"
-                        >
-                          Mark in Progress
-                        </Button>
-                      )}
-                      {order.status === "preparing" && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleCompleted(order._id)}
-                          className="cursor-pointer"
-                        >
-                          Mark as Completed
-                        </Button>
-                      )}
-                    </TableCell>
-                  </MotionTr>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                        )}
+                      </TableCell>
+                    </MotionTr>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div>No Live orders currently</div>
+          )}
 
           {/* Mobile View and tablet view */}
           <div className="xl:hidden space-y-4">

@@ -15,12 +15,14 @@ export interface CartItem {
 interface CartState {
   items: CartItem[];
   totalAmount: number;
+  actionloading: boolean;
   cartLoading: boolean;
 }
 
 const initialState: CartState = {
   items: [],
   totalAmount: 0,
+  actionloading: false,
   cartLoading: false,
 };
 export const addToCart = createAsyncThunk(
@@ -146,6 +148,9 @@ const cartSlice = createSlice({
         state.items = [];
         state.totalAmount = 0;
       })
+      .addCase(addToCart.pending, (state) => {
+        state.actionloading = true;
+      })
       .addCase(addToCart.fulfilled, (state, action) => {
         const newItem = action.payload as CartItem;
         const index = state.items.findIndex((i) => i.mealId === newItem.mealId);
@@ -156,8 +161,11 @@ const cartSlice = createSlice({
           state.items.push(newItem);
         }
         state.totalAmount = calTotalAmount(state.items);
+        state.actionloading = false;
       })
-
+      .addCase(increaseCartQty.pending, (state) => {
+        state.actionloading = true;
+      })
       .addCase(increaseCartQty.fulfilled, (state, action) => {
         const updatedItem = action.payload as CartItem;
         const item = state.items.find((i) => i.mealId === updatedItem.mealId);
@@ -165,8 +173,11 @@ const cartSlice = createSlice({
           item.quantity = updatedItem.quantity;
           state.totalAmount = calTotalAmount(state.items);
         }
+        state.actionloading = false;
       })
-
+      .addCase(decreaseCartQty.pending, (state) => {
+        state.actionloading = true;
+      })
       .addCase(decreaseCartQty.fulfilled, (state, action) => {
         const { item, removed, mealId } = action.payload;
 
@@ -179,12 +190,16 @@ const cartSlice = createSlice({
         }
 
         state.totalAmount = calTotalAmount(state.items);
+        state.actionloading = false;
       })
-
+      .addCase(removeCartItem.pending, (state) => {
+        state.actionloading = true;
+      })
       .addCase(removeCartItem.fulfilled, (state, action) => {
         const removedId = action.meta.arg;
         state.items = state.items.filter((item) => item.mealId !== removedId);
         state.totalAmount = calTotalAmount(state.items);
+        state.actionloading = false;
       });
   },
 });

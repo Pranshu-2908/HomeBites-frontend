@@ -67,98 +67,106 @@ export default function ViewMeals() {
         </CardHeader>
         <CardContent>
           {/* Desktop view */}
-          <div className="hidden xl:block overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead className="text-center">Category</TableHead>
-                  <TableHead className="text-center">Cuisine</TableHead>
-                  <TableHead className="text-center">Price (₹)</TableHead>
-                  <TableHead className="text-center">Quantity</TableHead>
-                  <TableHead className="text-center">Prep Time (min)</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {chefMeals.map((meal, ind) => (
-                  <MotionTr
-                    key={meal._id}
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3, delay: ind * 0.1 }}
-                  >
-                    <TableCell>{meal.name}</TableCell>
-                    <TableCell className="text-center">
-                      {meal.category}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {meal.cuisine}
-                    </TableCell>
-                    <TableCell className="text-center">₹{meal.price}</TableCell>
-                    <TableCell className="text-center">
-                      {meal.quantity}
-                    </TableCell>
-                    <TableCell className="text-center">
-                      {meal.preparationTime} min
-                    </TableCell>
-                    <TableCell className="text-center flex justify-center gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          router.push(`/chef-dashboard/meals/${meal._id}`)
-                        }
-                        className="cursor-pointer"
-                      >
-                        <Edit2 className="text-black w-6 h-6 animate-pulse mr-1" />
-                        Edit
-                      </Button>
+          {chefMeals.length > 0 ? (
+            <div className="hidden xl:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Name</TableHead>
+                    <TableHead className="text-center">Category</TableHead>
+                    <TableHead className="text-center">Cuisine</TableHead>
+                    <TableHead className="text-center">Price (₹)</TableHead>
+                    <TableHead className="text-center">Quantity</TableHead>
+                    <TableHead className="text-center">
+                      Prep Time (min)
+                    </TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {chefMeals.map((meal, ind) => (
+                    <MotionTr
+                      key={meal._id}
+                      initial={{ opacity: 0, y: 30 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3, delay: ind * 0.1 }}
+                    >
+                      <TableCell>{meal.name}</TableCell>
+                      <TableCell className="text-center">
+                        {meal.category}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {meal.cuisine}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        ₹{meal.price}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {meal.quantity}
+                      </TableCell>
+                      <TableCell className="text-center">
+                        {meal.preparationTime} min
+                      </TableCell>
+                      <TableCell className="text-center flex justify-center gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() =>
+                            router.push(`/chef-dashboard/meals/${meal._id}`)
+                          }
+                          className="cursor-pointer"
+                        >
+                          <Edit2 className="text-black w-6 h-6 animate-pulse mr-1" />
+                          Edit
+                        </Button>
 
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button
-                            variant="destructive"
-                            size="sm"
-                            onClick={() => setDeleteTargetMealId(meal._id)}
-                            className="cursor-pointer"
-                          >
-                            <Trash2 className="text-black w-6 h-6 animate-pulse mr-1" />
-                            Delete
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                          <DialogHeader>
-                            <DialogTitle>Confirm Deletion</DialogTitle>
-                            <DialogDescription>
-                              Are you sure you want to delete this meal? This
-                              action cannot be undone.
-                            </DialogDescription>
-                          </DialogHeader>
-                          <DialogFooter>
-                            {loading ? (
-                              <Button variant="destructive">
-                                <Loader2 className="text-black w-6 h-6 animate-spin mr-1" />
-                                Deleting...
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="destructive"
-                                onClick={() => handleDeleteMeal(meal._id)}
-                                className="cursor-pointer"
-                              >
-                                Confirm Delete
-                              </Button>
-                            )}
-                          </DialogFooter>
-                        </DialogContent>
-                      </Dialog>
-                    </TableCell>
-                  </MotionTr>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              onClick={() => setDeleteTargetMealId(meal._id)}
+                              className="cursor-pointer"
+                            >
+                              <Trash2 className="text-black w-6 h-6 animate-pulse mr-1" />
+                              Delete
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Confirm Deletion</DialogTitle>
+                              <DialogDescription>
+                                Are you sure you want to delete this meal? This
+                                action cannot be undone.
+                              </DialogDescription>
+                            </DialogHeader>
+                            <DialogFooter>
+                              {loading ? (
+                                <Button variant="destructive">
+                                  <Loader2 className="text-black w-6 h-6 animate-spin mr-1" />
+                                  Deleting...
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="destructive"
+                                  onClick={() => handleDeleteMeal(meal._id)}
+                                  className="cursor-pointer"
+                                >
+                                  Confirm Delete
+                                </Button>
+                              )}
+                            </DialogFooter>
+                          </DialogContent>
+                        </Dialog>
+                      </TableCell>
+                    </MotionTr>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div>Add Meals to see here</div>
+          )}
 
           {/* Mobile & Tablet View */}
           <div className="xl:hidden space-y-4">

@@ -11,6 +11,7 @@ import { axiosInstance } from "@/utils/axiosInstance";
 import { logout } from "@/redux/slices/authSlice";
 import { toast } from "sonner";
 import { LogOut } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function OnboardingPage() {
   const router = useRouter();
@@ -29,7 +30,12 @@ export default function OnboardingPage() {
 
   return (
     <div className="max-w-4xl mx-auto p-6 relative">
-      <div className="flex justify-between items-center mb-6">
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex justify-between items-center mb-6"
+      >
         <h1 className="text-2xl font-bold text-center w-full">
           Welcome, Chef! Let’s get you started 🍽️
         </h1>
@@ -41,15 +47,29 @@ export default function OnboardingPage() {
         >
           <LogOut className="text-black w-4 h-4" />
         </button>
-      </div>
+      </motion.div>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
+        <StepTimeline currentStep={step ?? 0} />
+      </motion.div>
 
-      <StepTimeline currentStep={step ?? 0} />
-
-      <div className="mt-10">
-        {step === 0 && <ProfileForm />}
-        {step === 1 && <AddMealForm />}
-        {step === 2 && <Completion />}
-      </div>
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={step}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.4 }}
+          className="mt-10"
+        >
+          {step === 0 && <ProfileForm />}
+          {step === 1 && <AddMealForm />}
+          {step === 2 && <Completion />}
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

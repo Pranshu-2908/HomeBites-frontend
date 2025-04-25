@@ -3,14 +3,14 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { getChefMealsById } from "@/redux/slices/mealSlice";
 import { RootState } from "@/redux/store";
 import { toast } from "sonner";
 import { addToCart } from "@/redux/slices/cartSlice";
-import { Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { motion } from "framer-motion";
 import { getDistance } from "geolib";
@@ -23,6 +23,8 @@ export default function ChefDetailsPage() {
   const { chefMealsById, loading } = useAppSelector(
     (store: RootState) => store.meal
   );
+  const [addingMealId, setAddingMealId] = useState<string | null>(null);
+
   useEffect(() => {
     dispatch(getChefMealsById(chefId));
   }, [chefId, dispatch]);
@@ -33,6 +35,7 @@ export default function ChefDetailsPage() {
       }
     : null;
   const handleAddToCart = async (mealId: string, quantity: number) => {
+    setAddingMealId(mealId);
     if (!user) {
       toast.error("Login to add items in cart!");
       return;
@@ -48,6 +51,7 @@ export default function ChefDetailsPage() {
     } else {
       toast.error("Failed to add meal to cart");
     }
+    setAddingMealId(null);
   };
   if (loading) return <LoadingSpinner message="Loading meals" />;
   return (
@@ -127,7 +131,13 @@ export default function ChefDetailsPage() {
                       className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full cursor-pointer"
                       onClick={() => handleAddToCart(meal._id, 1)}
                     >
-                      Add to cart
+                      {addingMealId === meal._id ? (
+                        <div className="flex gap-2">
+                          <Loader2 className="animate-spin" /> Adding...
+                        </div>
+                      ) : (
+                        <p>Add to Cart</p>
+                      )}
                     </Button>
                   )}
                 </div>

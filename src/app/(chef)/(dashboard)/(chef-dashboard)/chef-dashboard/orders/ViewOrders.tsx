@@ -106,7 +106,11 @@ export default function ViewOrders() {
                         ₹{order.totalAmount}
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={getStatusBadgeClass(order.status)}>
+                        <Badge
+                          className={
+                            getStatusBadgeClass(order.status) + "cursor-default"
+                          }
+                        >
                           {order.status}
                         </Badge>
                       </TableCell>
@@ -167,7 +171,11 @@ export default function ViewOrders() {
               <Card key={order._id} className="p-4 border shadow-sm">
                 <div className="flex justify-between items-start mb-3">
                   <div className="font-medium">{order._id}</div>
-                  <Badge className={getStatusBadgeClass(order.status)}>
+                  <Badge
+                    className={
+                      getStatusBadgeClass(order.status) + "cursor-default"
+                    }
+                  >
                     {order.status}
                   </Badge>
                 </div>

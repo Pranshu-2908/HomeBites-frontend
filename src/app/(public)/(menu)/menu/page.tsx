@@ -22,6 +22,7 @@ import { addToCart } from "@/redux/slices/cartSlice";
 import { motion } from "framer-motion";
 import { getDistance } from "geolib";
 import { Badge } from "@/components/ui/badge";
+import { formatTime } from "@/utils/formatTime";
 
 export default function MenuPage() {
   const { meals, loading, error } = useAppSelector(
@@ -98,6 +99,24 @@ export default function MenuPage() {
   if (!meals) {
     return <p className="text-center text-red-500">Meal not found.</p>;
   }
+  const isChefAvailable = (
+    startHour: number,
+    startMin: number,
+    endHour: number,
+    endMin: number
+  ): boolean => {
+    const now = new Date();
+
+    const startTime = new Date(now);
+    startTime.setHours(startHour, startMin, 0, 0);
+
+    const endTime = new Date(now);
+    endTime.setHours(endHour, endMin, 0, 0);
+    console.log("Now:", now);
+    console.log("startTime:", startTime);
+    console.log("endTime:", endTime);
+    return now >= startTime && now <= endTime;
+  };
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -187,6 +206,13 @@ export default function MenuPage() {
               distanceInKm = distance / 1000;
             }
             const maxDistanceKm = 20;
+            const available = isChefAvailable(
+              meal.chefId.workingHours?.startHour ?? 0,
+              meal.chefId.workingHours?.startMinute ?? 0,
+              meal.chefId.workingHours?.endHour ?? 0,
+              meal.chefId.workingHours?.endMinute ?? 0
+            );
+
             if (distanceInKm !== null && distanceInKm <= maxDistanceKm) {
               return (
                 <motion.div
@@ -242,10 +268,18 @@ export default function MenuPage() {
                       </div>
 
                       <div className="flex justify-between items-center mt-4">
-                        {distanceInKm !== null &&
-                        distanceInKm >= maxDistanceKm ? (
-                          <Badge className="bg-rose-600 text-white rounded-md px-4 py-2 text-sm">
-                            Unable to deliver to your location
+                        {!available ? (
+                          <Badge className="bg-rose-400  rounded-md px-4 py-2 text-sm text-black cursor-default">
+                            Available from{" "}
+                            {formatTime(
+                              meal.chefId?.workingHours?.startHour ?? 0,
+                              meal.chefId?.workingHours?.startMinute ?? 0
+                            )}{" "}
+                            to{" "}
+                            {formatTime(
+                              meal.chefId?.workingHours?.endHour ?? 0,
+                              meal.chefId?.workingHours?.endMinute ?? 0
+                            )}
                           </Badge>
                         ) : (
                           <Button

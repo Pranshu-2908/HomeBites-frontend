@@ -15,6 +15,7 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import { motion } from "framer-motion";
 import { getDistance } from "geolib";
 import { Badge } from "@/components/ui/badge";
+import { formatTime } from "@/utils/formatTime";
 
 export default function ChefDetailsPage() {
   const dispatch = useAppDispatch();
@@ -53,6 +54,24 @@ export default function ChefDetailsPage() {
     }
     setAddingMealId(null);
   };
+  const isChefAvailable = (
+    startHour: number,
+    startMin: number,
+    endHour: number,
+    endMin: number
+  ): boolean => {
+    const now = new Date();
+
+    const startTime = new Date(now);
+    startTime.setHours(startHour, startMin, 0, 0);
+
+    const endTime = new Date(now);
+    endTime.setHours(endHour, endMin, 0, 0);
+    console.log("Now:", now);
+    console.log("startTime:", startTime);
+    console.log("endTime:", endTime);
+    return now >= startTime && now <= endTime;
+  };
   if (loading) return <LoadingSpinner message="Loading meals" />;
   return (
     <div className="max-w-5xl mx-auto px-4 py-8">
@@ -75,6 +94,12 @@ export default function ChefDetailsPage() {
             distanceInKm = distance / 1000;
           }
           const maxDistanceKm = 20;
+          const available = isChefAvailable(
+            meal.chefId.workingHours?.startHour ?? 0,
+            meal.chefId.workingHours?.startMinute ?? 0,
+            meal.chefId.workingHours?.endHour ?? 0,
+            meal.chefId.workingHours?.endMinute ?? 0
+          );
           return (
             <motion.div
               key={meal._id}
@@ -123,8 +148,21 @@ export default function ChefDetailsPage() {
                     </p>
                   </div>
                   {distanceInKm !== null && distanceInKm >= maxDistanceKm ? (
-                    <Badge className="bg-rose-600 text-white rounded-md px-4 py-2 text-sm w-full">
+                    <Badge className="bg-rose-600 text-black rounded-md px-4 py-2 text-sm w-full cursor-default">
                       Unable to deliver to your location
+                    </Badge>
+                  ) : !available ? (
+                    <Badge className="bg-rose-400  rounded-md px-4 py-2 text-sm text-black w-full cursor-default">
+                      Available from{" "}
+                      {formatTime(
+                        meal.chefId?.workingHours?.startHour ?? 0,
+                        meal.chefId?.workingHours?.startMinute ?? 0
+                      )}{" "}
+                      to{" "}
+                      {formatTime(
+                        meal.chefId?.workingHours?.endHour ?? 0,
+                        meal.chefId?.workingHours?.endMinute ?? 0
+                      )}
                     </Badge>
                   ) : (
                     <Button

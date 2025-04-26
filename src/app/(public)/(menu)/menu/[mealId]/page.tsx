@@ -97,6 +97,30 @@ export default function MealDetailsPage() {
   if (!selectedMeal) {
     return <p className="text-center text-red-500">Meal not found.</p>;
   }
+  const isChefAvailable = (
+    startHour: number,
+    startMin: number,
+    endHour: number,
+    endMin: number
+  ): boolean => {
+    const now = new Date();
+
+    const startTime = new Date(now);
+    startTime.setHours(startHour, startMin, 0, 0);
+
+    const endTime = new Date(now);
+    endTime.setHours(endHour, endMin, 0, 0);
+    console.log("Now:", now);
+    console.log("startTime:", startTime);
+    console.log("endTime:", endTime);
+    return now >= startTime && now <= endTime;
+  };
+  const available = isChefAvailable(
+    selectedMeal.chefId?.workingHours?.startHour ?? 0,
+    selectedMeal.chefId?.workingHours?.startMinute ?? 0,
+    selectedMeal.chefId?.workingHours?.endHour ?? 0,
+    selectedMeal.chefId?.workingHours?.endMinute ?? 0
+  );
   return (
     <div className="container mx-auto p-4 max-w-4xl">
       <motion.div
@@ -112,7 +136,7 @@ export default function MealDetailsPage() {
                 alt={selectedMeal?.name || "Meal Image"}
                 width={500}
                 height={256}
-                className="basis-1/2 w-fit h-64 object-cover rounded-lg mx-auto"
+                className="basis-1/2 w-fit h-72 object-cover rounded-lg mx-auto"
               />
               <div className="basis-1/2 p-4">
                 <h1 className="text-2xl font-bold">{selectedMeal.name}</h1>
@@ -147,8 +171,21 @@ export default function MealDetailsPage() {
                   </p>
                 </div>
                 {distanceInKm !== null && distanceInKm >= maxDistanceKm ? (
-                  <Badge className="bg-rose-600 text-white rounded-md px-4 py-2 text-sm mt-4 w-full">
+                  <Badge className="bg-rose-600 text-white rounded-md px-4 py-2 text-sm mt-4 w-full cursor-default">
                     Unable to deliver to your location
+                  </Badge>
+                ) : !available ? (
+                  <Badge className="bg-rose-400  rounded-md px-4 py-2 text-sm text-black w-full mt-4 cursor-default">
+                    Available from{" "}
+                    {formatTime(
+                      selectedMeal.chefId?.workingHours?.startHour ?? 0,
+                      selectedMeal.chefId?.workingHours?.startMinute ?? 0
+                    )}{" "}
+                    to{" "}
+                    {formatTime(
+                      selectedMeal.chefId?.workingHours?.endHour ?? 0,
+                      selectedMeal.chefId?.workingHours?.endMinute ?? 0
+                    )}
                   </Badge>
                 ) : (
                   <Button
@@ -221,62 +258,66 @@ export default function MealDetailsPage() {
         viewport={{ once: true }}
         transition={{ duration: 0.4 }}
       >
-        <Carousel className="mt-4 w-full ">
-          <CarouselContent className="flex">
-            {reviews.map((review, index) => (
-              <CarouselItem
-                key={index}
-                className="w-full sm:basis-1/2 lg:basis-1/3"
-              >
-                <motion.div
+        {reviews.length > 0 ? (
+          <Carousel className="mt-4 w-full ">
+            <CarouselContent className="flex">
+              {reviews.map((review, index) => (
+                <CarouselItem
                   key={index}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.4, delay: index * 0.1 }}
-                  viewport={{ once: true }}
-                  className="h-full flex"
+                  className="w-full sm:basis-1/2 lg:basis-1/3"
                 >
-                  <Card className="border rounded-lg p-4 flex flex-col justify-between w-full">
-                    <CardContent className="flex flex-col gap-2 w-full overflow-hidden flex-grow">
-                      <div className="flex gap-2 justify-start">
-                        <Image
-                          src={`${review.customerId?.profilePicture}`}
-                          alt={`${review.customerId?.name}`}
-                          height={48}
-                          width={48}
-                          sizes="icon"
-                          className="rounded-full"
-                        />
-                        <div className="flex flex-col">
-                          <h3 className="font-bold text-xl">
-                            {review.customerId?.name}
-                          </h3>
-                          <div className="flex">
-                            {[...Array(review.rating)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className="w-6 h-6 text-yellow-500 animate-pulse"
-                              />
-                            ))}
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="h-full flex"
+                  >
+                    <Card className="border rounded-lg p-4 flex flex-col justify-between w-full">
+                      <CardContent className="flex flex-col gap-2 w-full overflow-hidden flex-grow">
+                        <div className="flex gap-2 justify-start">
+                          <Image
+                            src={`${review.customerId?.profilePicture}`}
+                            alt={`${review.customerId?.name}`}
+                            height={48}
+                            width={48}
+                            sizes="icon"
+                            className="rounded-full"
+                          />
+                          <div className="flex flex-col">
+                            <h3 className="font-bold text-xl">
+                              {review.customerId?.name}
+                            </h3>
+                            <div className="flex">
+                              {[...Array(review.rating)].map((_, i) => (
+                                <Star
+                                  key={i}
+                                  className="w-6 h-6 text-yellow-500 animate-pulse"
+                                />
+                              ))}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <p className="text-gray-700 mt-1 ml-4 flex-grow">
-                        “
-                        {review.comment && review.comment.length < 50
-                          ? review.comment
-                          : review.comment.slice(0, 50) + "..."}
-                        ”
-                      </p>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              </CarouselItem>
-            ))}
-          </CarouselContent>
-          <CarouselPrevious className="hidden lg:inline" />
-          <CarouselNext className="hidden lg:inline" />
-        </Carousel>
+                        <p className="text-gray-700 mt-1 ml-4 flex-grow">
+                          “
+                          {review.comment && review.comment.length < 50
+                            ? review.comment
+                            : review.comment.slice(0, 50) + "..."}
+                          ”
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="hidden lg:inline" />
+            <CarouselNext className="hidden lg:inline" />
+          </Carousel>
+        ) : (
+          <div className="text-center">Not yet Reviewed</div>
+        )}
       </motion.div>
     </div>
   );

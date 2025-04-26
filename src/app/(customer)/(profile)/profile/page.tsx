@@ -338,7 +338,7 @@ export default function UserProfile() {
                           <Badge
                             className={`${
                               statusColor[order.status]
-                            } text-black text-xs px-3 py-1 rounded-full`}
+                            } text-black text-xs px-3 py-1 rounded-full cursor-default`}
                           >
                             {order.status}
                           </Badge>

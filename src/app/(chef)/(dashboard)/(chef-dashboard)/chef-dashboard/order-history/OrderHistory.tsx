@@ -104,7 +104,11 @@ export default function OrderHistory() {
                         )}
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge className={getStatusBadgeClass(order.status)}>
+                        <Badge
+                          className={
+                            getStatusBadgeClass(order.status) + "cursor-default"
+                          }
+                        >
                           {order.status}
                         </Badge>
                       </TableCell>
@@ -125,7 +129,11 @@ export default function OrderHistory() {
                   <div className="hidden sm:inline font-medium">
                     {order._id}
                   </div>
-                  <Badge className={getStatusBadgeClass(order.status)}>
+                  <Badge
+                    className={
+                      getStatusBadgeClass(order.status) + "cursor-default"
+                    }
+                  >
                     {order.status}
                   </Badge>
                 </div>

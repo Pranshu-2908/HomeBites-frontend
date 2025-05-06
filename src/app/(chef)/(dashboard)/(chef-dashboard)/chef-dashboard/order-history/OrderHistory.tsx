@@ -82,8 +82,9 @@ export default function OrderHistory() {
                       <TableCell className="text-center">
                         {order.meals.map((meal, index) => (
                           <div key={index}>
-                            {meal.mealId?.name} - {meal.quantity}x (₹
-                            {meal.mealId?.price})
+                            {meal.mealId?.name ?? "Not available"} -{" "}
+                            {meal.quantity}x (₹
+                            {meal.mealId?.price ?? "Not available"})
                           </div>
                         ))}
                       </TableCell>
@@ -154,9 +155,10 @@ export default function OrderHistory() {
                     <div className="text-gray-500 mb-1">Items:</div>
                     {order.meals.map((meal, index) => (
                       <div key={index} className="flex justify-between py-1">
-                        <span>{meal.mealId?.name}</span>
+                        <span>{meal.mealId?.name ?? "Not available"}</span>
                         <span>
-                          {meal.quantity}x (₹{meal.mealId?.price})
+                          {meal.quantity}x (₹
+                          {meal.mealId?.price ?? "Not available"})
                         </span>
                       </div>
                     ))}

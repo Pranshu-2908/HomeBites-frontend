@@ -73,6 +73,7 @@ export default function MenuPage() {
     }
     if (items.length > 0 && items[0].chefId !== chefId) {
       toast.error("You can only add meals from the same chef to the cart.");
+      setAddingMealId(null);
       return;
     }
     const res = await dispatch(
@@ -315,13 +316,13 @@ export default function MenuPage() {
         </div>
       ) : (
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredMeals.map((meal, index) => (
+          {filteredMeals.map((meal) => (
             <motion.div
               key={meal._id}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
-              transition={{ duration: 0.8, delay: index * 0.1 }}
+              transition={{ duration: 0.8, delay: 0.1 }}
             >
               <Card className="overflow-hidden p-0 m-2 md:m-0">
                 <Image

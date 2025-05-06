@@ -352,9 +352,12 @@ export default function UserProfile() {
                               className="text-sm text-gray-700 flex justify-between"
                             >
                               <span className="font-medium">
-                                {item.mealId.name} --- x{item.quantity}
+                                {item.mealId.name ?? "Item no longer Available"}
+                                --- x{item.quantity}
                               </span>
-                              <span>₹{item.mealId.price}</span>
+                              <span>
+                                ₹{item.mealId.price ?? "Not Available"}
+                              </span>
                             </div>
                           ))}
                         </div>

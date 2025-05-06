@@ -165,7 +165,14 @@ export const deleteMeal = createAsyncThunk(
     }
   }
 );
-
+const shuffleArray = (array: Meal[]) => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
 const mealSlice = createSlice({
   name: "meals",
   initialState,
@@ -177,7 +184,7 @@ const mealSlice = createSlice({
       })
       .addCase(fetchMeals.fulfilled, (state, action) => {
         state.loading = false;
-        state.meals = action.payload;
+        state.meals = shuffleArray(action.payload);
       })
       .addCase(fetchMeals.rejected, (state, action) => {
         state.loading = false;

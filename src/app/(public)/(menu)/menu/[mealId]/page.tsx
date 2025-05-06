@@ -31,6 +31,7 @@ import { Badge } from "@/components/ui/badge";
 export default function MealDetailsPage() {
   const { mealId } = useParams() as { mealId: string };
   const { user } = useAppSelector((store: RootState) => store.auth);
+  const { items } = useAppSelector((store: RootState) => store.cart);
   const { reviews, chefAverageRating } = useAppSelector(
     (store: RootState) => store.review
   );
@@ -51,10 +52,20 @@ export default function MealDetailsPage() {
   useEffect(() => {
     dispatch(getChefAverageRating(selectedMeal?.chefId?._id));
   }, [dispatch, selectedMeal?.chefId?._id]);
-  const handleAddToCart = async (mealId: string, quantity: number) => {
+
+  const handleAddToCart = async (
+    mealId: string,
+    quantity: number,
+    chefId: string
+  ) => {
     setAddingMealId(mealId);
     if (!user) {
       toast.error("Login to add items in cart!");
+      return;
+    }
+    if (items.length > 0 && items[0].chefId !== chefId) {
+      toast.error("You can only add meals from the same chef to the cart.");
+      setAddingMealId(null);
       return;
     }
     const res = await dispatch(
@@ -190,7 +201,13 @@ export default function MealDetailsPage() {
                 ) : (
                   <Button
                     className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full cursor-pointer"
-                    onClick={() => handleAddToCart(selectedMeal._id, 1)}
+                    onClick={() =>
+                      handleAddToCart(
+                        selectedMeal._id,
+                        1,
+                        selectedMeal.chefId._id
+                      )
+                    }
                   >
                     {addingMealId === selectedMeal._id ? (
                       <div className="flex gap-2">

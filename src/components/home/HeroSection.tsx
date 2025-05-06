@@ -38,9 +38,8 @@ const HeroSection = () => {
           className="text-sm sm:text-md md:text-lg text-center px-4 lg:px-8 sm:max-w-md md:max-w-lg xl:max-w-xl  text-slate-800"
         >
           <p>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Esse
-            consectetur quibusdam illo doloribus. Tempore culpa voluptas iste
-            hic esse illum?
+            Discover authentic home-cooked meals crafted by passionate local
+            chefs. Taste the warmth of home — delivered fresh to your door.
           </p>
         </motion.div>
 

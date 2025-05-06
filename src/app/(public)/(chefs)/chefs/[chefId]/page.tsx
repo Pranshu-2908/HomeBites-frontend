@@ -21,6 +21,7 @@ export default function ChefDetailsPage() {
   const dispatch = useAppDispatch();
   const { chefId } = useParams() as { chefId: string };
   const { user } = useAppSelector((store: RootState) => store.auth);
+  const { items } = useAppSelector((store: RootState) => store.cart);
   const { chefMealsById, loading } = useAppSelector(
     (store: RootState) => store.meal
   );
@@ -35,10 +36,19 @@ export default function ChefDetailsPage() {
         longitude: user.address.coordinates.lng,
       }
     : null;
-  const handleAddToCart = async (mealId: string, quantity: number) => {
+  const handleAddToCart = async (
+    mealId: string,
+    quantity: number,
+    chefId: string
+  ) => {
     setAddingMealId(mealId);
     if (!user) {
       toast.error("Login to add items in cart!");
+      return;
+    }
+    if (items.length > 0 && items[0].chefId !== chefId) {
+      toast.error("You can only add meals from the same chef to the cart.");
+      setAddingMealId(null);
       return;
     }
     const res = await dispatch(
@@ -167,7 +177,9 @@ export default function ChefDetailsPage() {
                   ) : (
                     <Button
                       className="mt-4 bg-violet-600 text-white py-2 px-4 rounded-md hover:bg-violet-700 w-full cursor-pointer"
-                      onClick={() => handleAddToCart(meal._id, 1)}
+                      onClick={() =>
+                        handleAddToCart(meal._id, 1, meal.chefId._id)
+                      }
                     >
                       {addingMealId === meal._id ? (
                         <div className="flex gap-2">

@@ -43,11 +43,9 @@ const Login = () => {
       // Redirect based on user role
       if (response.data.user.role === "chef") {
         if (response.data.user.onBoardingSteps < 2) {
-          console.log("onboarding");
-          router.push("/chef-onboarding");
+          router.replace("/chef-onboarding");
         } else {
-          console.log("dashboard");
-          router.push("/chef-dashboard");
+          router.replace("/chef-dashboard");
         }
       } else {
         if (navigator.geolocation) {
@@ -77,7 +75,7 @@ const Login = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white px-4"
+      className="flex items-center justify-center px-4 mt-25"
     >
       <form
         onSubmit={handleSubmit}

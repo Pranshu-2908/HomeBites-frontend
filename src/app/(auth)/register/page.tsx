@@ -62,7 +62,7 @@ const Signup = () => {
             }
           );
         }
-        router.push("/chef-onboarding");
+        router.replace("/chef-onboarding");
       } else {
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(
@@ -75,7 +75,7 @@ const Signup = () => {
             }
           );
         }
-        router.push("/");
+        router.replace("/");
       }
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
@@ -92,7 +92,7 @@ const Signup = () => {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.5 }}
-      className="min-h-screen flex items-center justify-center bg-gradient-to-b from-purple-50 to-white px-4"
+      className="flex items-center justify-center mt-25 px-4"
     >
       <form
         onSubmit={handleSubmit}

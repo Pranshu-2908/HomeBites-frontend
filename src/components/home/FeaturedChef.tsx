@@ -7,10 +7,11 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
+import { useEffect } from "react";
 
 export default function FeaturedChefs() {
   const { chefs } = useAppSelector((store: RootState) => store.auth);
-  const [sliderRef] = useKeenSlider<HTMLDivElement>({
+  const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
     loop: true,
     mode: "snap",
     slides: {
@@ -26,6 +27,13 @@ export default function FeaturedChefs() {
       },
     },
   });
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      slider.current?.update();
+    }, 300); // Delay ensures layout is ready
+
+    return () => clearTimeout(timeout);
+  }, [slider]);
 
   return (
     <section className="py-16 px-4 bg-purple-50 text-gray-800">

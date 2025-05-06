@@ -50,7 +50,7 @@ export default function ChefDashboardLayout({
       withCredentials: true,
     });
     dispatch(logout());
-    router.push("/");
+    router.replace("/");
     toast(resp.data.message);
   };
 

@@ -17,7 +17,6 @@ export default function PaymentSuccessPage() {
   useEffect(() => {
     const fetchOrderId = async () => {
       if (!sessionId) return;
-      console.log(sessionId);
       try {
         const { data } = await axiosInstance.get(
           `/payment/session/${sessionId}`

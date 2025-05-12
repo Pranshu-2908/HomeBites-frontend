@@ -21,7 +21,8 @@ export default function MenuPage() {
     dispatch(fetchAllchefs());
   }, [dispatch]);
 
-  if (loading) return <LoadingSpinner message="Loading Chefs..." />;
+  if (loading)
+    return <LoadingSpinner message="Loading Chefs..." fullScreen={true} />;
   if (!chefs) {
     return <p className="text-center text-red-500">Meal not found.</p>;
   }

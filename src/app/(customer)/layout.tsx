@@ -19,7 +19,6 @@ interface Notification {
 export default function CustomerLayout({ children }: { children: ReactNode }) {
   const dispatch = useAppDispatch();
   const { socket } = useSocket();
-  console.log(socket);
   useEffect(() => {
     if (socket) {
       socket.on("newNotification", (notification: Notification) => {

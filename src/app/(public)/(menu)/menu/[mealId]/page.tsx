@@ -61,6 +61,8 @@ export default function MealDetailsPage() {
     setAddingMealId(mealId);
     if (!user) {
       toast.error("Login to add items in cart!");
+      setAddingMealId(null);
+
       return;
     }
     if (items.length > 0 && items[0].chefId !== chefId) {
@@ -103,7 +105,8 @@ export default function MealDetailsPage() {
     distanceInKm = distance / 1000;
   }
   const maxDistanceKm = 20;
-  if (loading) return <LoadingSpinner message="Loading meal..." />;
+  if (loading)
+    return <LoadingSpinner message="Loading meal..." fullScreen={true} />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!selectedMeal) {
     return <p className="text-center text-red-500">Meal not found.</p>;
@@ -121,9 +124,7 @@ export default function MealDetailsPage() {
 
     const endTime = new Date(now);
     endTime.setHours(endHour, endMin, 0, 0);
-    console.log("Now:", now);
-    console.log("startTime:", startTime);
-    console.log("endTime:", endTime);
+
     return now >= startTime && now <= endTime;
   };
   const available = isChefAvailable(
@@ -158,14 +159,12 @@ export default function MealDetailsPage() {
                   </span>
                   <span
                     className={
-                      selectedMeal.category === "vegetarian"
-                        ? "text-green-600"
-                        : "text-red-600"
+                      selectedMeal.category === "non-veg"
+                        ? "text-red-600"
+                        : "text-green-600"
                     }
                   >
-                    {selectedMeal.category === "vegetarian"
-                      ? "🌱 Veg"
-                      : "🍗 Non-Veg"}
+                    {selectedMeal.category}
                   </span>
                 </div>
                 <p className="text-sm text-gray-500 mt-2">

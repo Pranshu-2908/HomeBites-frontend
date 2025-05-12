@@ -36,7 +36,6 @@ export default function ChefDashboardLayout({
   children: ReactNode;
 }) {
   const { socket } = useSocket();
-  console.log(socket);
   const dispatch = useAppDispatch();
   const router = useRouter();
   const pathName = usePathname();
@@ -56,11 +55,9 @@ export default function ChefDashboardLayout({
 
   useEffect(() => {
     if (socket) {
-      console.log("Socket connected:", socket.connected);
       socket.on("newNotification", (notification: any) => {
         toast(notification.message);
         dispatch(fetchChefOrdersByStatus());
-        console.log("New notification received:", notification);
       });
     }
 

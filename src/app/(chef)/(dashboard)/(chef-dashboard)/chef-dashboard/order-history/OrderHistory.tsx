@@ -10,11 +10,12 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { fetchChefOrdersByStatus } from "@/redux/slices/orderSlice";
 import { RootState } from "@/redux/store";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { motion } from "framer-motion";
+import Pagination from "@/components/Pagination";
 
 const MotionTr = motion(TableRow);
 
@@ -22,6 +23,14 @@ export default function OrderHistory() {
   const { completedOrders, cancelledOrders, rejectedOrders, loading, error } =
     useAppSelector((store: RootState) => store.order);
   const orders = [...completedOrders, ...cancelledOrders, ...rejectedOrders];
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  const totalPages = Math.ceil(orders.length / itemsPerPage);
+  const paginatedOrders = orders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
   const dispatch = useAppDispatch();
   useEffect(() => {
     dispatch(fetchChefOrdersByStatus());
@@ -68,7 +77,7 @@ export default function OrderHistory() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {orders.map((order, ind) => (
+                  {paginatedOrders.map((order, ind) => (
                     <MotionTr
                       key={order._id}
                       initial={{ opacity: 0, y: 30 }}
@@ -117,6 +126,11 @@ export default function OrderHistory() {
                   ))}
                 </TableBody>
               </Table>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={setCurrentPage}
+              />
             </div>
           ) : (
             <div>No Order History available</div>
@@ -124,7 +138,7 @@ export default function OrderHistory() {
 
           {/* Mobile card and tablet view */}
           <div className="xl:hidden space-y-4">
-            {orders.map((order) => (
+            {paginatedOrders.map((order) => (
               <Card key={order._id} className="p-4 border shadow-sm">
                 <div className="flex justify-between items-start mb-2">
                   <div className="hidden sm:inline font-medium">
@@ -170,6 +184,11 @@ export default function OrderHistory() {
                 </div>
               </Card>
             ))}
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         </CardContent>
       </Card>

@@ -36,7 +36,6 @@ function Page() {
     (store: RootState) => store.chef
   );
   const { user } = useAppSelector((store: RootState) => store.auth);
-  console.log(user?._id);
   const { chefAverageRating, totalReviewOfAChef } = useAppSelector(
     (store: RootState) => store.review
   );
@@ -48,7 +47,6 @@ function Page() {
     dispatch(fetchChefStats());
   }, [dispatch, user?._id]);
   const router = useRouter();
-  console.log(orderTrends);
   return (
     <DashboardPage title="DASHBOARD" hideBackButton={true}>
       <div className="flex flex-col gap-6">

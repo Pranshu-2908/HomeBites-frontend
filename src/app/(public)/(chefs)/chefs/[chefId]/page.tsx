@@ -77,9 +77,6 @@ export default function ChefDetailsPage() {
 
     const endTime = new Date(now);
     endTime.setHours(endHour, endMin, 0, 0);
-    console.log("Now:", now);
-    console.log("startTime:", startTime);
-    console.log("endTime:", endTime);
     return now >= startTime && now <= endTime;
   };
   if (loading) return <LoadingSpinner message="Loading meals" />;
@@ -137,12 +134,12 @@ export default function ChefDetailsPage() {
                     <span className="text-lg font-semibold">₹{meal.price}</span>
                     <span
                       className={
-                        meal.category === "vegetarian"
-                          ? "text-green-600"
-                          : "text-red-600"
+                        meal.category === "non-veg"
+                          ? "text-red-600"
+                          : "text-green-600"
                       }
                     >
-                      {meal.category === "vegetarian" ? "🌱 Veg" : "🍗 Non-Veg"}
+                      {meal.category}
                     </span>
                   </div>
                   <p className="text-sm text-gray-500">

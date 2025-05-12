@@ -13,7 +13,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   );
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      console.log("sent from protected route");
       router.replace("/login");
     }
   }, [isAuthenticated, router, loading]);

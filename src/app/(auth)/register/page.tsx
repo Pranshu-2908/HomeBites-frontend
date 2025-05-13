@@ -33,6 +33,7 @@ const Signup = () => {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
+      setLoading(true);
       return;
     }
 
@@ -77,10 +78,9 @@ const Signup = () => {
         }
         router.replace("/");
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
     } catch (err: any) {
       toast("Sign up failed!");
-      throw err;
     } finally {
       setLoading(false);
     }

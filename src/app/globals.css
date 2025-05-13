@@ -129,3 +129,10 @@ body {
   font-family: var(--font-rowdies-one), sans-serif;
   font-style: normal;
 }
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

@@ -52,6 +52,11 @@ const Cart: React.FC = () => {
     id: string;
     type: "add" | "minus" | "delete";
   } | null>(null);
+
+  useEffect(() => {
+    dispatch(loadCart());
+  }, [dispatch]);
+
   const handleCartAction = async (
     id: string,
     type: "add" | "minus" | "delete"
@@ -69,10 +74,6 @@ const Cart: React.FC = () => {
       setLoadingAction(null);
     }
   };
-
-  useEffect(() => {
-    dispatch(loadCart());
-  }, [dispatch]);
   const handlePlaceOrder = async (preferredTime: {
     hour: number;
     minute: number;
@@ -109,12 +110,11 @@ const Cart: React.FC = () => {
       } else {
         throw new Error("Stripe checkout session URL not received.");
       }
-      await dispatch(deleteCart());
     } catch (err: any) {
       toast.error(err?.response.data.message || "Failed to place order");
-      throw err;
     } finally {
       setLoading(false);
+      await dispatch(deleteCart());
     }
   };
 

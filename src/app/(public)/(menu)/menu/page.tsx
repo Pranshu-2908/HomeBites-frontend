@@ -187,7 +187,7 @@ export default function MenuPage() {
         </div>
       </div>
       {loading ? (
-        <LoadingSpinner message="Loading Meals..." fullScreen={true} />
+        <LoadingSpinner message="Loading Meals..." />
       ) : user ? (
         <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMeals.map((meal, index) => {

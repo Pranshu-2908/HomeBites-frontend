@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import {
@@ -74,7 +75,6 @@ export const fetchMeals = createAsyncThunk("meals/fetchMeals", async () => {
     return response.data.meals;
   } catch (error: any) {
     toast(error.response?.data?.message || "failed to fetch meals");
-    throw error;
   }
 });
 export const fetchMealById = createAsyncThunk(
@@ -85,7 +85,6 @@ export const fetchMealById = createAsyncThunk(
       return response.data.meal;
     } catch (error: any) {
       toast(error.response?.data?.message || "Failed to fetch meal");
-      throw error;
     }
   }
 );
@@ -97,7 +96,6 @@ export const fetchChefMeals = createAsyncThunk(
       return response.data.meals;
     } catch (error: any) {
       toast(error.response?.data?.message || "Failed to fetch meals");
-      throw error;
     }
   }
 );
@@ -109,7 +107,6 @@ export const getChefMealsById = createAsyncThunk(
       return response.data.meals;
     } catch (error: any) {
       toast(error.response?.data?.message || "Failed to fetch meals");
-      throw error;
     }
   }
 );
@@ -161,7 +158,6 @@ export const deleteMeal = createAsyncThunk(
       return mealId;
     } catch (error) {
       toast.error("Failed to delete meal");
-      throw error;
     }
   }
 );

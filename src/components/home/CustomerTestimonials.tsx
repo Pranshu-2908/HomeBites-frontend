@@ -18,6 +18,7 @@ export default function CustomerTestimonials() {
   useEffect(() => {
     dispatch(getTopReviews());
   }, [dispatch]);
+
   return (
     <section className="py-16 px-6 bg-purple-50">
       <motion.div
@@ -34,6 +35,7 @@ export default function CustomerTestimonials() {
           Authentic stories from happy food lovers
         </p>
       </motion.div>
+
       {loading ? (
         <LoadingSpinner message="Loading reviews..." />
       ) : (
@@ -46,18 +48,15 @@ export default function CustomerTestimonials() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card
-                key={index}
-                className="p-6 shadow-md hover:shadow-lg transition-all"
-              >
-                <CardContent className="flex flex-col gap-4 h-full">
+              <Card className="w-100 h-60 mx-auto p-6 shadow-md hover:shadow-lg transition-all flex flex-col justify-between">
+                <CardContent className="flex flex-col gap-4 h-full p-0">
                   <div className="flex items-center gap-4">
                     <Image
                       src={top.customerId?.profilePicture || ""}
                       alt={top.customerId?.name || "image"}
                       width={64}
                       height={64}
-                      className="rounded-full"
+                      className="rounded-full object-fit w-16 h-16"
                     />
                     <div>
                       <h3 className="font-semibold">{top?.customerId?.name}</h3>
@@ -66,8 +65,12 @@ export default function CustomerTestimonials() {
                       </p>
                     </div>
                   </div>
-                  <p className="text-gray-700 italic">“{top.comment}”</p>
-                  <div className="flex gap-1">
+
+                  <p className="text-gray-700 italic line-clamp-3">
+                    “{top.comment}”
+                  </p>
+
+                  <div className="flex gap-1 mt-auto">
                     {[...Array(top.rating)].map((_, i) => (
                       <Star
                         key={i}

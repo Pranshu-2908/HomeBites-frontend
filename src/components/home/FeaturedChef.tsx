@@ -49,7 +49,9 @@ export default function FeaturedChefs() {
                   <p className="text-sm text-gray-600">Bio: {chef.bio}</p>
                   <div className="flex items-center gap-1 text-yellow-500">
                     <Star className="w-5 h-5 fill-yellow-500" />
-                    <span className="text-md font-medium">{4}</span>
+                    <span className="text-md font-medium">
+                      {chef.averageRating ?? "N/R"}
+                    </span>
                   </div>
                 </CardContent>
               </Card>

@@ -265,7 +265,9 @@ export default function MenuPage() {
                           strokeWidth="3"
                         />
                         <p className="font-semibold text-sm tracking-wide">
-                          {meal.averageRating}
+                          {Number(meal.averageRating) > 0
+                            ? meal.averageRating
+                            : "N/R"}
                         </p>
                       </div>
 
@@ -370,7 +372,9 @@ export default function MenuPage() {
                         strokeWidth="3"
                       />
                       <p className="font-semibold text-sm tracking-wide">
-                        {meal.averageRating}
+                        {Number(meal.averageRating) > 0
+                          ? meal.averageRating
+                          : "N/R"}
                       </p>
                     </div>
 

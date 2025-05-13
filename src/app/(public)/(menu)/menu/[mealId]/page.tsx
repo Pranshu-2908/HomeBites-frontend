@@ -177,7 +177,9 @@ export default function MealDetailsPage() {
                     strokeWidth="3"
                   />
                   <p className="font-semibold text-lg tracking-wide">
-                    {selectedMeal.averageRating}
+                    {Number(selectedMeal.averageRating) > 0
+                      ? selectedMeal.averageRating
+                      : "N/R"}
                   </p>
                 </div>
                 {distanceInKm !== null && distanceInKm >= maxDistanceKm ? (
@@ -230,7 +232,9 @@ export default function MealDetailsPage() {
                   <p className="text-gray-600">
                     ⭐ <span className="font-bold">Rating :</span>{" "}
                     <span className="font-bold text-black">
-                      {chefAverageRating}
+                      {chefAverageRating && chefAverageRating > 0
+                        ? chefAverageRating
+                        : "N/R"}
                     </span>
                   </p>
                   <p className="text-gray-600">

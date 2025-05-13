@@ -33,6 +33,7 @@ interface User {
     endMinute: number;
   };
   onBoardingSteps: number;
+  averageRating: number;
 }
 
 interface AuthState {

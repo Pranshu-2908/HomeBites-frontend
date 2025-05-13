@@ -151,7 +151,9 @@ export default function ChefDetailsPage() {
                       strokeWidth="3"
                     />
                     <p className="font-semibold text-md tracking-wide">
-                      {meal.averageRating}
+                      {Number(meal.averageRating) > 0
+                        ? meal.averageRating
+                        : "N/R"}
                     </p>
                   </div>
                   {distanceInKm !== null && distanceInKm >= maxDistanceKm ? (

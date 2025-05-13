@@ -26,6 +26,7 @@ export default function MenuPage() {
   if (!chefs) {
     return <p className="text-center text-red-500">Meal not found.</p>;
   }
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -64,7 +65,9 @@ export default function MenuPage() {
                 <div className="flex justify-between">
                   <div className="flex items-center gap-1 text-yellow-500">
                     <Star className="w-5 h-5 fill-yellow-500" />
-                    <span className="text-md font-medium">{4}</span>
+                    <span className="text-md font-medium">
+                      {chef.averageRating ?? "N/R"}
+                    </span>
                   </div>
                   <Button
                     size={"icon"}

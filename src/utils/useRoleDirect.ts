@@ -10,6 +10,7 @@ export function useBlockChefs() {
   useEffect(() => {
     if (!loading) {
       if (user?.role === "chef") {
+        console.log("Chef detected, redirecting to chef dashboard");
         router.replace("/chef-dashboard");
       } else {
         setChecking(false);

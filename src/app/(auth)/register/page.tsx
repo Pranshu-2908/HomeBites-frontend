@@ -33,7 +33,7 @@ const Signup = () => {
 
     if (password !== confirmPassword) {
       setError("Passwords do not match");
-      setLoading(true);
+      setLoading(false);
       return;
     }
 

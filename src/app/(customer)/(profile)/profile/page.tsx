@@ -23,6 +23,7 @@ import ReviewModal from "./reviewModal";
 import { motion } from "framer-motion";
 import "leaflet/dist/leaflet.css";
 import MapPicker from "./MapPicker";
+import PaginationControls from "@/components/Pagination";
 const container = {
   hidden: {},
   show: {
@@ -50,6 +51,14 @@ export default function UserProfile() {
   );
   const { customerOrders, loading } = useAppSelector(
     (store: RootState) => store.order
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
+
+  const totalPages = Math.ceil(customerOrders.length / itemsPerPage);
+  const paginatedCustomerOrders = customerOrders.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
   useEffect(() => {
     dispatch(fetchCustomerOrders());
@@ -289,7 +298,7 @@ export default function UserProfile() {
               Your Orders
             </h2>
             <div className="grid grid-cols-1 gap-6 bg-white rounded-xl p-4">
-              {customerOrders.map((order, index) => {
+              {paginatedCustomerOrders.map((order, index) => {
                 const isLive =
                   order.status !== "completed" &&
                   order.status !== "cancelled" &&
@@ -399,6 +408,11 @@ export default function UserProfile() {
                 );
               })}
             </div>
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         )}
       </div>

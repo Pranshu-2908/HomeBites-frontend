@@ -5,7 +5,11 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
-
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 export default function FeaturedChefs() {
   const { chefs } = useAppSelector((store: RootState) => store.auth);
 
@@ -25,39 +29,48 @@ export default function FeaturedChefs() {
           Passionate, skilled, and ready to serve you the taste of home
         </p>
 
-        <div className="flex gap-6 overflow-x-auto pb-4 scrollbar-hide">
-          {chefs.map((chef, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-              viewport={{ once: true, amount: 0.3 }}
-              className="w-80 flex-shrink-0"
-            >
-              <Card className="hover:shadow-xl transition-all duration-300 h-full p-0">
-                <CardContent className="p-6 text-left space-y-4">
-                  <div className="w-full h-72 relative rounded-xl overflow-hidden">
-                    <Image
-                      src={chef.profilePicture ?? ""}
-                      alt={chef.name}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <h3 className="text-xl font-bold">{chef.name}</h3>
-                  <p className="text-sm text-gray-600">Bio: {chef.bio}</p>
-                  <div className="flex items-center gap-1 text-yellow-500">
-                    <Star className="w-5 h-5 fill-yellow-500" />
-                    <span className="text-md font-medium">
-                      {chef.averageRating ?? "N/R"}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+        <Carousel
+          opts={{ align: "start", loop: true }}
+          className="w-full max-w-7xl mx-auto"
+        >
+          <CarouselContent>
+            {chefs.map((chef, index) => (
+              <CarouselItem
+                key={index}
+                className="px-2 basis-[80%] sm:basis-1/2 md:basis-1/3 lg:basis-1/4"
+              >
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  viewport={{ once: true, amount: 0.3 }}
+                  className="h-full"
+                >
+                  <Card className="hover:shadow-xl transition-all duration-300 h-full p-0">
+                    <CardContent className="p-6 text-left space-y-4">
+                      <div className="w-full h-72 relative rounded-xl overflow-hidden">
+                        <Image
+                          src={chef.profilePicture ?? ""}
+                          alt={chef.name}
+                          fill
+                          className="object-cover"
+                        />
+                      </div>
+                      <h3 className="text-xl font-bold">{chef.name}</h3>
+                      <p className="text-sm text-gray-600">Bio: {chef.bio}</p>
+                      <div className="flex items-center gap-1 text-yellow-500">
+                        <Star className="w-5 h-5 fill-yellow-500" />
+                        <span className="text-md font-medium">
+                          {chef.averageRating ?? "N/R"}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
       </motion.div>
     </section>
   );

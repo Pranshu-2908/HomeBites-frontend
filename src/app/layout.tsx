@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { StoreProvider } from "@/redux/storeProvider";
 import AuthProvider from "@/utils/AuthProvider";
 import { SocketProvider } from "@/utils/SocketContext";
+import ChatWidget from "@/components/ChatWidget";
 
 const ubuntu = Ubuntu({
   variable: "--font-ubuntu",
@@ -33,7 +34,10 @@ export default function RootLayout({
       <body className={`${ubuntu.variable} ${rowdies.variable} antialiased`}>
         <StoreProvider>
           <SocketProvider>
-            <AuthProvider>{children}</AuthProvider>
+            <AuthProvider>
+              {children}
+              <ChatWidget />
+            </AuthProvider>
           </SocketProvider>
           <Toaster />
         </StoreProvider>

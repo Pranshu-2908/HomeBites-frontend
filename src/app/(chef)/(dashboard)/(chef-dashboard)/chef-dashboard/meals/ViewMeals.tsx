@@ -51,7 +51,7 @@ export default function ViewMeals() {
     dispatch(deleteMeal(mealId));
     setDeleteTargetMealId(null);
   };
-  if (loading) return <LoadingSpinner message="Loading your meals..." />;
+  if (loading) return <LoadingSpinner message="Loading your meals..." fullScreen={true}/>;
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}

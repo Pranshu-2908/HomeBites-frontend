@@ -53,7 +53,10 @@ export default function ViewOrders() {
     await dispatch(updateOrderStatus({ orderId, status: "rejected" }));
     await dispatch(fetchChefOrdersByStatus());
   };
-  if (loading) return <LoadingSpinner message="Loading live orders...." />;
+  if (loading)
+    return (
+      <LoadingSpinner message="Loading live orders...." fullScreen={true} />
+    );
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}

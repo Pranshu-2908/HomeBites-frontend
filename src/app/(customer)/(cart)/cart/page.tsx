@@ -114,7 +114,7 @@ const Cart: React.FC = () => {
       toast.error(err?.response.data.message || "Failed to place order");
     } finally {
       setLoading(false);
-      await dispatch(deleteCart());
+      dispatch(deleteCart());
     }
   };
 

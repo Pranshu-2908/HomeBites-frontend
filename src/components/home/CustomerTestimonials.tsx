@@ -39,7 +39,7 @@ export default function CustomerTestimonials() {
       {loading ? (
         <LoadingSpinner message="Loading reviews..." />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-8 max-w-7xl mx-auto">
           {topReviews.map((top, index) => (
             <motion.div
               key={index}
@@ -48,7 +48,7 @@ export default function CustomerTestimonials() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
             >
-              <Card className="w-100 h-60 mx-auto p-6 shadow-md hover:shadow-lg transition-all flex flex-col justify-between">
+              <Card className="w-full min-h-[240px] h-full mx-auto p-6 shadow-md hover:shadow-lg transition-all flex flex-col justify-between">
                 <CardContent className="flex flex-col gap-4 h-full p-0">
                   <div className="flex items-center gap-4">
                     <Image
@@ -56,7 +56,7 @@ export default function CustomerTestimonials() {
                       alt={top.customerId?.name || "image"}
                       width={64}
                       height={64}
-                      className="rounded-full object-fit w-16 h-16"
+                      className="rounded-full object-cover w-16 h-16"
                     />
                     <div>
                       <h3 className="font-semibold">{top?.customerId?.name}</h3>

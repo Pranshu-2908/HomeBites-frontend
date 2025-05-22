@@ -16,11 +16,14 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   if (totalPages <= 1) return null;
 
   const pageNumbers = Array.from({ length: totalPages }, (_, i) => i + 1);
-
+  const handlePageChange = (page: number) => {
+    onPageChange(page);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   return (
     <div className="flex justify-center items-center gap-2 mt-6 flex-wrap">
       <button
-        onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
+        onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
         className="px-3 py-1 border rounded disabled:opacity-50"
       >
@@ -30,7 +33,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       {pageNumbers.map((num) => (
         <button
           key={num}
-          onClick={() => onPageChange(num)}
+          onClick={() => handlePageChange(num)}
           className={`px-3 py-1 border rounded ${
             currentPage === num ? "bg-black text-white" : ""
           }`}
@@ -40,7 +43,7 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       ))}
 
       <button
-        onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
+        onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
         className="px-3 py-1 border rounded disabled:opacity-50"
       >

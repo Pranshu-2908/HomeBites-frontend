@@ -57,6 +57,8 @@ interface MealState {
   selectedMeal: Meal;
   chefMeals: Meal[];
   chefMealsById: Meal[];
+  pastMeals: Meal[];
+  loadingPastMeals: boolean;
   loading: boolean;
   error: string | null;
 }
@@ -65,6 +67,8 @@ const initialState: MealState = {
   meals: [],
   selectedMeal: {} as Meal,
   chefMeals: [],
+  pastMeals: [],
+  loadingPastMeals: false,
   chefMealsById: [],
   loading: false,
   error: null,
@@ -161,6 +165,21 @@ export const deleteMeal = createAsyncThunk(
     }
   }
 );
+
+export const fetchPastMeals = createAsyncThunk<Meal[]>(
+  "meals/fetchPastMeals",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get("meal/pastOrderMeals");
+      return response.data.pastMeals;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch past meals"
+      );
+    }
+  }
+);
+
 const shuffleArray = (array: Meal[]) => {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -257,6 +276,16 @@ const mealSlice = createSlice({
       .addCase(deleteMeal.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
+      })
+      .addCase(fetchPastMeals.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(fetchPastMeals.fulfilled, (state, action) => {
+        state.pastMeals = action.payload;
+        state.loadingPastMeals = false;
+      })
+      .addCase(fetchPastMeals.rejected, (state, action) => {
+        state.loadingPastMeals = false;
       });
   },
 });

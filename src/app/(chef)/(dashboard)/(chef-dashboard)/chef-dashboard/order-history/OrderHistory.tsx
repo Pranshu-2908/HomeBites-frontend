@@ -35,7 +35,10 @@ export default function OrderHistory() {
   useEffect(() => {
     dispatch(fetchChefOrdersByStatus());
   }, [dispatch]);
-  if (loading) return <LoadingSpinner message="Loading order history..." />;
+  if (loading)
+    return (
+      <LoadingSpinner message="Loading order history..." fullScreen={true} />
+    );
   if (error) return <p className="text-red-500">Error: {error}</p>;
   if (!completedOrders) {
     return <p className="text-center text-red-500">Meal not found.</p>;

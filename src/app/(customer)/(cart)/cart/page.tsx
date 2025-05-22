@@ -106,6 +106,7 @@ const Cart: React.FC = () => {
 
       // redirect user to stripe payment page
       if (checkoutUrl) {
+        dispatch(deleteCart());
         window.location.href = checkoutUrl;
       } else {
         throw new Error("Stripe checkout session URL not received.");
@@ -114,7 +115,6 @@ const Cart: React.FC = () => {
       toast.error(err?.response.data.message || "Failed to place order");
     } finally {
       setLoading(false);
-      dispatch(deleteCart());
     }
   };
 

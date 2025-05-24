@@ -21,13 +21,13 @@ export default function ChatWidget() {
     setInput("");
 
     try {
-      const res = await axiosInstance.post("chatbot/", {
+      const res = await axiosInstance.post("agent/query", {
         message: input,
       });
       console.log(res.data);
       const botReply = {
         from: "bot",
-        text: res.data.reply || "Sorry, no response from bot.",
+        text: res.data.response || "Sorry, no response from bot.",
       };
       setMessages((prev) => [...prev, botReply]);
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

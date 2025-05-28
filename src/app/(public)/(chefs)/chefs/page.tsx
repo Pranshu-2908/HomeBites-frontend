@@ -54,8 +54,10 @@ export default function MenuPage() {
                   />
                 </div>
                 <h3 className="text-xl font-bold">{chef.name}</h3>
-                <div>
-                  <p className="text-sm text-gray-600">Bio: {chef.bio}</p>
+                <div className="h-[3.75rem] overflow-hidden">
+                  <p className="text-sm text-gray-600 line-clamp-3">
+                    Bio: {chef.bio}
+                  </p>
                 </div>
                 <div>
                   <p>

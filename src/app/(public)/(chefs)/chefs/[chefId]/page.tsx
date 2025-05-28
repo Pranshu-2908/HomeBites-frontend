@@ -1,6 +1,6 @@
 "use client";
 
-import { Card } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -10,12 +10,13 @@ import { getChefMealsById } from "@/redux/slices/mealSlice";
 import { RootState } from "@/redux/store";
 import { toast } from "sonner";
 import { addToCart } from "@/redux/slices/cartSlice";
-import { Loader2, Star } from "lucide-react";
+import { Contact, Loader2, Mail, MapPin, Star } from "lucide-react";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { motion } from "framer-motion";
 import { getDistance } from "geolib";
 import { Badge } from "@/components/ui/badge";
 import { formatTime } from "@/utils/formatTime";
+import { fetchChefById } from "@/redux/slices/authSlice";
 
 export default function ChefDetailsPage() {
   const dispatch = useAppDispatch();
@@ -26,7 +27,10 @@ export default function ChefDetailsPage() {
     (store: RootState) => store.meal
   );
   const [addingMealId, setAddingMealId] = useState<string | null>(null);
-
+  const { chefData } = useAppSelector((store: RootState) => store.auth);
+  useEffect(() => {
+    dispatch(fetchChefById(chefId));
+  }, [chefId, dispatch]);
   useEffect(() => {
     dispatch(getChefMealsById(chefId));
   }, [chefId, dispatch]);
@@ -81,7 +85,84 @@ export default function ChefDetailsPage() {
   };
   if (loading) return <LoadingSpinner message="Loading meals" />;
   return (
-    <div className="max-w-5xl mx-auto px-4 py-8">
+    <div className="flex flex-col gap-5 max-w-5xl mx-auto px-4 py-8">
+      <Card className="bg-white border border-gray-200 shadow-lg rounded-2xl overflow-hidden p-6 max-w-5xl">
+        <CardContent>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="flex flex-col sm:flex-row items-center sm:items-start gap-8"
+          >
+            {/* Profile Picture + Basic Info */}
+            <div className="flex flex-col items-center sm:items-start w-full sm:w-1/3">
+              <Image
+                src={
+                  chefData?.profilePicture ||
+                  "https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"
+                }
+                alt="Chef Profile"
+                width={120}
+                height={120}
+                className="rounded-full object-cover border-4 border-indigo-500 shadow-md"
+              />
+              <h2 className="mt-4 text-2xl font-bold text-gray-900 text-center sm:text-left">
+                {chefData?.name || "Chef Name"}
+              </h2>
+              <div className="mt-3 space-y-2 text-gray-600 text-sm sm:text-base w-full">
+                <div className="flex items-center gap-2">
+                  <Mail className="text-indigo-600" />
+                  <span>{chefData?.email || "email@example.com"}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Contact className="text-indigo-600" />
+                  <span>{chefData?.phoneNumber || "N/A"}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="text-indigo-600" />
+                  <span>{chefData?.address?.city || "Unknown city"}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Bio & Working Hours */}
+            <div className="w-full sm:w-2/3 space-y-8 text-gray-700">
+              <section>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-2 border-b border-indigo-200 pb-1">
+                  About Chef
+                </h3>
+                <p className="leading-relaxed whitespace-pre-line min-h-[4.5rem]">
+                  {chefData?.bio || "This chef has not provided a bio yet."}
+                </p>
+              </section>
+
+              <section>
+                <h3 className="text-xl font-semibold text-indigo-700 mb-2 border-b border-indigo-200 pb-1">
+                  Working Hours
+                </h3>
+                {chefData?.workingHours ? (
+                  <p className="text-lg font-medium">
+                    {`${chefData.workingHours.startHour
+                      .toString()
+                      .padStart(2, "0")}:${chefData.workingHours.startMinute
+                      .toString()
+                      .padStart(2, "0")} - ${chefData.workingHours.endHour
+                      .toString()
+                      .padStart(2, "0")}:${chefData.workingHours.endMinute
+                      .toString()
+                      .padStart(2, "0")}`}
+                  </p>
+                ) : (
+                  <p className="italic text-gray-400">
+                    Working hours not specified
+                  </p>
+                )}
+              </section>
+            </div>
+          </motion.div>
+        </CardContent>
+      </Card>
+
       <div className="space-y-4">
         {chefMealsById.map((meal, index) => {
           const chefLocation = meal.chefId.address?.coordinates;

@@ -22,6 +22,7 @@ export default function PaymentSuccessPage() {
           `/payment/session/${sessionId}`
         );
         setOrderId(data.orderId);
+        await axiosInstance.delete("/cart");
       } catch (err) {
         console.error("Error fetching session:", err);
       }

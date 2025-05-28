@@ -17,7 +17,6 @@ import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { RootState } from "@/redux/store";
 import {
   decreaseCartQty,
-  deleteCart,
   increaseCartQty,
   loadCart,
   removeCartItem,
@@ -106,7 +105,6 @@ const Cart: React.FC = () => {
 
       // redirect user to stripe payment page
       if (checkoutUrl) {
-        dispatch(deleteCart());
         window.location.href = checkoutUrl;
       } else {
         throw new Error("Stripe checkout session URL not received.");

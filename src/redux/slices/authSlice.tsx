@@ -39,6 +39,7 @@ interface User {
 interface AuthState {
   user: User | null;
   chefs: User[];
+  chefData: User | null;
   isAuthenticated: boolean;
   status: "idle" | "succeeded" | "loading";
   loading: boolean;
@@ -49,10 +50,23 @@ const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   chefs: [],
+  chefData: null,
   status: "idle",
   loading: true,
   error: null,
 };
+
+export const fetchChefById = createAsyncThunk(
+  "chef/fetchChefById",
+  async (chefId: string, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.get(`/chef/${chefId}`);
+      return response.data;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || err.message);
+    }
+  }
+);
 export const updateProfile = createAsyncThunk<
   User,
   FormData,
@@ -171,6 +185,18 @@ const authSlice = createSlice({
         state.user = action.payload.user;
       })
       .addCase(updateUserLocation.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      })
+      .addCase(fetchChefById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchChefById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.chefData = action.payload;
+      })
+      .addCase(fetchChefById.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload as string;
       });

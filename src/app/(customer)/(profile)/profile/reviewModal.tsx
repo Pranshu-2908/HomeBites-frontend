@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useAppDispatch } from "@/redux/hooks";
 import { addReview } from "@/redux/slices/reviewSlice";
-import { Star } from "lucide-react";
+import { Loader2, Star } from "lucide-react";
 import { toast } from "sonner";
 interface meal {
   _id: string;
@@ -55,6 +55,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ order, open, onClose }) => {
       comment: "",
     }))
   );
+  const [loadind, setLoading] = useState(false);
   const handleRatingChange = (index: number, rating: number) => {
     const updated = [...reviews];
     updated[index].rating = rating;
@@ -68,10 +69,12 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ order, open, onClose }) => {
   };
 
   const handleSubmit = () => {
+    setLoading(true);
     dispatch(addReview({ orderId: order._id, mealReviews: reviews }))
       .unwrap()
       .then(() => {
         toast.success("Review posted. Thanks a lot for your feedback!!!");
+        setLoading(false);
         onClose();
       });
   };
@@ -114,9 +117,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ order, open, onClose }) => {
           ))}
         </div>
 
-        <Button className="w-full mt-6 cursor-pointer" onClick={handleSubmit}>
-          Submit Reviews
-        </Button>
+        {loadind ? (
+          <Button className="w-full mt-6 cursor-pointer">
+            <Loader2 className="animate-spin" />
+            Submitting
+          </Button>
+        ) : (
+          <Button className="w-full mt-6 cursor-pointer" onClick={handleSubmit}>
+            Submit Reviews
+          </Button>
+        )}
       </DialogContent>
     </Dialog>
   );

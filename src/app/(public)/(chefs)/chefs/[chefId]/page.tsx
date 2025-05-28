@@ -142,15 +142,16 @@ export default function ChefDetailsPage() {
                 </h3>
                 {chefData?.workingHours ? (
                   <p className="text-lg font-medium">
-                    {`${chefData.workingHours.startHour
-                      .toString()
-                      .padStart(2, "0")}:${chefData.workingHours.startMinute
-                      .toString()
-                      .padStart(2, "0")} - ${chefData.workingHours.endHour
-                      .toString()
-                      .padStart(2, "0")}:${chefData.workingHours.endMinute
-                      .toString()
-                      .padStart(2, "0")}`}
+                    Available from{" "}
+                    {formatTime(
+                      chefData.workingHours?.startHour ?? 0,
+                      chefData.workingHours?.startMinute ?? 0
+                    )}{" "}
+                    to{" "}
+                    {formatTime(
+                      chefData.workingHours?.endHour ?? 0,
+                      chefData.workingHours?.endMinute ?? 0
+                    )}
                   </p>
                 ) : (
                   <p className="italic text-gray-400">

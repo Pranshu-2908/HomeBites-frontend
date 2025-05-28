@@ -14,7 +14,14 @@ export interface workingHours {
   endHour: number;
   endMinute: number;
 }
-
+interface FilterParams {
+  name?: string;
+  cuisine?: string;
+  category?: string;
+  time?: string | number;
+  page?: number;
+  limit?: number;
+}
 export interface address {
   addressLine: string;
   city: string;
@@ -58,6 +65,8 @@ interface MealState {
   chefMeals: Meal[];
   chefMealsById: Meal[];
   pastMeals: Meal[];
+  currentPage: number;
+  totalPages: number;
   loadingPastMeals: boolean;
   loading: boolean;
   error: string | null;
@@ -68,19 +77,39 @@ const initialState: MealState = {
   selectedMeal: {} as Meal,
   chefMeals: [],
   pastMeals: [],
+  currentPage: 1,
+  totalPages: 1,
   loadingPastMeals: false,
   chefMealsById: [],
   loading: false,
   error: null,
 };
-export const fetchMeals = createAsyncThunk("meals/fetchMeals", async () => {
-  try {
-    const response = await axiosInstance.get("/meal/");
-    return response.data.meals;
-  } catch (error: any) {
-    toast(error.response?.data?.message || "failed to fetch meals");
+// export const fetchMeals = createAsyncThunk("meals/fetchMeals", async () => {
+//   try {
+//     const response = await axiosInstance.get("/meal/");
+//     return response.data.meals;
+//   } catch (error: any) {
+//     toast(error.response?.data?.message || "failed to fetch meals");
+//   }
+// });
+export const fetchMeals = createAsyncThunk(
+  "meals/fetchMeals",
+  async (filters: FilterParams = {}) => {
+    try {
+      const params = new URLSearchParams();
+
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value) params.append(key, value.toString());
+      });
+
+      const response = await axiosInstance.get(`/meal/?${params.toString()}`);
+      return response.data;
+    } catch (error: any) {
+      toast(error.response?.data?.message || "failed to fetch meals");
+      throw error;
+    }
   }
-});
+);
 export const fetchMealById = createAsyncThunk(
   "meals/fetchMealById",
   async (mealId: ParamValue) => {
@@ -199,7 +228,9 @@ const mealSlice = createSlice({
       })
       .addCase(fetchMeals.fulfilled, (state, action) => {
         state.loading = false;
-        state.meals = shuffleArray(action.payload);
+        state.meals = action.payload.meals;
+        state.currentPage = action.payload.currentPage;
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchMeals.rejected, (state, action) => {
         state.loading = false;

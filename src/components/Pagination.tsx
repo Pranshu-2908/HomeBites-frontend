@@ -1,5 +1,6 @@
 "use client";
 
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import React from "react";
 
 interface PaginationControlsProps {
@@ -25,9 +26,9 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       <button
         onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        className="px-3 py-1 border rounded disabled:opacity-50"
+        className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-400 disabled:hover:bg-red-200"
       >
-        Prev
+        <ChevronLeft />
       </button>
 
       {pageNumbers.map((num) => (
@@ -45,9 +46,9 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       <button
         onClick={() => handlePageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        className="px-3 py-1 border rounded disabled:opacity-50"
+        className="px-3 py-1 border rounded disabled:opacity-50 hover:bg-gray-400 disabled:hover:bg-red-200"
       >
-        Next
+        <ChevronRight />
       </button>
     </div>
   );
